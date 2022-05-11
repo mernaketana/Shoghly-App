@@ -1,6 +1,6 @@
-# project
+# Sho3'ly-app
 
-The mobile application version of the website sho3'ly built as a graduation project by me and my team members. 
+### The mobile application version of the website sho3'ly built as a graduation project by me and my team members. 
 
 ## Detailed Description
 
