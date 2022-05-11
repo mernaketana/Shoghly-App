@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:comment_box/comment/comment.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:project/models/comment.dart';
 import '../dummy_data.dart';
 
@@ -23,6 +24,7 @@ class Comments extends StatefulWidget {
 class _CommentsState extends State<Comments> {
   final formKey = GlobalKey<FormState>();
   final commentController = TextEditingController();
+  double? _rate;
   @override
   Widget build(BuildContext context) {
     return CommentBox(
@@ -58,6 +60,19 @@ class _CommentsState extends State<Comments> {
                     .where((e) => e.workerId == widget.workerId)
                     .toList()[index]
                     .comment),
+                trailing: SizedBox(
+                  width: 50,
+                  child: Row(children: [
+                    const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text('$_rate')
+                  ]),
+                ),
               ));
         },
         itemCount: widget.items
@@ -68,15 +83,55 @@ class _CommentsState extends State<Comments> {
       labelText: 'اكتب تعليق...',
       withBorder: false,
       sendButtonMethod: () {
+        // ignore: avoid_print
+        // print(commentController.text);
+        showDialog(
+            context: context,
+            builder: (context) => Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: AlertDialog(
+                    title: const Text('ما هو تقييمك؟'),
+                    content: FittedBox(
+                      child: RatingBar.builder(
+                        itemBuilder: (context, index) =>
+                            const Icon(Icons.star, color: Colors.amber),
+                        onRatingUpdate: (rate) {
+                          // ignore: avoid_print
+                          print(rate);
+                          setState(() {
+                            _rate = rate;
+                          });
+                        },
+                        initialRating: 0,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        itemCount: 5,
+                        itemSize: 25,
+                        itemPadding: const EdgeInsets.symmetric(horizontal: 2),
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('تم'))
+                    ],
+                  ),
+                ));
+        // rate is faultyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
         if (formKey.currentState!.validate()) {
-          // ignore: avoid_print
-          print(commentController.text);
+          if (_rate! > 0) {
+            setState(() {
+              var value = Comment(
+                  rate: _rate,
+                  comment: commentController.text,
+                  userId: widget.userId,
+                  workerId: widget.workerId);
+              widget.items.add(value);
+            });
+          }
           setState(() {
-            var value = Comment(
-                comment: commentController.text,
-                userId: widget.userId,
-                workerId: widget.workerId);
-            widget.items.add(value);
+            _rate = 0.0;
           });
           commentController.clear();
           FocusScope.of(context).unfocus();

@@ -105,81 +105,15 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(
-                            flex: 1,
-                            child: Text(
-                              '${user.fname} ${user.lname}',
-                              softWrap: true,
-                              overflow: TextOverflow.clip,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 20),
-                              textAlign: TextAlign.right,
-                            ),
+                          Text(
+                            '${user.fname} ${user.lname}',
+                            softWrap: true,
+                            overflow: TextOverflow.clip,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 20),
+                            textAlign: TextAlign.right,
                           ),
-                          Flexible(
-                            flex: 1,
-                            child: FittedBox(
-                              child: RatingBar.builder(
-                                itemBuilder: (context, index) =>
-                                    const Icon(Icons.star, color: Colors.amber),
-                                onRatingUpdate: (rate) {
-                                  // ignore: avoid_print
-                                  print(rate);
-                                },
-                                initialRating: 0,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: false,
-                                itemCount: 5,
-                                itemSize: 25,
-                                itemPadding:
-                                    const EdgeInsets.symmetric(horizontal: 2),
-                              ),
-                            ),
-                          )
                         ]),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Card(
-                    elevation: 4,
-                    margin: const EdgeInsets.all(4),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.all(9),
-                            child: Text('معلومات عن ${user.fname}')),
-                        // desc
-                      ],
-                    ),
-                  ),
-                  Card(
-                    elevation: 4,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 11, vertical: 9),
-                          child: Text(
-                            'التعليقات',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                        SizedBox(
-                            height: 190,
-                            child: Comments(
-                                items: DUMMY_COMMENTS,
-                                userId: currentUser.id,
-                                workerId: id)),
-                      ],
-                    ),
                   ),
                   Card(
                     elevation: 4,
@@ -205,7 +139,31 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                           )
                       ],
                     ),
-                  )
+                  ),
+                  Card(
+                    elevation: 4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 11, vertical: 9),
+                          child: Text(
+                            'التعليقات',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                        ),
+                        SizedBox(
+                            height: 200,
+                            child: Comments(
+                                items: DUMMY_COMMENTS,
+                                userId: currentUser.id,
+                                workerId: id)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ), //delegate tells it how to renders the content of the list
