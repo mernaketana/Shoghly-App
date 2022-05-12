@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:project/models/comment.dart';
 import '../dummy_data.dart';
 
@@ -56,10 +57,16 @@ class _CommentsState extends State<Comments> {
                           : const AssetImage('assets/images/placeholder.png')),
                 ),
                 title: Text('${user.fname} ${user.lname}'),
-                subtitle: Text(widget.items
-                    .where((e) => e.workerId == widget.workerId)
-                    .toList()[index]
-                    .comment),
+                subtitle: Column(
+                  children: [
+                    Text(
+                        '${widget.items.where((e) => e.workerId == widget.workerId).toList()[index].createdAt}'),
+                    Text(widget.items
+                        .where((e) => e.workerId == widget.workerId)
+                        .toList()[index]
+                        .comment),
+                  ],
+                ),
                 trailing: SizedBox(
                   width: 50,
                   child: Row(children: [
@@ -70,7 +77,8 @@ class _CommentsState extends State<Comments> {
                     const SizedBox(
                       width: 5,
                     ),
-                    Text('$_rate')
+                    Text(
+                        '${widget.items.where((e) => e.workerId == widget.workerId).toList()[index].rate}')
                   ]),
                 ),
               ));
@@ -85,57 +93,45 @@ class _CommentsState extends State<Comments> {
       sendButtonMethod: () {
         // ignore: avoid_print
         // print(commentController.text);
-        showDialog(
-            context: context,
-            builder: (context) => Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: AlertDialog(
-                    title: const Text('ما هو تقييمك؟'),
-                    content: FittedBox(
-                      child: RatingBar.builder(
-                        itemBuilder: (context, index) =>
-                            const Icon(Icons.star, color: Colors.amber),
-                        onRatingUpdate: (rate) {
-                          // ignore: avoid_print
-                          print(rate);
-                          setState(() {
-                            _rate = rate;
-                          });
-                        },
-                        initialRating: 0,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: false,
-                        itemCount: 5,
-                        itemSize: 25,
-                        itemPadding: const EdgeInsets.symmetric(horizontal: 2),
+        showRate(context).whenComplete(() {
+          if (commentController.text == '') {
+            showDialog(
+                context: context,
+                builder: (context) => Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: AlertDialog(
+                        title: const Text('اكتب تعليق لتتمكن من اضافة تقييم'),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text(
+                                'حسنا',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ))
+                        ],
                       ),
-                    ),
-                    actions: [
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('تم'))
-                    ],
-                  ),
-                ));
-        // rate is faultyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-        if (formKey.currentState!.validate()) {
-          if (_rate! > 0) {
-            setState(() {
-              var value = Comment(
-                  rate: _rate,
-                  comment: commentController.text,
-                  userId: widget.userId,
-                  workerId: widget.workerId);
-              widget.items.add(value);
-            });
+                    ));
           }
-          setState(() {
-            _rate = 0.0;
-          });
-          commentController.clear();
-          FocusScope.of(context).unfocus();
-        }
+          if (formKey.currentState!.validate()) {
+            if (_rate! > 0 && commentController.text != '') {
+              setState(() {
+                var value = Comment(
+                    rate: _rate,
+                    comment: commentController.text,
+                    userId: widget.userId,
+                    workerId: widget.workerId,
+                    createdAt: DateTime.now());
+                widget.items.add(value);
+              });
+            }
+
+            commentController.clear();
+            FocusScope.of(context).unfocus();
+          }
+        });
+        // rate is faultyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
         // ignore: avoid_print
         // print('invalid');
       },
@@ -143,5 +139,44 @@ class _CommentsState extends State<Comments> {
       commentController: commentController,
       sendWidget: const Icon(Icons.send),
     );
+  }
+
+  Future<dynamic> showRate(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => Directionality(
+              textDirection: TextDirection.rtl,
+              child: AlertDialog(
+                title: const Text('ما هو تقييمك؟'),
+                content: FittedBox(
+                  child: RatingBar.builder(
+                    itemBuilder: (context, index) =>
+                        const Icon(Icons.star, color: Colors.amber),
+                    onRatingUpdate: (rate) {
+                      // ignore: avoid_print
+                      print(rate);
+                      setState(() {
+                        _rate = rate;
+                      });
+                    },
+                    initialRating: 0,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: false,
+                    itemCount: 5,
+                    itemSize: 25,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 2),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(
+                        'تم',
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ))
+                ],
+              ),
+            ));
   }
 }

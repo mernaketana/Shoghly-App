@@ -21,7 +21,7 @@ class EmployeesScreen extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 254, 247, 241),
         // drawer: MyDrawer(currentUser: currentUser),
         appBar: AppBar(
-          title: const Text('شغلي'),
+          title: Text('$categoryId'),
           // actions: <Widget>[
           //   IconButton(onPressed: () {}, icon: const Icon(Icons.messenger)),
           //   IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),

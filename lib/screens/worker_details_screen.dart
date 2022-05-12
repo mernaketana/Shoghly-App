@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:project/models/employee.dart';
+import '../models/comment.dart';
 import '../widgets/images_gallery_widget.dart';
 
 import '../widgets/comments.dart';
@@ -17,6 +19,14 @@ class WorkerDetailsScreen extends StatefulWidget {
 }
 
 class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
+  // int rate(List<Comment> rates) {
+  //   double sum = 0;
+  //   for (var i = 0; i < rates.length; i++) {
+  //     sum += (rates[i].rate!) / (rates.length - 1);
+  //   }
+  //   return sum.round();
+  // }
+
   @override
   Widget build(BuildContext context) {
     final arguments =
@@ -102,8 +112,9 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                             bottomLeft: Radius.circular(5),
                             bottomRight: Radius.circular(5))),
                     padding: const EdgeInsets.all(10),
-                    child: Row(
+                    child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             '${user.fname} ${user.lname}',
@@ -113,6 +124,10 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                 color: Colors.white, fontSize: 20),
                             textAlign: TextAlign.right,
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(user.location),
+                          )
                         ]),
                   ),
                   Card(

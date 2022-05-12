@@ -71,12 +71,7 @@ var DUMMY_EMP = [
 ];
 
 // ignore: non_constant_identifier_names
-var DUMMY_COMMENTS = [
-  Comment(comment: 'رائع', userId: '2', workerId: '1'),
-  Comment(comment: 'جامد', userId: '2', workerId: '1'),
-  Comment(comment: 'رائع', userId: '2', workerId: '1'),
-  Comment(comment: 'رائع', userId: '2', workerId: '1'),
-];
+List<Comment> DUMMY_COMMENTS = [];
 
 // ignore: non_constant_identifier_names
 var DUMMY_IMAGES = [

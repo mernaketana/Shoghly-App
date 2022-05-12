@@ -64,10 +64,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = ModalRoute.of(context)!.settings.arguments as Employee;
-    final List<Widget> _pages = [
+    final List<Widget> _workerPages = [
       const MyAccountScreen(),
       categoriesScreen(currentUser: currentUser),
       const GalleryScreen(),
+      MainSettingsScreen(
+        currentUser: currentUser,
+      ),
+    ];
+    final List<Widget> _userPages = [
+      const MyAccountScreen(),
+      categoriesScreen(currentUser: currentUser),
       MainSettingsScreen(
         currentUser: currentUser,
       ),
@@ -134,7 +141,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           //   // )
           // ],
         ),
-        body: _pages[_selectedPageIndex],
+        body: currentUser.role == 'worker'
+            ? _workerPages[_selectedPageIndex]
+            : _userPages[_selectedPageIndex],
         bottomNavigationBar: BottomNavigationBar(
           // fixedColor: Colors.red,
           type: BottomNavigationBarType.fixed,
@@ -142,15 +151,25 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           backgroundColor: Colors.red,
           selectedItemColor: Colors.white,
           unselectedItemColor: const Color.fromARGB(170, 219, 219, 219),
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), label: 'حسابي'),
-            BottomNavigationBarItem(icon: Icon(Icons.category), label: 'الحرف'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.photo_library), label: 'معرضي'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: 'الاعدادات'),
-          ],
+          items: currentUser.role == 'worker'
+              ? const [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.account_circle), label: 'حسابي'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.category), label: 'الحرف'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.photo_library), label: 'معرضي'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.settings), label: 'الاعدادات'),
+                ]
+              : const [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.account_circle), label: 'حسابي'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.category), label: 'الحرف'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.settings), label: 'الاعدادات'),
+                ],
           onTap: onTap,
           currentIndex: _selectedPageIndex,
         ),
