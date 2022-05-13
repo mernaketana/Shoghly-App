@@ -27,32 +27,32 @@ const DUMMY_CATEGORIES = [
 // ignore: constant_identifier_names, non_constant_identifier_names
 var DUMMY_EMP = [
   Employee(
-    id: '1',
-    categordId: DUMMY_CATEGORIES
-        .firstWhere((element) => element.title == 'السباكة')
-        .title,
-    image:
-        'https://media.angi.com/s3fs-public/plumber-fixing-bathroom-sink-leak.jpg',
-    fname: 'احمد',
-    lname: 'ابراهيم',
-    email: 'ahmed@gmail.com',
-    password: '123456789',
-    phone: 01234567891,
-    location: 'بورسعيد',
-    role: 'worker',
-  ),
+      id: '1',
+      categordId: DUMMY_CATEGORIES
+          .firstWhere((element) => element.title == 'السباكة')
+          .title,
+      image:
+          'https://media.angi.com/s3fs-public/plumber-fixing-bathroom-sink-leak.jpg',
+      fname: 'احمد',
+      lname: 'ابراهيم',
+      email: 'ahmed@gmail.com',
+      password: '123456789',
+      phone: 01234567891,
+      location: 'بورسعيد',
+      role: 'worker',
+      address: 'تعاونيات الزهور'),
   Employee(
-    id: '2',
-    image:
-        'https://storage.googleapis.com/air-multi-tmbi-cpt-uploads/wp-content/uploads/2020/03/4e43e850-61u5vx9jfvl._ac_sl1000_-1024x1024.jpg',
-    fname: 'اسلام',
-    lname: 'زين',
-    email: 'ahmedd@gmail.com',
-    password: '123456789',
-    phone: 01234567892,
-    location: 'طنطا',
-    role: 'client',
-  ),
+      id: '2',
+      image:
+          'https://storage.googleapis.com/air-multi-tmbi-cpt-uploads/wp-content/uploads/2020/03/4e43e850-61u5vx9jfvl._ac_sl1000_-1024x1024.jpg',
+      fname: 'اسلام',
+      lname: 'زين',
+      email: 'ahmedd@gmail.com',
+      password: '123456789',
+      phone: 01234567892,
+      location: 'طنطا',
+      role: 'client',
+      address: 'معرفش اماكن في طنطا'),
   Employee(
     image:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjGHveD6FYI8wfBYEBx8sKcof9110urFnoAQ&usqp=CAU',
@@ -67,6 +67,7 @@ var DUMMY_EMP = [
     phone: 01234567893,
     location: 'بورسعيد',
     role: 'worker',
+    address: 'شارع الجمهورية',
   ),
 ];
 

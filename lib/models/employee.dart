@@ -19,9 +19,11 @@ class Employee {
   String location;
   DateTime? bDate;
   final String role;
+  String address;
 
   Employee(
       {required this.id,
+      required this.address,
       this.bDate,
       this.categordId,
       required this.fname,

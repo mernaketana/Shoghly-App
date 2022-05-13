@@ -55,6 +55,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
       password: '',
       phone: 0,
       location: '',
+      address: '',
       role: '');
 
   void _submit() {
@@ -106,6 +107,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
           password: newUsers.password,
           phone: newUsers.phone,
           location: newUsers.location,
+          address: newUsers.address,
           role: newUsers.role,
           image: _userImage);
     });
@@ -145,6 +147,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           phone: newUsers.phone,
                           location: newUsers.location,
                           categordId: newUsers.categordId,
+                          address: newUsers.address,
                           role: widget.role),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
@@ -178,6 +181,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           fname: newUsers.fname,
                           lname: e as String,
                           email: newUsers.email,
+                          address: newUsers.address,
                           password: newUsers.password,
                           phone: newUsers.phone,
                           location: newUsers.location,
@@ -211,13 +215,14 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                       onSaved: (e) => newUsers = Employee(
                           image: newUsers.image,
                           categordId: newUsers.categordId,
-                          id: DateTime.now().toString(),
+                          id: newUsers.id,
                           fname: newUsers.fname,
                           lname: newUsers.lname,
                           phone: int.parse(e as String),
                           email: newUsers.email,
                           password: newUsers.password,
                           location: newUsers.location,
+                          address: newUsers.address,
                           role: newUsers.role),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
@@ -269,6 +274,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           password: newUsers.password,
                           phone: newUsers.phone,
                           location: newUsers.location,
+                          address: newUsers.address,
                           role: newUsers.role,
                           bDate: DateFormat.yMd().parse(e as String)),
                       onTap: () {
@@ -330,9 +336,47 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                                 password: newUsers.password,
                                 phone: newUsers.phone,
                                 location: _dropdownVal as String,
+                                address: newUsers.address,
                                 role: newUsers.role);
                           });
                         }),
+                    const SizedBox(
+                      height: 14,
+                    ),
+                    TextFormField(
+                      key: const ValueKey('address'),
+                      validator: (e) {
+                        if (e!.isEmpty) {
+                          return 'يجب ادخال العنوان ';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onSaved: (e) => newUsers = Employee(
+                          image: newUsers.image,
+                          categordId: newUsers.categordId,
+                          id: newUsers.id,
+                          fname: newUsers.fname,
+                          lname: newUsers.lname,
+                          phone: newUsers.phone,
+                          email: newUsers.email,
+                          password: newUsers.password,
+                          location: newUsers.location,
+                          address: e as String,
+                          role: newUsers.role),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.home,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        labelText: 'العنوان',
+                        // labelStyle: TextStyle(color: Colors.white)
+                      ),
+                      // style: const TextStyle(color: Colors.white),
+                    ),
                     if (widget.role == 'worker')
                       const SizedBox(
                         height: 14,
@@ -389,6 +433,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                                   password: newUsers.password,
                                   phone: newUsers.phone,
                                   location: newUsers.location,
+                                  address: newUsers.address,
                                   role: newUsers.role);
                             });
                           }),

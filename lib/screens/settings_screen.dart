@@ -42,22 +42,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
       password: '',
       phone: 0,
       location: '',
+      address: '',
+      bDate: null,
       role: '');
 
-  void _submit() {
+  void _submit(int index) {
+    print(index);
     final _valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (!_valid) {
+      print('invalid');
       return;
     }
     _formKey.currentState!.save();
+    print('valid');
 
-    var userIndex = DUMMY_EMP.indexWhere((e) => e.id == newUsers.id);
+    // var userIndex = DUMMY_EMP.indexWhere((e) => e.id == newUsers.id);
     // print(newUsers.role);
     // print(newUsers.id);
     // print(newUsers.image);
 
-    DUMMY_EMP[userIndex] = newUsers;
+    setState(() {
+      DUMMY_EMP[index] = newUsers;
+    });
+    print(newUsers.id);
+    print(DUMMY_EMP.indexWhere((e) => e.id == newUsers.id));
+
     Navigator.of(context)
         .pushReplacementNamed(CategoriesScreen.routeName, arguments: newUsers);
   }
@@ -91,10 +101,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           phone: newUsers.phone,
           location: newUsers.location,
           role: newUsers.role,
+          address: newUsers.address,
           image: _userImage);
       // print(newUsers.image);
     });
   }
+
+  // faaultyyyyyyyyyyyyyyyyyyyyyyyyyy
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Employee currentUser = arguments['currentUser'];
     bool editPass = arguments['editPass'];
+    print(DUMMY_EMP.indexWhere((e) => e.id == currentUser.id));
     // _pickedDate.text =
     //     '${currentUser.bDate!.day}/${currentUser.bDate!.month}/${currentUser.bDate!.year}';
     return Directionality(
@@ -136,10 +150,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 image: currentUser.image,
                                 fname: currentUser.fname,
                                 lname: currentUser.lname,
-                                email: e as String,
+                                email: e ?? currentUser.email,
                                 password: currentUser.password,
                                 phone: currentUser.phone,
                                 location: currentUser.location,
+                                address: newUsers.address,
                                 role: currentUser.role,
                                 bDate: currentUser.bDate,
                                 categordId: currentUser.categordId),
@@ -173,17 +188,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               }
                             },
                             onSaved: (e) => newUsers = Employee(
-                                id: currentUser.id,
-                                image: currentUser.image,
-                                fname: currentUser.fname,
-                                lname: currentUser.lname,
-                                email: currentUser.email,
-                                password: e as String,
-                                phone: currentUser.phone,
-                                location: currentUser.location,
-                                role: currentUser.role,
-                                bDate: currentUser.bDate,
-                                categordId: currentUser.categordId),
+                                id: newUsers.id,
+                                image: newUsers.image,
+                                fname: newUsers.fname,
+                                lname: newUsers.lname,
+                                email: newUsers.email,
+                                password: e ?? currentUser.password,
+                                phone: newUsers.phone,
+                                location: newUsers.location,
+                                address: newUsers.address,
+                                role: newUsers.role,
+                                bDate: newUsers.bDate,
+                                categordId: newUsers.categordId),
                             decoration: InputDecoration(
                               prefixIcon: const Icon(
                                 Icons.password,
@@ -239,9 +255,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               }
                             },
                             onSaved: (e) => newUsers = Employee(
-                                image: newUsers.image == ''
-                                    ? currentUser.image
-                                    : newUsers.image,
+                                image: currentUser.image,
                                 id: currentUser.id,
                                 fname: e ?? currentUser.fname,
                                 lname: currentUser.lname,
@@ -249,11 +263,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 password: currentUser.password,
                                 phone: currentUser.phone,
                                 location: currentUser.location,
+                                address: currentUser.address,
                                 categordId: currentUser.categordId,
                                 role: currentUser.role),
                             decoration: InputDecoration(
                               prefixIcon: const Icon(
-                                Icons.email_outlined,
+                                Icons.person,
                                 color: Colors.grey,
                               ),
                               border: OutlineInputBorder(
@@ -287,10 +302,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 password: newUsers.password,
                                 phone: newUsers.phone,
                                 location: newUsers.location,
+                                address: newUsers.address,
                                 role: newUsers.role),
                             decoration: InputDecoration(
                               prefixIcon: const Icon(
-                                Icons.email_outlined,
+                                Icons.person,
                                 color: Colors.grey,
                               ),
                               border: OutlineInputBorder(
@@ -327,10 +343,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 email: newUsers.email,
                                 password: newUsers.password,
                                 location: newUsers.location,
+                                address: newUsers.address,
                                 role: newUsers.role),
                             decoration: InputDecoration(
                               prefixIcon: const Icon(
-                                Icons.email_outlined,
+                                Icons.phone_enabled_outlined,
                                 color: Colors.grey,
                               ),
                               border: OutlineInputBorder(
@@ -364,10 +381,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 password: newUsers.password,
                                 phone: newUsers.phone,
                                 location: newUsers.location,
+                                address: newUsers.address,
                                 role: newUsers.role,
                                 bDate: e == ''
                                     ? currentUser.bDate
-                                    : DateFormat.yMd().parse(e!)),
+                                    : DateFormat.yMd().parse(e as String)),
                             onTap: () {
                               FocusScope.of(context).requestFocus(FocusNode());
                               _datePicker();
@@ -375,7 +393,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             controller: _pickedDate,
                             decoration: InputDecoration(
                               prefixIcon: const Icon(
-                                Icons.email_outlined,
+                                Icons.date_range_outlined,
                                 color: Colors.grey,
                               ),
                               border: OutlineInputBorder(
@@ -393,20 +411,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           DropdownButtonFormField(
                               validator: (e) {
                                 if (e == null) {
-                                  return 'يجب اختيار الحرفة  ';
+                                  return 'يجب اختيار المحافظة  ';
                                 } else {
                                   return null;
                                 }
                               },
                               decoration: InputDecoration(
                                   prefixIcon: const Icon(
-                                    Icons.work_outline,
+                                    Icons.location_city_outlined,
                                     color: Colors.grey,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'الحرفة'
+                                  labelText: 'المحافظة'
                                   // style: const TextStyle(color: Colors.white)
 
                                   // labelStyle: TextStyle(color: Colors.white)
@@ -440,9 +458,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       password: newUsers.password,
                                       phone: newUsers.phone,
                                       location: _dropdownVal as String,
+                                      address: newUsers.address,
                                       role: newUsers.role);
                                 });
                               }),
+                        if (!editPass)
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        if (!editPass)
+                          TextFormField(
+                            key: const ValueKey('address'),
+                            initialValue: currentUser.address,
+                            validator: (e) {
+                              if (e!.isEmpty) {
+                                return 'يجب ادخال العنوان ';
+                              } else {
+                                return null;
+                              }
+                            },
+                            onSaved: (e) => newUsers = Employee(
+                                image: newUsers.image,
+                                categordId: newUsers.categordId,
+                                id: newUsers.id,
+                                fname: newUsers.fname,
+                                lname: newUsers.lname,
+                                phone: newUsers.phone,
+                                email: newUsers.email,
+                                password: newUsers.password,
+                                location: newUsers.location,
+                                address:
+                                    e == '' ? currentUser.address : e as String,
+                                role: newUsers.role),
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.home,
+                                color: Colors.grey,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              labelText: 'العنوان',
+                              // labelStyle: TextStyle(color: Colors.white)
+                            ),
+                            // style: const TextStyle(color: Colors.white),
+                          ),
                         if (!editPass)
                           if (currentUser.role == 'worker')
                             const SizedBox(
@@ -453,7 +513,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             DropdownButtonFormField(
                                 validator: (e) {
                                   if (e == null) {
-                                    return 'يجب اختيار المحافظة  ';
+                                    return 'يجب اختيار الحرفة  ';
                                   } else {
                                     return null;
                                   }
@@ -499,6 +559,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         password: newUsers.password,
                                         phone: newUsers.phone,
                                         location: newUsers.location,
+                                        address: newUsers.address,
                                         role: newUsers.role);
                                   });
                                 }),
@@ -509,7 +570,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: () => _submit,
+                            onPressed: () => _submit(DUMMY_EMP
+                                .indexWhere((e) => e.id == currentUser.id)),
                             child: const Text(
                               'تم',
                               style: TextStyle(

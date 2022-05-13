@@ -48,6 +48,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.currentUser.bDate);
     // print(widget.currentUser.image);
     // print(DUMMY_IMAGES.firstWhere((e) => e.userId == widget.currentUser.id).url
     //     as List<String>);
@@ -58,7 +59,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
         Container(
           width: 380,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          child: widget.currentUser.image != null
+          child: widget.currentUser.image != ''
               ? InkWell(
                   onTap: () => Navigator.of(context).pushNamed(
                       DetailedImageScreen.routeName,
@@ -146,8 +147,11 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                         padding: const EdgeInsets.only(left: 10),
                         child: TextButton.icon(
                             onPressed: () => Navigator.of(context).pushNamed(
-                                SettingsScreen.routeName,
-                                arguments: widget.currentUser),
+                                    SettingsScreen.routeName,
+                                    arguments: {
+                                      'currentUser': widget.currentUser,
+                                      'editPass': false
+                                    }),
                             icon: const Icon(
                               Icons.edit,
                               size: 20,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:comment_box/comment/comment.dart';
@@ -39,6 +40,10 @@ class _CommentsState extends State<Comments> {
                   .where((e) => e.workerId == widget.workerId)
                   .toList()[index]
                   .userId);
+          var commentTime = widget.items
+              .where((e) => e.workerId == widget.workerId)
+              .toList()[index]
+              .createdAt;
           return Padding(
               padding: const EdgeInsets.all(6),
               child: ListTile(
@@ -49,7 +54,7 @@ class _CommentsState extends State<Comments> {
                       BoxDecoration(borderRadius: BorderRadius.circular(10)),
                   child: CircleAvatar(
                       maxRadius: 20,
-                      backgroundImage: user.image != null
+                      backgroundImage: user.image != ''
                           ? user.image!.startsWith('/data')
                               ? FileImage(File(user.image as String))
                               : NetworkImage(user.image as String)
@@ -58,9 +63,12 @@ class _CommentsState extends State<Comments> {
                 ),
                 title: Text('${user.fname} ${user.lname}'),
                 subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        '${widget.items.where((e) => e.workerId == widget.workerId).toList()[index].createdAt}'),
+                      '${commentTime.hour}:${commentTime.minute}  ${commentTime.year}-${commentTime.month}-${commentTime.day}',
+                      style: const TextStyle(fontSize: 10),
+                    ),
                     Text(widget.items
                         .where((e) => e.workerId == widget.workerId)
                         .toList()[index]
@@ -68,18 +76,39 @@ class _CommentsState extends State<Comments> {
                   ],
                 ),
                 trailing: SizedBox(
-                  width: 50,
-                  child: Row(children: [
-                    const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                        '${widget.items.where((e) => e.workerId == widget.workerId).toList()[index].rate}')
-                  ]),
+                  width: 100,
+                  child: FittedBox(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 18,
+                          ),
+                          const SizedBox(
+                            width: 3,
+                          ),
+                          Text(
+                            '${widget.items.where((e) => e.workerId == widget.workerId).toList()[index].rate}',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  widget.items.remove(widget.items
+                                      .where(
+                                          (e) => e.workerId == widget.workerId)
+                                      .toList()[index]);
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 18,
+                              ))
+                        ]),
+                  ),
                 ),
               ));
         },
