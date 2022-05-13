@@ -24,6 +24,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _userImage;
   final _categories = DUMMY_CATEGORIES.map((e) => e.title).toList();
   final _passController = TextEditingController();
+  var _canEditPass = false;
+  String verifyPass = '';
   final _items = [
     'بورسعيد',
     'القاهرة',
@@ -58,14 +60,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     print('valid');
 
     // var userIndex = DUMMY_EMP.indexWhere((e) => e.id == newUsers.id);
-    // print(newUsers.role);
-    // print(newUsers.id);
-    // print(newUsers.image);
+    print(newUsers.role);
+    print(newUsers.id);
+    print(newUsers.image);
+    print(newUsers.location);
 
     setState(() {
       DUMMY_EMP[index] = newUsers;
     });
     print(newUsers.id);
+    print(newUsers.bDate);
+    print('loooooooooooooooooooooooooooooooooooo');
+    print(newUsers.password);
+    print(newUsers.email);
     print(DUMMY_EMP.indexWhere((e) => e.id == newUsers.id));
 
     Navigator.of(context)
@@ -92,6 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _userImage = image.path; //بفوروارد بالعكس
     setState(() {
       newUsers = Employee(
+          bDate: newUsers.bDate,
           categordId: newUsers.categordId,
           id: newUsers.id,
           fname: newUsers.fname,
@@ -103,7 +111,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           role: newUsers.role,
           address: newUsers.address,
           image: _userImage);
-      // print(newUsers.image);
+      print('imaaaaaaaaaaaaaaaaaaaaaaaaaaaaage');
+      print(newUsers.image);
     });
   }
 
@@ -115,7 +124,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Employee currentUser = arguments['currentUser'];
     bool editPass = arguments['editPass'];
+    int currentIndex = DUMMY_EMP.indexWhere((e) => e.id == currentUser.id);
+    print(currentUser.id);
+    print(currentUser.fname);
     print(DUMMY_EMP.indexWhere((e) => e.id == currentUser.id));
+    print(currentUser.password);
     // _pickedDate.text =
     //     '${currentUser.bDate!.day}/${currentUser.bDate!.month}/${currentUser.bDate!.year}';
     return Directionality(
@@ -134,7 +147,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        if (editPass)
+                        if (editPass && !_canEditPass)
+                          const Text(
+                            'ادخل الرقم السري لتتمكن من تغييره',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        if (editPass && !_canEditPass)
+                          const SizedBox(
+                            height: 14,
+                          ),
+                        if (editPass && !_canEditPass)
+                          TextFormField(
+                            key: const ValueKey('canEditPass'),
+                            obscureText: true,
+                            validator: (e) {
+                              if (e!.isEmpty) {
+                                return 'يرجي ادخال الرقم السري  ';
+                              } else {
+                                return null;
+                              }
+                            },
+                            onSaved: (e) {
+                              print(
+                                  'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+                              print(e);
+                              verifyPass = e!;
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.password,
+                                color: Colors.grey,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              labelText: 'الرقم السري',
+                              // labelStyle: TextStyle(color: Colors.white)
+                            ),
+                          ),
+                        if (editPass && _canEditPass)
                           TextFormField(
                             key: const ValueKey('email'),
                             initialValue: currentUser.email,
@@ -154,7 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 password: currentUser.password,
                                 phone: currentUser.phone,
                                 location: currentUser.location,
-                                address: newUsers.address,
+                                address: currentUser.address,
                                 role: currentUser.role,
                                 bDate: currentUser.bDate,
                                 categordId: currentUser.categordId),
@@ -173,11 +228,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                             // style: const TextStyle(color: Colors.white),
                           ),
-                        if (editPass)
+                        if (editPass && _canEditPass)
                           const SizedBox(
                             height: 35,
                           ),
-                        if (editPass)
+                        if (editPass && _canEditPass)
                           TextFormField(
                             key: const ValueKey('password'),
                             validator: (e) {
@@ -213,11 +268,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             controller: _passController,
                             obscureText: true,
                           ),
-                        if (editPass)
+                        if (editPass && _canEditPass)
                           const SizedBox(
                             height: 35,
                           ),
-                        if (editPass)
+                        if (editPass && _canEditPass)
                           TextFormField(
                             validator: (e) {
                               if (e != _passController.text) {
@@ -255,7 +310,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               }
                             },
                             onSaved: (e) => newUsers = Employee(
-                                image: currentUser.image,
+                                bDate: currentUser.bDate,
+                                image: newUsers.image != ''
+                                    ? newUsers.image
+                                    : currentUser.image,
                                 id: currentUser.id,
                                 fname: e ?? currentUser.fname,
                                 lname: currentUser.lname,
@@ -293,11 +351,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               }
                             },
                             onSaved: (e) => newUsers = Employee(
+                                bDate: newUsers.bDate,
                                 image: newUsers.image,
                                 categordId: newUsers.categordId,
                                 id: newUsers.id,
                                 fname: newUsers.fname,
-                                lname: e ?? currentUser.lname,
+                                lname: e ?? newUsers.lname,
                                 email: newUsers.email,
                                 password: newUsers.password,
                                 phone: newUsers.phone,
@@ -332,14 +391,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                             keyboardType: TextInputType.number,
                             onSaved: (e) => newUsers = Employee(
+                                bDate: newUsers.bDate,
                                 image: newUsers.image,
                                 categordId: newUsers.categordId,
                                 id: newUsers.id,
                                 fname: newUsers.fname,
                                 lname: newUsers.lname,
-                                phone: e == null
-                                    ? currentUser.phone
-                                    : int.parse(e),
+                                phone:
+                                    e == null ? newUsers.phone : int.parse(e),
                                 email: newUsers.email,
                                 password: newUsers.password,
                                 location: newUsers.location,
@@ -371,21 +430,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 return null;
                               }
                             },
-                            onSaved: (e) => newUsers = Employee(
-                                image: newUsers.image,
-                                categordId: newUsers.categordId,
-                                id: newUsers.id,
-                                fname: newUsers.fname,
-                                lname: newUsers.lname,
-                                email: newUsers.email,
-                                password: newUsers.password,
-                                phone: newUsers.phone,
-                                location: newUsers.location,
-                                address: newUsers.address,
-                                role: newUsers.role,
-                                bDate: e == ''
-                                    ? currentUser.bDate
-                                    : DateFormat.yMd().parse(e as String)),
+                            onSaved: (e) {
+                              print('HEREEEEEEEEEEEEEEEEEEEEEEEEEEEe');
+                              print(e);
+                              print(_pickedDate.text);
+                              print(newUsers.bDate);
+                              newUsers = Employee(
+                                  image: newUsers.image,
+                                  categordId: newUsers.categordId,
+                                  id: newUsers.id,
+                                  fname: newUsers.fname,
+                                  lname: newUsers.lname,
+                                  email: newUsers.email,
+                                  password: newUsers.password,
+                                  phone: newUsers.phone,
+                                  location: newUsers.location,
+                                  address: newUsers.address,
+                                  role: newUsers.role,
+                                  bDate: e == ''
+                                      ? newUsers.bDate
+                                      : DateFormat.yMd().parse(e!));
+                              print(
+                                  'BDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDdd');
+                              print(newUsers.bDate);
+                            },
                             onTap: () {
                               FocusScope.of(context).requestFocus(FocusNode());
                               _datePicker();
@@ -410,7 +478,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (!editPass)
                           DropdownButtonFormField(
                               validator: (e) {
-                                if (e == null) {
+                                if (e == null && currentUser.location == null) {
                                   return 'يجب اختيار المحافظة  ';
                                 } else {
                                   return null;
@@ -444,11 +512,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         value: e,
                                       ))
                                   .toList(),
+                              onSaved: (String? e) => newUsers = Employee(
+                                  bDate: newUsers.bDate,
+                                  image: newUsers.image,
+                                  categordId: newUsers.categordId,
+                                  id: newUsers.id,
+                                  fname: newUsers.fname,
+                                  lname: newUsers.lname,
+                                  email: newUsers.email,
+                                  password: newUsers.password,
+                                  phone: newUsers.phone,
+                                  location: e ?? currentUser.location,
+                                  address: newUsers.address,
+                                  role: newUsers.role),
                               onChanged: (newVal) {
+                                print(
+                                    'neeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeew');
+                                print(newVal);
                                 setState(() {
+                                  print('nowwwwwwwwwwwwwwwwwwwwwwwwwwwww');
                                   _dropdownVal = newVal as String?;
-                                  // print(_dropdownVal);
+                                  print(_dropdownVal);
                                   newUsers = Employee(
+                                      bDate: newUsers.bDate,
                                       image: newUsers.image,
                                       categordId: newUsers.categordId,
                                       id: newUsers.id,
@@ -460,6 +546,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       location: _dropdownVal as String,
                                       address: newUsers.address,
                                       role: newUsers.role);
+                                  print(newUsers.location);
                                 });
                               }),
                         if (!editPass)
@@ -478,6 +565,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               }
                             },
                             onSaved: (e) => newUsers = Employee(
+                                bDate: newUsers.bDate,
                                 image: newUsers.image,
                                 categordId: newUsers.categordId,
                                 id: newUsers.id,
@@ -546,10 +634,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           value: e,
                                         ))
                                     .toList(),
+                                onSaved: (String? e) => newUsers = Employee(
+                                    bDate: newUsers.bDate,
+                                    image: newUsers.image,
+                                    categordId: e ?? currentUser.categordId,
+                                    id: newUsers.id,
+                                    fname: newUsers.fname,
+                                    lname: newUsers.lname,
+                                    email: newUsers.email,
+                                    password: newUsers.password,
+                                    phone: newUsers.phone,
+                                    location: newUsers.location,
+                                    address: newUsers.address,
+                                    role: newUsers.role),
                                 onChanged: (newVal) {
                                   setState(() {
                                     _dropdownValCat = newVal as String?;
                                     newUsers = Employee(
+                                        bDate: newUsers.bDate,
                                         image: newUsers.image,
                                         categordId: _dropdownValCat,
                                         id: newUsers.id,
@@ -566,25 +668,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () => _submit(DUMMY_EMP
-                                .indexWhere((e) => e.id == currentUser.id)),
-                            child: const Text(
-                              'تم',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold),
+                        if (_canEditPass)
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () => _submit(currentIndex),
+                              child: const Text(
+                                'تم',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold),
+                              ),
+                              style: ButtonStyle(
+                                  elevation: MaterialStateProperty.all(0),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                  foregroundColor:
+                                      MaterialStateProperty.all(Colors.white)),
                             ),
-                            style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(0),
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.red),
-                                foregroundColor:
-                                    MaterialStateProperty.all(Colors.white)),
                           ),
-                        ),
+                        if (!_canEditPass)
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                print('paaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaass');
+                                print(verifyPass);
+                                final _valid =
+                                    _formKey.currentState!.validate();
+                                FocusScope.of(context).unfocus();
+                                if (!_valid) {
+                                  print('invalid');
+                                  return;
+                                }
+                                _formKey.currentState!.save();
+                                if (verifyPass == currentUser.password) {
+                                  setState(() {
+                                    _canEditPass = true;
+                                  });
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => Directionality(
+                                            textDirection: TextDirection.rtl,
+                                            child: AlertDialog(
+                                              title:
+                                                  const Text('رقم السر خاطئ'),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(),
+                                                    child: const Text('حسنا'))
+                                              ],
+                                            ),
+                                          ));
+                                }
+                              },
+                              child: const Text(
+                                'تم',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold),
+                              ),
+                              style: ButtonStyle(
+                                  elevation: MaterialStateProperty.all(0),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                  foregroundColor:
+                                      MaterialStateProperty.all(Colors.white)),
+                            ),
+                          ),
                         // ElevatedButton(
                         //   onPressed: _submit,
                         //   child: const Text(

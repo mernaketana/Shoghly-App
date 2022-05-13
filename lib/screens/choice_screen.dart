@@ -147,7 +147,7 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
                       onPressed: role == ''
                           ? () {}
                           : () {
-                              Navigator.of(context).pushNamed(
+                              Navigator.of(context).pushReplacementNamed(
                                   DetailedAuthScreen.routeName,
                                   arguments: {
                                     'role': role,

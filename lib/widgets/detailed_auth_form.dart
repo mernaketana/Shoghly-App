@@ -46,6 +46,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   //     location: '',
   //     role: true);
   var newUsers = Employee(
+      bDate: null,
       image: '',
       categordId: '',
       id: '',
@@ -99,6 +100,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
     _userImage = image.path; //بفوروارد بالعكس
     setState(() {
       newUsers = Employee(
+          bDate: newUsers.bDate,
           categordId: newUsers.categordId,
           id: newUsers.id,
           fname: newUsers.fname,
@@ -138,6 +140,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                         }
                       },
                       onSaved: (e) => newUsers = Employee(
+                          bDate: newUsers.bDate,
                           image: newUsers.image,
                           id: DateTime.now().toString(),
                           fname: e as String,
@@ -175,6 +178,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                         }
                       },
                       onSaved: (e) => newUsers = Employee(
+                          bDate: newUsers.bDate,
                           image: newUsers.image,
                           categordId: newUsers.categordId,
                           id: newUsers.id,
@@ -213,6 +217,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                       },
                       keyboardType: TextInputType.number,
                       onSaved: (e) => newUsers = Employee(
+                          bDate: newUsers.bDate,
                           image: newUsers.image,
                           categordId: newUsers.categordId,
                           id: newUsers.id,
@@ -323,10 +328,24 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                                   value: e,
                                 ))
                             .toList(),
+                        onSaved: (String? e) => newUsers = Employee(
+                            bDate: newUsers.bDate,
+                            image: newUsers.image,
+                            categordId: newUsers.categordId,
+                            id: newUsers.id,
+                            fname: newUsers.fname,
+                            lname: newUsers.lname,
+                            email: newUsers.email,
+                            password: newUsers.password,
+                            phone: newUsers.phone,
+                            location: e as String,
+                            address: newUsers.address,
+                            role: newUsers.role),
                         onChanged: (newVal) {
                           setState(() {
                             _dropdownVal = newVal as String?;
                             newUsers = Employee(
+                                bDate: newUsers.bDate,
                                 image: newUsers.image,
                                 categordId: newUsers.categordId,
                                 id: newUsers.id,
@@ -353,6 +372,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                         }
                       },
                       onSaved: (e) => newUsers = Employee(
+                          bDate: newUsers.bDate,
                           image: newUsers.image,
                           categordId: newUsers.categordId,
                           id: newUsers.id,
@@ -420,10 +440,24 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                                     value: e,
                                   ))
                               .toList(),
+                          onSaved: (String? e) => newUsers = Employee(
+                              bDate: newUsers.bDate,
+                              image: newUsers.image,
+                              categordId: e as String,
+                              id: newUsers.id,
+                              fname: newUsers.fname,
+                              lname: newUsers.lname,
+                              email: newUsers.email,
+                              password: newUsers.password,
+                              phone: newUsers.phone,
+                              location: newUsers.location,
+                              address: newUsers.address,
+                              role: newUsers.role),
                           onChanged: (newVal) {
                             setState(() {
                               _dropdownValCat = newVal as String?;
                               newUsers = Employee(
+                                  bDate: newUsers.bDate,
                                   image: newUsers.image,
                                   categordId: _dropdownValCat,
                                   id: newUsers.id,

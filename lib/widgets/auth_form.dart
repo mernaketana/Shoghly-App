@@ -25,7 +25,7 @@ class _AuthFormState extends State<AuthForm> {
     }
     _formKey.currentState!.save();
     if (!_isLogin) {
-      Navigator.of(context).pushNamed(ChoicesScreen.routeName,
+      Navigator.of(context).pushReplacementNamed(ChoicesScreen.routeName,
           arguments: {'userEmail': _userEmail, 'userPass': _userPass});
     } else {
       if (DUMMY_EMP.any((element) =>
