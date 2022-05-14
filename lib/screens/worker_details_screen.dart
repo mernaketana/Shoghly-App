@@ -19,13 +19,23 @@ class WorkerDetailsScreen extends StatefulWidget {
 }
 
 class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
-  // int rate(List<Comment> rates) {
-  //   double sum = 0;
-  //   for (var i = 0; i < rates.length; i++) {
-  //     sum += (rates[i].rate!) / (rates.length - 1);
-  //   }
-  //   return sum.round();
-  // }
+  var starList = <Widget>[];
+  int rate(List<Comment> rates) {
+    double sum = 0;
+    for (var i = 0; i < rates.length; i++) {
+      sum += (rates[i].rate!);
+    }
+    double avg = 0;
+    if (rates.length != 0) {
+      avg = sum / rates.length;
+    } else {
+      avg = 0;
+    }
+    // print(avg.round());
+
+    // print(avg.round());
+    return avg.round();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +44,26 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
     final id = arguments['workerId'];
     final currentUser = arguments['currentUser'] as Employee;
     final user = DUMMY_EMP.firstWhere((e) => e.id == id);
+    starList.clear();
+    for (var i = 0;
+        i <
+            rate(DUMMY_COMMENTS
+                .where((element) => element.workerId == id)
+                .toList());
+        i++) {
+      print(i);
+      starList.add(
+        const Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: 20,
+        ),
+      );
+      // print(starList.length);
+    }
+
+    print(starList.length);
+
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
@@ -112,7 +142,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                             bottomLeft: Radius.circular(5),
                             bottomRight: Radius.circular(5))),
                     padding: const EdgeInsets.all(10),
-                    child: Column(
+                    child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -124,11 +154,74 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                 color: Colors.white, fontSize: 20),
                             textAlign: TextAlign.right,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(user.location),
-                          )
+                          SizedBox(
+                            width: 150,
+                            height: 30,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: DUMMY_COMMENTS
+                                          .where((element) =>
+                                              element.workerId == id)
+                                          .toList() !=
+                                      []
+                                  ? starList
+                                  : [],
+                            ),
+                          ),
                         ]),
+                  ),
+                  Card(
+                    elevation: 4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 11, vertical: 9),
+                          child: Text(
+                            'المعلومات',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 22, bottom: 14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                user.categordId as String,
+                              ),
+                              Text(
+                                user.location,
+                              ),
+                              Text(
+                                user.address,
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.phone,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    user.phone.toString(),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Card(
                     elevation: 4,
