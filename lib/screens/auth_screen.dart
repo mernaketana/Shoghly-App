@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../widgets/auth_form.dart';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
-}
-
-class _AuthScreenState extends State<AuthScreen> {
-  @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -30,7 +26,11 @@ class _AuthScreenState extends State<AuthScreen> {
               left: 2,
               child: Image.asset('assets/images/auth.gif'),
             ),
-            const Positioned(top: 290, right: 2, left: 2, child: AuthForm())
+            Positioned(
+                top: deviceSize.height / 3.002,
+                right: deviceSize.width / 200,
+                left: deviceSize.width / 200,
+                child: const AuthForm())
           ]),
         ),
       ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/widgets/user_image_picker.dart';
+import 'package:provider/provider.dart';
+import '../providers/Auth.dart';
 import '../screens/categories_screen.dart';
 import '../dummy_data.dart';
 
@@ -45,78 +47,150 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   //     phone: 0,
   //     location: '',
   //     role: true);
-  var newUsers = Employee(
-      bDate: null,
-      image: '',
-      categordId: '',
-      id: '',
-      fname: '',
-      lname: '',
-      email: '',
-      password: '',
-      phone: 0,
-      location: '',
-      address: '',
-      role: '');
 
-  void _submit() {
+  Map<String, String> _authData = {
+    'firstName': '',
+    'lastName': '',
+    'email': '',
+    'password': '',
+    'gender': '',
+    'role': '',
+    'profession': '',
+    'phone': '',
+    'country': '',
+    'city': '',
+    'line': ''
+  };
+  var _isLoading = false;
+
+  // var newUsers = Employee(
+  //     bDate: null,
+  //     image: '',
+  //     categordId: '',
+  //     id: '',
+  //     fname: '',
+  //     lname: '',
+  //     email: '',
+  //     password: '',
+  //     phone: 0,
+  //     location: '',
+  //     address: '',
+  //     role: '');
+
+  void _errorMessage(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: const Text('An error occured'),
+              content: Text(message),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    child: const Text('Ok'))
+              ],
+            ));
+  }
+
+  Future<void> _submit() async {
     final _valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (!_valid) {
       return;
     }
     _formKey.currentState!.save();
-    DUMMY_EMP.add(newUsers);
-    // print(newUsers.bDate);
-    // print(newUsers.bDate);
-    // print(newUsers.categordId);
-    // print(newUsers.email);
-    // print(newUsers.id);
-    // print(newUsers.role);
-    // print(newUsers.location);
-    // print(newUsers.name);
-
-    Navigator.of(context)
-        .pushReplacementNamed(CategoriesScreen.routeName, arguments: newUsers);
-  }
-
-  Future _datePicker() async {
-    await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    ).then((date) {
-      if (date == null) {
-        return;
-      }
-      setState(() {
-        _pickedDate.text = DateFormat.yMd().format(date);
-      });
-    });
-  }
-
-  void _pickedImage(File image) {
-    _userImage = image.path; //بفوروارد بالعكس
     setState(() {
-      newUsers = Employee(
-          bDate: newUsers.bDate,
-          categordId: newUsers.categordId,
-          id: newUsers.id,
-          fname: newUsers.fname,
-          lname: newUsers.lname,
-          email: newUsers.email,
-          password: newUsers.password,
-          phone: newUsers.phone,
-          location: newUsers.location,
-          address: newUsers.address,
-          role: newUsers.role,
-          image: _userImage);
+      _isLoading = true;
     });
+    print(_authData['firstName']);
+    print(_authData['lastName']);
+    print(_authData['gender']);
+    print(_authData['role']);
+    print(_authData['profession']);
+    print(_authData['phone']);
+    print(_authData['city']);
+    print(_authData['line']);
+    print(_authData['email']);
+    print(_authData['password']);
+
+    try {
+      await Provider.of<Auth>(context, listen: false).signup(
+          _authData['firstName'] as String,
+          _authData['lastName'] as String,
+          _authData['gender'] as String,
+          _authData['role'] as String,
+          _authData['profession'] as String,
+          _authData['phone'] as String,
+          _authData['city'] as String,
+          _authData['line'] as String,
+          _authData['email'] as String,
+          _authData['password'] as String);
+    } on HttpException catch (error) {
+      var errorMessage = 'Authentication failed.';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email address already exists';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'Invalid email address.';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Password is too weak.';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Could not find a user with that email.';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Invalid password.';
+      }
+      _errorMessage(errorMessage);
+    } catch (error) {
+      var errorMessage = 'Authentication failed. Please try again later.';
+      _errorMessage(errorMessage);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+
+    // DUMMY_EMP.add(newUsers);
+    // Navigator.of(context)
+    //     .pushReplacementNamed(CategoriesScreen.routeName, arguments: newUsers);
   }
+
+  // Future _datePicker() async {
+  //   await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(1900),
+  //     lastDate: DateTime.now(),
+  //   ).then((date) {
+  //     if (date == null) {
+  //       return;
+  //     }
+  //     setState(() {
+  //       _pickedDate.text = DateFormat.yMd().format(date);
+  //     });
+  //   });
+  // }
+
+  // void _pickedImage(File image) {
+  //   _userImage = image.path; //بفوروارد بالعكس
+  //   setState(() {
+  //     newUsers = Employee(
+  //         bDate: newUsers.bDate,
+  //         categordId: newUsers.categordId,
+  //         id: newUsers.id,
+  //         fname: newUsers.fname,
+  //         lname: newUsers.lname,
+  //         email: newUsers.email,
+  //         password: newUsers.password,
+  //         phone: newUsers.phone,
+  //         location: newUsers.location,
+  //         address: newUsers.address,
+  //         role: newUsers.role,
+  //         image: _userImage);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    _authData['email'] = widget.userEmail;
+    _authData['password'] = widget.userPass;
+    _authData['role'] = widget.role;
     return Center(
         child: Padding(
             padding: const EdgeInsets.all(40),
@@ -126,7 +200,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    UserImagePicker(imagePick: _pickedImage),
+                    // UserImagePicker(imagePick: _pickedImage),
                     const SizedBox(
                       height: 8,
                     ),
@@ -139,19 +213,21 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           return null;
                         }
                       },
-                      onSaved: (e) => newUsers = Employee(
-                          bDate: newUsers.bDate,
-                          image: newUsers.image,
-                          id: DateTime.now().toString(),
-                          fname: e as String,
-                          lname: newUsers.lname,
-                          email: widget.userEmail,
-                          password: widget.userPass,
-                          phone: newUsers.phone,
-                          location: newUsers.location,
-                          categordId: newUsers.categordId,
-                          address: newUsers.address,
-                          role: widget.role),
+                      onSaved: (e) => _authData['firstName'] = e as String,
+
+                      // newUsers = Employee(
+                      //     bDate: newUsers.bDate,
+                      //     image: newUsers.image,
+                      //     id: DateTime.now().toString(),
+                      //     fname: e as String,
+                      //     lname: newUsers.lname,
+                      //     email: widget.userEmail,
+                      //     password: widget.userPass,
+                      //     phone: newUsers.phone,
+                      //     location: newUsers.location,
+                      //     categordId: newUsers.categordId,
+                      //     address: newUsers.address,
+                      //     role: widget.role),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
                           Icons.person_outline,
@@ -177,19 +253,20 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           return null;
                         }
                       },
-                      onSaved: (e) => newUsers = Employee(
-                          bDate: newUsers.bDate,
-                          image: newUsers.image,
-                          categordId: newUsers.categordId,
-                          id: newUsers.id,
-                          fname: newUsers.fname,
-                          lname: e as String,
-                          email: newUsers.email,
-                          address: newUsers.address,
-                          password: newUsers.password,
-                          phone: newUsers.phone,
-                          location: newUsers.location,
-                          role: newUsers.role),
+                      onSaved: (e) => _authData['lastName'] = e as String,
+                      // newUsers = Employee(
+                      //     bDate: newUsers.bDate,
+                      //     image: newUsers.image,
+                      //     categordId: newUsers.categordId,
+                      //     id: newUsers.id,
+                      //     fname: newUsers.fname,
+                      //     lname: e as String,
+                      //     email: newUsers.email,
+                      //     address: newUsers.address,
+                      //     password: newUsers.password,
+                      //     phone: newUsers.phone,
+                      //     location: newUsers.location,
+                      //     role: newUsers.role),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
                           Icons.person_outline,
@@ -216,19 +293,20 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                         }
                       },
                       keyboardType: TextInputType.number,
-                      onSaved: (e) => newUsers = Employee(
-                          bDate: newUsers.bDate,
-                          image: newUsers.image,
-                          categordId: newUsers.categordId,
-                          id: newUsers.id,
-                          fname: newUsers.fname,
-                          lname: newUsers.lname,
-                          phone: int.parse(e as String),
-                          email: newUsers.email,
-                          password: newUsers.password,
-                          location: newUsers.location,
-                          address: newUsers.address,
-                          role: newUsers.role),
+                      onSaved: (e) => _authData['phone'] = e as String,
+                      // newUsers = Employee(
+                      //     bDate: newUsers.bDate,
+                      //     image: newUsers.image,
+                      //     categordId: newUsers.categordId,
+                      //     id: newUsers.id,
+                      //     fname: newUsers.fname,
+                      //     lname: newUsers.lname,
+                      //     phone: int.parse(e as String),
+                      //     email: newUsers.email,
+                      //     password: newUsers.password,
+                      //     location: newUsers.location,
+                      //     address: newUsers.address,
+                      //     role: newUsers.role),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
                           Icons.phone_outlined,
@@ -260,46 +338,123 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                     //       labelStyle: TextStyle(color: Colors.white)),
                     //   style: const TextStyle(color: Colors.white),
                     // ),
-                    TextFormField(
-                      key: const ValueKey('bdate'),
-                      validator: (e) {
-                        if (e!.isEmpty) {
-                          return 'يجب ادخال تاريخ الميلاد';
-                        } else {
-                          return null;
-                        }
-                      },
-                      onSaved: (e) => newUsers = Employee(
-                          image: newUsers.image,
-                          categordId: newUsers.categordId,
-                          id: newUsers.id,
-                          fname: newUsers.fname,
-                          lname: newUsers.lname,
-                          email: newUsers.email,
-                          password: newUsers.password,
-                          phone: newUsers.phone,
-                          location: newUsers.location,
-                          address: newUsers.address,
-                          role: newUsers.role,
-                          bDate: DateFormat.yMd().parse(e as String)),
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        _datePicker();
-                      },
-                      controller: _pickedDate,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.date_range_outlined,
-                          color: Colors.grey,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        labelText: 'تاريخ الميلاد',
-                        // labelStyle: TextStyle(color: Colors.white)
-                      ),
-                      // style: const TextStyle(color: Colors.white),
-                    ),
+                    // BIRTHDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY
+                    // TextFormField(
+                    //   key: const ValueKey('bdate'),
+                    //   validator: (e) {
+                    //     if (e!.isEmpty) {
+                    //       return 'يجب ادخال تاريخ الميلاد';
+                    //     } else {
+                    //       return null;
+                    //     }
+                    //   },
+                    //   onSaved: (e) =>
+                    //   newUsers = Employee(
+                    //       image: newUsers.image,
+                    //       categordId: newUsers.categordId,
+                    //       id: newUsers.id,
+                    //       fname: newUsers.fname,
+                    //       lname: newUsers.lname,
+                    //       email: newUsers.email,
+                    //       password: newUsers.password,
+                    //       phone: newUsers.phone,
+                    //       location: newUsers.location,
+                    //       address: newUsers.address,
+                    //       role: newUsers.role,
+                    //       bDate: DateFormat.yMd().parse(e as String)),
+                    //   onTap: () {
+                    //     FocusScope.of(context).requestFocus(FocusNode());
+                    //     _datePicker();
+                    //   },
+                    //   controller: _pickedDate,
+                    //   decoration: InputDecoration(
+                    //     prefixIcon: const Icon(
+                    //       Icons.date_range_outlined,
+                    //       color: Colors.grey,
+                    //     ),
+                    //     border: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(10.0),
+                    //     ),
+                    //     labelText: 'تاريخ الميلاد',
+                    //     // labelStyle: TextStyle(color: Colors.white)
+                    //   ),
+                    //   // style: const TextStyle(color: Colors.white),
+                    // ),
+                    DropdownButtonFormField(
+                        validator: (e) {
+                          if (e == null) {
+                            return 'يجب اختيار الجنس  ';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                            prefixIcon: const Icon(
+                              Icons.person_outlined,
+                              color: Colors.grey,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            labelText: 'الجنس'
+                            // style: const TextStyle(color: Colors.white)
+
+                            // labelStyle: TextStyle(color: Colors.white)
+                            ),
+                        isExpanded: true,
+                        iconEnabledColor: Colors.white,
+                        // hint: _dropdownValCat == null
+                        //     ? const Text(
+                        //         'مجال العمل',
+                        //         // style: TextStyle(color: Colors.white),
+                        //       )
+                        //     : Text(
+                        //         _dropdownValCat as String,
+                        //         // style: const TextStyle(color: Colors.white)
+                        //       ),
+                        items: const [
+                          DropdownMenuItem(
+                            child: Text('انثى'),
+                            value: 'انثى',
+                          ),
+                          DropdownMenuItem(
+                            child: Text('رجل'),
+                            value: 'رجل',
+                          )
+                        ],
+                        onSaved: (String? e) =>
+                            _authData['gender'] = e as String,
+                        // newUsers = Employee(
+                        //     bDate: newUsers.bDate,
+                        //     image: newUsers.image,
+                        //     categordId: e as String,
+                        //     id: newUsers.id,
+                        //     fname: newUsers.fname,
+                        //     lname: newUsers.lname,
+                        //     email: newUsers.email,
+                        //     password: newUsers.password,
+                        //     phone: newUsers.phone,
+                        //     location: newUsers.location,
+                        //     address: newUsers.address,
+                        //     role: newUsers.role),
+                        onChanged: (newVal) {
+                          // setState(() {
+                          _dropdownValCat = newVal as String?;
+                          //   newUsers = Employee(
+                          //       bDate: newUsers.bDate,
+                          //       image: newUsers.image,
+                          //       categordId: _dropdownValCat,
+                          //       id: newUsers.id,
+                          //       fname: newUsers.fname,
+                          //       lname: newUsers.lname,
+                          //       email: newUsers.email,
+                          //       password: newUsers.password,
+                          //       phone: newUsers.phone,
+                          //       location: newUsers.location,
+                          //       address: newUsers.address,
+                          //       role: newUsers.role);
+                          // });
+                        }),
                     const SizedBox(
                       height: 14,
                     ),
@@ -328,36 +483,37 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                                   value: e,
                                 ))
                             .toList(),
-                        onSaved: (String? e) => newUsers = Employee(
-                            bDate: newUsers.bDate,
-                            image: newUsers.image,
-                            categordId: newUsers.categordId,
-                            id: newUsers.id,
-                            fname: newUsers.fname,
-                            lname: newUsers.lname,
-                            email: newUsers.email,
-                            password: newUsers.password,
-                            phone: newUsers.phone,
-                            location: e as String,
-                            address: newUsers.address,
-                            role: newUsers.role),
+                        onSaved: (String? e) => _authData['city'] = e as String,
+                        // newUsers = Employee(
+                        //     bDate: newUsers.bDate,
+                        //     image: newUsers.image,
+                        //     categordId: newUsers.categordId,
+                        //     id: newUsers.id,
+                        //     fname: newUsers.fname,
+                        //     lname: newUsers.lname,
+                        //     email: newUsers.email,
+                        //     password: newUsers.password,
+                        //     phone: newUsers.phone,
+                        //     location: e as String,
+                        //     address: newUsers.address,
+                        //     role: newUsers.role),
                         onChanged: (newVal) {
-                          setState(() {
-                            _dropdownVal = newVal as String?;
-                            newUsers = Employee(
-                                bDate: newUsers.bDate,
-                                image: newUsers.image,
-                                categordId: newUsers.categordId,
-                                id: newUsers.id,
-                                fname: newUsers.fname,
-                                lname: newUsers.lname,
-                                email: newUsers.email,
-                                password: newUsers.password,
-                                phone: newUsers.phone,
-                                location: _dropdownVal as String,
-                                address: newUsers.address,
-                                role: newUsers.role);
-                          });
+                          // setState(() {
+                          _dropdownVal = newVal as String?;
+                          // newUsers = Employee(
+                          //     bDate: newUsers.bDate,
+                          //     image: newUsers.image,
+                          //     categordId: newUsers.categordId,
+                          //     id: newUsers.id,
+                          //     fname: newUsers.fname,
+                          //     lname: newUsers.lname,
+                          //     email: newUsers.email,
+                          //     password: newUsers.password,
+                          //     phone: newUsers.phone,
+                          //     location: _dropdownVal as String,
+                          //     address: newUsers.address,
+                          //     role: newUsers.role);
+                          // });
                         }),
                     const SizedBox(
                       height: 14,
@@ -371,19 +527,20 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           return null;
                         }
                       },
-                      onSaved: (e) => newUsers = Employee(
-                          bDate: newUsers.bDate,
-                          image: newUsers.image,
-                          categordId: newUsers.categordId,
-                          id: newUsers.id,
-                          fname: newUsers.fname,
-                          lname: newUsers.lname,
-                          phone: newUsers.phone,
-                          email: newUsers.email,
-                          password: newUsers.password,
-                          location: newUsers.location,
-                          address: e as String,
-                          role: newUsers.role),
+                      onSaved: (e) => _authData['line'] = e as String,
+                      // newUsers = Employee(
+                      //     bDate: newUsers.bDate,
+                      //     image: newUsers.image,
+                      //     categordId: newUsers.categordId,
+                      //     id: newUsers.id,
+                      //     fname: newUsers.fname,
+                      //     lname: newUsers.lname,
+                      //     phone: newUsers.phone,
+                      //     email: newUsers.email,
+                      //     password: newUsers.password,
+                      //     location: newUsers.location,
+                      //     address: e as String,
+                      //     role: newUsers.role),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
                           Icons.home,
@@ -440,36 +597,38 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                                     value: e,
                                   ))
                               .toList(),
-                          onSaved: (String? e) => newUsers = Employee(
-                              bDate: newUsers.bDate,
-                              image: newUsers.image,
-                              categordId: e as String,
-                              id: newUsers.id,
-                              fname: newUsers.fname,
-                              lname: newUsers.lname,
-                              email: newUsers.email,
-                              password: newUsers.password,
-                              phone: newUsers.phone,
-                              location: newUsers.location,
-                              address: newUsers.address,
-                              role: newUsers.role),
+                          onSaved: (String? e) =>
+                              _authData['profession'] = e as String,
+                          // newUsers = Employee(
+                          //     bDate: newUsers.bDate,
+                          //     image: newUsers.image,
+                          //     categordId: e as String,
+                          //     id: newUsers.id,
+                          //     fname: newUsers.fname,
+                          //     lname: newUsers.lname,
+                          //     email: newUsers.email,
+                          //     password: newUsers.password,
+                          //     phone: newUsers.phone,
+                          //     location: newUsers.location,
+                          //     address: newUsers.address,
+                          //     role: newUsers.role),
                           onChanged: (newVal) {
-                            setState(() {
-                              _dropdownValCat = newVal as String?;
-                              newUsers = Employee(
-                                  bDate: newUsers.bDate,
-                                  image: newUsers.image,
-                                  categordId: _dropdownValCat,
-                                  id: newUsers.id,
-                                  fname: newUsers.fname,
-                                  lname: newUsers.lname,
-                                  email: newUsers.email,
-                                  password: newUsers.password,
-                                  phone: newUsers.phone,
-                                  location: newUsers.location,
-                                  address: newUsers.address,
-                                  role: newUsers.role);
-                            });
+                            // setState(() {
+                            _dropdownValCat = newVal as String?;
+                            //   newUsers = Employee(
+                            //       bDate: newUsers.bDate,
+                            //       image: newUsers.image,
+                            //       categordId: _dropdownValCat,
+                            //       id: newUsers.id,
+                            //       fname: newUsers.fname,
+                            //       lname: newUsers.lname,
+                            //       email: newUsers.email,
+                            //       password: newUsers.password,
+                            //       phone: newUsers.phone,
+                            //       location: newUsers.location,
+                            //       address: newUsers.address,
+                            //       role: newUsers.role);
+                            // });
                           }),
                     const SizedBox(
                       height: 20,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../helpers/http_exception.dart';
+import '../providers/Auth.dart';
 import '../screens/categories_screen.dart';
 import '../screens/choice_screen.dart';
 import '../dummy_data.dart';
@@ -16,69 +19,153 @@ class _AuthFormState extends State<AuthForm> {
   final _passController = TextEditingController();
   String _userEmail = '';
   String _userPass = '';
+  var _isLoading = false;
 
-  void _submit(BuildContext context) {
+  void _errorMessage(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: const Text('An error occured'),
+              content: Text(message),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    child: const Text('Ok'))
+              ],
+            ));
+  }
+
+  // Future<void> _submit() async {
+  //   if (!_formKey.currentState!.validate()) {
+  //     //Invalid
+  //     return;
+  //   }
+  //   _formKey.currentState!.save();
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   try {
+  //     if (_authMode == AuthMode.login) {
+  //       await Provider.of<Auth>(context, listen: false).logIn(
+  //           _authData['email'] as String, _authData['password'] as String);
+  //     } else {
+  //       await Provider.of<Auth>(context, listen: false).signUp(
+  //           _authData['email'] as String, _authData['password'] as String);
+  //     }
+  //   } on HttpException catch (error) {
+  //     var errorMessage = 'Authentication failed.';
+  //     if (error.toString().contains('EMAIL_EXISTS')) {
+  //       errorMessage = 'This email address already exists';
+  //     } else if (error.toString().contains('INVALID_EMAIL')) {
+  //       errorMessage = 'Invalid email address.';
+  //     } else if (error.toString().contains('WEAK_PASSWORD')) {
+  //       errorMessage = 'Password is too weak.';
+  //     } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+  //       errorMessage = 'Could not find a user with that email.';
+  //     } else if (error.toString().contains('INVALID_PASSWORD')) {
+  //       errorMessage = 'Invalid password.';
+  //     }
+  //     _errorMessage(errorMessage);
+  //   } catch (error) {
+  //     var errorMessage = 'Authentication failed. Please try again later.';
+  //     _errorMessage(errorMessage);
+  //   }
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  // }
+
+  Future<void> _submit(BuildContext context) async {
     final _valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (!_valid) {
       return;
     }
     _formKey.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
     if (!_isLogin) {
-      Navigator.of(context).pushReplacementNamed(ChoicesScreen.routeName,
+      Navigator.of(context).pushNamed(ChoicesScreen.routeName,
           arguments: {'userEmail': _userEmail, 'userPass': _userPass});
     } else {
-      if (DUMMY_EMP.any((element) =>
-          element.email == _userEmail && element.password == _userPass)) {
-        final currentUser = DUMMY_EMP.firstWhere((element) =>
-            element.email == _userEmail && element.password == _userPass);
-        // print(currentUser);
-
-        Navigator.of(context).pushReplacementNamed(CategoriesScreen.routeName,
-            arguments: currentUser);
-      } else if (!DUMMY_EMP.any((element) => element.email == _userEmail)) {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: const Text(
-                  'لا يوجد مستعمل بهذا البريد',
-                  textAlign: TextAlign.right,
-                ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _isLogin = false;
-                        });
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('سجل الان'))
-                ],
-              );
-            });
-      } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: const Text(
-                  'يوجد خطأ في البريد الالكتروني او الرقم السري',
-                  textAlign: TextAlign.right,
-                ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('حسنا'))
-                ],
-              );
-            });
+      try {
+        await Provider.of<Auth>(context, listen: false)
+            .signin(_userEmail, _userPass);
+      } on HttpException catch (error) {
+        var errorMessage = 'Authentication failed.';
+        if (error.toString().contains('EMAIL_EXISTS')) {
+          errorMessage = 'This email address already exists';
+        } else if (error.toString().contains('INVALID_EMAIL')) {
+          errorMessage = 'Invalid email address.';
+        } else if (error.toString().contains('WEAK_PASSWORD')) {
+          errorMessage = 'Password is too weak.';
+        } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+          errorMessage = 'Could not find a user with that email.';
+        } else if (error.toString().contains('INVALID_PASSWORD')) {
+          errorMessage = 'Invalid password.';
+        }
+        _errorMessage(errorMessage);
+      } catch (error) {
+        var errorMessage = 'Authentication failed. Please try again later.';
+        _errorMessage(errorMessage);
       }
+      setState(() {
+        _isLoading = false;
+      });
+
+      // if (DUMMY_EMP.any((element) =>
+      //     element.email == _userEmail && element.password == _userPass)) {
+      //   final currentUser = DUMMY_EMP.firstWhere((element) =>
+      //       element.email == _userEmail && element.password == _userPass);
+      //   // print(currentUser);
+
+      //   Navigator.of(context).pushReplacementNamed(CategoriesScreen.routeName,
+      //       arguments: currentUser);
+      // } else if (!DUMMY_EMP.any((element) => element.email == _userEmail)) {
+      //   showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           content: const Text(
+      //             'لا يوجد مستعمل بهذا البريد',
+      //             textAlign: TextAlign.right,
+      //           ),
+      //           actions: [
+      //             TextButton(
+      //                 onPressed: () {
+      //                   setState(() {
+      //                     _isLogin = false;
+      //                   });
+      //                   Navigator.of(context).pop();
+      //                 },
+      //                 child: const Text('سجل الان'))
+      //           ],
+      //         );
+      //       });
+      // } else {
+      //   showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           content: const Text(
+      //             'يوجد خطأ في البريد الالكتروني او الرقم السري',
+      //             textAlign: TextAlign.right,
+      //           ),
+      //           actions: [
+      //             TextButton(
+      //                 onPressed: () {
+      //                   Navigator.of(context).pop();
+      //                 },
+      //                 child: const Text('حسنا'))
+      //           ],
+      //         );
+      //       });
+      // }
     }
   }
 
+// log in isn't working
   @override
   Widget build(BuildContext context) {
     return Center(
