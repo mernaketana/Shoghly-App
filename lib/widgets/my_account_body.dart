@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/models/employee.dart';
-import 'package:project/screens/detailed_image_screen.dart';
+// import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/settings_screen.dart';
 import 'dart:math';
@@ -48,7 +48,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.currentUser.bDate);
+    // print(widget.currentUser.bDate);
     // print(widget.currentUser.image);
     // print(DUMMY_IMAGES.firstWhere((e) => e.userId == widget.currentUser.id).url
     //     as List<String>);
@@ -56,32 +56,32 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          width: 380,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          child: widget.currentUser.image != ''
-              ? InkWell(
-                  onTap: () => Navigator.of(context).pushNamed(
-                      DetailedImageScreen.routeName,
-                      arguments: widget.currentUser.image),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: widget.currentUser.image!.startsWith('/data')
-                          ? Image.file(
-                              File(
-                                widget.currentUser.image as String,
-                              ),
-                              height: 200,
-                              width: 200,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              widget.currentUser.image as String,
-                              fit: BoxFit.cover,
-                            )),
-                )
-              : Image.asset('assets/images/placeholder.png'),
-        ),
+        // Container(
+        //   width: 380,
+        //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        //   child: widget.currentUser.image != ''
+        //       ? InkWell(
+        //           onTap: () => Navigator.of(context).pushNamed(
+        //               DetailedImageScreen.routeName,
+        //               arguments: widget.currentUser.image),
+        //           child: ClipRRect(
+        //               borderRadius: BorderRadius.circular(10),
+        //               child: widget.currentUser.image!.startsWith('/data')
+        //                   ? Image.file(
+        //                       File(
+        //                         widget.currentUser.image as String,
+        //                       ),
+        //                       height: 200,
+        //                       width: 200,
+        //                       fit: BoxFit.cover,
+        //                     )
+        //                   : Image.network(
+        //                       widget.currentUser.image as String,
+        //                       fit: BoxFit.cover,
+        //                     )),
+        //         )
+        //       : Image.asset('assets/images/placeholder.png'),
+        // ),
         // CircleAvatar(
         //   backgroundImage: widget.currentUser.image != null
         //       ? NetworkImage(widget.currentUser.image as String)

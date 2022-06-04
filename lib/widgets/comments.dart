@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart' hide TextDirection;
+// import 'package:intl/intl.dart' hide TextDirection;
 import 'package:project/models/comment.dart';
 import '../dummy_data.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../helpers/http_exception.dart';
-import '../providers/Auth.dart';
-import '../screens/categories_screen.dart';
+import '../providers/auth.dart';
+// import '../screens/categories_screen.dart';
 import '../screens/choice_screen.dart';
-import '../dummy_data.dart';
+// import '../dummy_data.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({Key? key}) : super(key: key);
@@ -25,59 +25,19 @@ class _AuthFormState extends State<AuthForm> {
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: const Text('An error occured'),
+              title: const Text('حدث خطأ ما'),
               content: Text(message),
               actions: <Widget>[
                 TextButton(
                     onPressed: () => Navigator.of(ctx).pop(),
-                    child: const Text('Ok'))
+                    child: const Text('حسنا'))
               ],
             ));
   }
 
-  // Future<void> _submit() async {
-  //   if (!_formKey.currentState!.validate()) {
-  //     //Invalid
-  //     return;
-  //   }
-  //   _formKey.currentState!.save();
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   try {
-  //     if (_authMode == AuthMode.login) {
-  //       await Provider.of<Auth>(context, listen: false).logIn(
-  //           _authData['email'] as String, _authData['password'] as String);
-  //     } else {
-  //       await Provider.of<Auth>(context, listen: false).signUp(
-  //           _authData['email'] as String, _authData['password'] as String);
-  //     }
-  //   } on HttpException catch (error) {
-  //     var errorMessage = 'Authentication failed.';
-  //     if (error.toString().contains('EMAIL_EXISTS')) {
-  //       errorMessage = 'This email address already exists';
-  //     } else if (error.toString().contains('INVALID_EMAIL')) {
-  //       errorMessage = 'Invalid email address.';
-  //     } else if (error.toString().contains('WEAK_PASSWORD')) {
-  //       errorMessage = 'Password is too weak.';
-  //     } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-  //       errorMessage = 'Could not find a user with that email.';
-  //     } else if (error.toString().contains('INVALID_PASSWORD')) {
-  //       errorMessage = 'Invalid password.';
-  //     }
-  //     _errorMessage(errorMessage);
-  //   } catch (error) {
-  //     var errorMessage = 'Authentication failed. Please try again later.';
-  //     _errorMessage(errorMessage);
-  //   }
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
-
   Future<void> _submit(BuildContext context) async {
     final _valid = _formKey.currentState!.validate();
-    FocusScope.of(context).unfocus();
+    FocusScope.of(context).unfocus(); // Invalid
     if (!_valid) {
       return;
     }
@@ -90,29 +50,30 @@ class _AuthFormState extends State<AuthForm> {
           arguments: {'userEmail': _userEmail, 'userPass': _userPass});
     } else {
       try {
+        // print(_userEmail);
+        // print(_userPass);
         await Provider.of<Auth>(context, listen: false)
             .signin(_userEmail, _userPass);
-      } on HttpException catch (error) {
-        var errorMessage = 'Authentication failed.';
-        if (error.toString().contains('EMAIL_EXISTS')) {
-          errorMessage = 'This email address already exists';
-        } else if (error.toString().contains('INVALID_EMAIL')) {
-          errorMessage = 'Invalid email address.';
-        } else if (error.toString().contains('WEAK_PASSWORD')) {
-          errorMessage = 'Password is too weak.';
-        } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-          errorMessage = 'Could not find a user with that email.';
-        } else if (error.toString().contains('INVALID_PASSWORD')) {
-          errorMessage = 'Invalid password.';
-        }
+      } on HttpException catch (_) {
+        var errorMessage = 'حدث خطأ ما';
+        // if (error.toString().contains('EMAIL_EXISTS')) {
+        //   errorMessage = 'This email address already exists';
+        // } else if (error.toString().contains('INVALID_EMAIL')) {
+        //   errorMessage = 'Invalid email address.';
+        // } else if (error.toString().contains('WEAK_PASSWORD')) {
+        //   errorMessage = 'Password is too weak.';
+        // } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        //   errorMessage = 'Could not find a user with that email.';
+        // } else if (error.toString().contains('INVALID_PASSWORD')) {
+        //   errorMessage = 'Invalid password.';
+        // }
         _errorMessage(errorMessage);
       } catch (error) {
-        var errorMessage = 'Authentication failed. Please try again later.';
+        // print(error);
+        var errorMessage = 'حدث خطأ ما';
         _errorMessage(errorMessage);
       }
-      setState(() {
-        _isLoading = false;
-      });
+      _isLoading = false;
 
       // if (DUMMY_EMP.any((element) =>
       //     element.email == _userEmail && element.password == _userPass)) {
@@ -268,24 +229,27 @@ class _AuthFormState extends State<AuthForm> {
                     // if (widget.isLoading)
                     //   const CircularProgressIndicator(),
                     // if (!widget.isLoading)
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () => _submit(context),
-                        child: Text(
-                          _isLogin ? 'الدخول' : 'التسجيل',
-                          style: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
+                    if (_isLoading)
+                      const CircularProgressIndicator()
+                    else
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () => _submit(context),
+                          child: Text(
+                            _isLogin ? 'الدخول' : 'التسجيل',
+                            style: const TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
+                          ),
+                          style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(0),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.red),
+                              foregroundColor:
+                                  MaterialStateProperty.all(Colors.white)),
                         ),
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.red),
-                            foregroundColor:
-                                MaterialStateProperty.all(Colors.white)),
                       ),
-                    ),
                     // if (!widget.isLoading)
                     TextButton(
                       onPressed: () {

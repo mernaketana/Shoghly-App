@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:project/models/employee.dart';
-import 'package:project/widgets/user_image_picker.dart';
+// import 'package:intl/intl.dart';
+// import 'package:project/models/employee.dart';
+// import 'package:project/widgets/user_image_picker.dart';
 import 'package:provider/provider.dart';
-import '../providers/Auth.dart';
-import '../screens/categories_screen.dart';
+import '../providers/auth.dart';
+// import '../screens/categories_screen.dart';
 import '../dummy_data.dart';
 
 class DetailedAuthForm extends StatefulWidget {
@@ -25,10 +25,12 @@ class DetailedAuthForm extends StatefulWidget {
 
 class _DetailedAuthFormState extends State<DetailedAuthForm> {
   final _formKey = GlobalKey<FormState>();
-  final _pickedDate = TextEditingController();
+  // final _pickedDate = TextEditingController();
+  // ignore: unused_field
   String? _dropdownVal;
+  // ignore: unused_field
   String? _dropdownValCat;
-  String? _userImage;
+  // String? _userImage;
   final _items = [
     'بورسعيد',
     'القاهرة',
@@ -48,6 +50,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   //     location: '',
   //     role: true);
 
+  // ignore: prefer_final_fields
   Map<String, String> _authData = {
     'firstName': '',
     'lastName': '',
@@ -101,17 +104,6 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
     setState(() {
       _isLoading = true;
     });
-    print(_authData['firstName']);
-    print(_authData['lastName']);
-    print(_authData['gender']);
-    print(_authData['role']);
-    print(_authData['profession']);
-    print(_authData['phone']);
-    print(_authData['city']);
-    print(_authData['line']);
-    print(_authData['email']);
-    print(_authData['password']);
-
     try {
       await Provider.of<Auth>(context, listen: false).signup(
           _authData['firstName'] as String,
@@ -124,31 +116,19 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
           _authData['line'] as String,
           _authData['email'] as String,
           _authData['password'] as String);
-    } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed.';
-      if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address already exists';
-      } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'Invalid email address.';
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'Password is too weak.';
-      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find a user with that email.';
-      } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid password.';
-      }
+      Navigator.of(context).pop();
+    } on HttpException catch (_) {
+      var errorMessage = 'حدث خطأ ما';
       _errorMessage(errorMessage);
     } catch (error) {
-      var errorMessage = 'Authentication failed. Please try again later.';
+      // ignore: avoid_print
+      print(error.toString());
+      var errorMessage = 'حدث خطأ ما رجاء المحاولة في وقت لاحق';
       _errorMessage(errorMessage);
     }
     setState(() {
       _isLoading = false;
     });
-
-    // DUMMY_EMP.add(newUsers);
-    // Navigator.of(context)
-    //     .pushReplacementNamed(CategoriesScreen.routeName, arguments: newUsers);
   }
 
   // Future _datePicker() async {
@@ -633,23 +613,26 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                     const SizedBox(
                       height: 20,
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _submit,
-                        child: const Text(
-                          'التسجيل',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
+                    if (_isLoading)
+                      const CircularProgressIndicator()
+                    else
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _submit,
+                          child: const Text(
+                            'التسجيل',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 17),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.red),
+                              foregroundColor:
+                                  MaterialStateProperty.all(Colors.white)),
                         ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.red),
-                            foregroundColor:
-                                MaterialStateProperty.all(Colors.white)),
                       ),
-                    ),
                   ],
                 ),
               ),

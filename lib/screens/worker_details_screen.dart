@@ -1,8 +1,7 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:project/models/employee.dart';
 import '../models/comment.dart';
 import '../widgets/images_gallery_widget.dart';
@@ -26,6 +25,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
       sum += (rates[i].rate!);
     }
     double avg = 0;
+    // ignore: prefer_is_empty
     if (rates.length != 0) {
       avg = sum / rates.length;
     } else {
@@ -51,7 +51,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                 .where((element) => element.workerId == id)
                 .toList());
         i++) {
-      print(i);
+      // print(i);
       starList.add(
         const Icon(
           Icons.star,
@@ -62,7 +62,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
       // print(starList.length);
     }
 
-    print(starList.length);
+    // print(starList.length);
 
     return Directionality(
         textDirection: TextDirection.rtl,

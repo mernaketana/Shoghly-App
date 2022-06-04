@@ -14,12 +14,6 @@ class AuthScreen extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 254, 247, 241),
         body: Center(
           child: Stack(children: [
-            // ClipPath(
-            //   clipper: Background(),
-            //   child: Container(
-            //     color: Colors.white,
-            //   ),
-            // ),
             Positioned(
               top: 80,
               right: 2,

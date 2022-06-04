@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/image.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 import '../models/employee.dart';
 import '../dummy_data.dart';
+// import '../providers/user.dart';
+import '../providers/images.dart';
 import '../screens/detailed_image_screen.dart';
 
 class GalleryScreen extends StatefulWidget {
   static const routeName = '/gallery-screen';
-  const GalleryScreen({Key? key}) : super(key: key);
+  final Employee currentUser;
+  const GalleryScreen({Key? key, required this.currentUser}) : super(key: key);
 
   @override
   State<GalleryScreen> createState() => _GalleryScreenState();
@@ -53,32 +57,35 @@ class _GalleryScreenState extends State<GalleryScreen> {
       final picker = ImagePicker();
       final pickedImage = await picker.pickImage(source: ImageSource.camera);
       if (pickedImage == null) return;
+      print("here");
+      // await Provider.of<Images>(context).addImage(File(pickedImage.path));
       // final pickedImageFile = File(pickedImage.path);
       // setState(() {
       //   _image = pickedImage.path;
       // });
-      setState(() {
-        if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
-          newWorkImage =
-              MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
-          // for (var i in DUMMY_IMAGES) {
-          //   // print(i.userId);
-          //   // print(i.url);
-          //   // print(i.id);
-          // }
-          // print('me');
-          // var new_user_img = MyImage(
-          //     DateTime.now().toString(), ['${pickedImage.path}'], userId);
-          // print(newWorkImage.url);
-          DUMMY_IMAGES.add(newWorkImage);
-        } else {
-          // print('or me');
-          DUMMY_IMAGES
-              .firstWhere((element) => element.userId == userId)
-              .url!
-              .add(pickedImage.path);
-        }
-      });
+
+      // setState(() {
+      //   if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
+      //     newWorkImage =
+      //         MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
+      //     // for (var i in DUMMY_IMAGES) {
+      //     //   // print(i.userId);
+      //     //   // print(i.url);
+      //     //   // print(i.id);
+      //     // }
+      //     // print('me');
+      //     // var new_user_img = MyImage(
+      //     //     DateTime.now().toString(), ['${pickedImage.path}'], userId);
+      //     // print(newWorkImage.url);
+      //     DUMMY_IMAGES.add(newWorkImage);
+      //   } else {
+      //     // print('or me');
+      //     DUMMY_IMAGES
+      //         .firstWhere((element) => element.userId == userId)
+      //         .url!
+      //         .add(pickedImage.path);
+      //   }
+      // });
       // widget.imagePick(pickedImageFile);
     } on PlatformException catch (_) {
       return;
@@ -125,119 +132,118 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ModalRoute.of(context)!.settings.arguments as Employee;
+    // late Employee currentUser;
+    // final currentUser = ModalRoute.of(context)!.settings.arguments as Employee;
     // print(currentUser.fname);
-    return
-        // Directionality(
-        //   textDirection: TextDirection.rtl,
-        //   child:
-        //   // Scaffold(
-        //   //     floatingActionButton: FloatingActionButton(
-        //   //       onPressed: () => _dialog(context, currentUser.id),
-        //   //       child: const Icon(Icons.add),
-        //   //       backgroundColor: Theme.of(context).colorScheme.primary,
-        //   //     ),
-        //   //     drawer: MyDrawer(currentUser: currentUser),
-        //   //     appBar: AppBar(
-        //   //       title: const Text('معرضي'),
-        //   //       // actions: <Widget>[
-        //   //       //   IconButton(onPressed: () {}, icon: const Icon(Icons.messenger)),
-        //   //       //   IconButton(
-        //   //       //       onPressed: () {}, icon: const Icon(Icons.notifications)),
-        //   //       // ],
-        //   //     ),
-        //       body:
-        !DUMMY_IMAGES.any((element) => element.userId == currentUser.id)
 
-            //     .firstWhere((element) => element.id == currentUser.id)
-            //    .url ==
-            // null
-            ? Container()
-            : Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.info,
-                          size: 19,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text(
-                          'لحذف صورة قم بالضغط عليها مرتين ثم اختر نعم',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 102, 101, 101)),
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: GridView(
-                      children: <Widget>[
-                        ...DUMMY_IMAGES
-                            .firstWhere(
-                                (element) => element.userId == currentUser.id)
-                            .url!
-                            .map((e) => listImages(e, context, currentUser.id))
-                            .toList(),
+    // Directionality(
+    //   textDirection: TextDirection.rtl,
+    //   child:
+    //   // Scaffold(
+    //   //     floatingActionButton: FloatingActionButton(
+    //   //       onPressed: () => _dialog(context, currentUser.id),
+    //   //       child: const Icon(Icons.add),
+    //   //       backgroundColor: Theme.of(context).colorScheme.primary,
+    //   //     ),
+    //   //     drawer: MyDrawer(currentUser: currentUser),
+    //   //     appBar: AppBar(
+    //   //       title: const Text('معرضي'),
+    //   //       // actions: <Widget>[
+    //   //       //   IconButton(onPressed: () {}, icon: const Icon(Icons.messenger)),
+    //   //       //   IconButton(
+    //   //       //       onPressed: () {}, icon: const Icon(Icons.notifications)),
+    //   //       // ],
+    //   //     ),
+    //       body:
 
-                        // SizedBox(
-                        //   height: 20,
-                        //   width: 20,
-                        //   child: FittedBox(
-                        //     child: FloatingActionButton(
-                        //       onPressed: () => _dialog(context, currentUser.id),
-                        //       child: const Icon(
-                        //         Icons.add,
-                        //       ),
-                        //       backgroundColor: Theme.of(context).colorScheme.primary,
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        childAspectRatio: 2.7 / 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                      ),
-                      padding: const EdgeInsets.all(14),
+    return !DUMMY_IMAGES
+            .any((element) => element.userId == widget.currentUser.id)
+        ? Container()
+        : Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Row(
+                  children: const [
+                    Icon(
+                      Icons.info,
+                      size: 19,
+                      color: Colors.grey,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: FloatingActionButton(
-                      elevation: 0,
-                      onPressed: () => _dialog(context, currentUser.id),
-                      child: const Icon(Icons.add),
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    SizedBox(
+                      width: 6,
                     ),
-                  ),
+                    Text(
+                      'لحذف صورة قم بالضغط عليها مرتين ثم اختر نعم',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 102, 101, 101)),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: GridView(
+                  children: <Widget>[
+                    ...DUMMY_IMAGES
+                        .firstWhere((element) =>
+                            element.userId == widget.currentUser.id)
+                        .url!
+                        .map((e) =>
+                            listImages(e, context, widget.currentUser.id))
+                        .toList(),
 
-                  // SizedBox(
-                  //   width: 150,
-                  //   height: 150,
-                  //   child: FittedBox(
-                  //     child: RawMaterialButton(
-                  //       shape: const CircleBorder(),
-                  //       fillColor: Colors.red,
-                  //       elevation: 0.0,
-                  //       child: const Icon(
-                  //         Icons.add,
-                  //         color: Color.fromARGB(255, 254, 247, 241),
-                  //         size: 16,
-                  //       ),
-                  //       onPressed: () => _dialog(context, currentUser.id),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              );
+                    // SizedBox(
+                    //   height: 20,
+                    //   width: 20,
+                    //   child: FittedBox(
+                    //     child: FloatingActionButton(
+                    //       onPressed: () => _dialog(context, currentUser.id),
+                    //       child: const Icon(
+                    //         Icons.add,
+                    //       ),
+                    //       backgroundColor: Theme.of(context).colorScheme.primary,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 2.7 / 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                  ),
+                  padding: const EdgeInsets.all(14),
+                ),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 10),
+              //   child: FloatingActionButton(
+              //     elevation: 0,
+              //     onPressed: () => _dialog(context, widget.currentUser.id),
+              //     child: const Icon(Icons.add),
+              //     backgroundColor: Theme.of(context).colorScheme.primary,
+              //   ),
+              // ),
+
+              // SizedBox(
+              //   width: 150,
+              //   height: 150,
+              //   child: FittedBox(
+              //     child: RawMaterialButton(
+              //       shape: const CircleBorder(),
+              //       fillColor: Colors.red,
+              //       elevation: 0.0,
+              //       child: const Icon(
+              //         Icons.add,
+              //         color: Color.fromARGB(255, 254, 247, 241),
+              //         size: 16,
+              //       ),
+              //       onPressed: () => _dialog(context, currentUser.id),
+              //     ),
+              //   ),
+              // ),
+            ],
+          );
   }
 
   InkWell listImages(String img, BuildContext context, String userId) {

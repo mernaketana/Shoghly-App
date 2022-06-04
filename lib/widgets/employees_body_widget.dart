@@ -29,6 +29,7 @@ class EmployeesBodyWidget extends StatelessWidget {
         sum += (rates[i].rate!);
       }
       double avg = 0;
+      // ignore: prefer_is_empty
       if (rates.length != 0) {
         avg = sum / rates.length;
       } else {
