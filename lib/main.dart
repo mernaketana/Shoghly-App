@@ -46,6 +46,11 @@ class MyApp extends StatelessWidget {
             create: (context) => Images(),
             update: (context, auth, notifier) => notifier!..recieveToken(auth),
           ),
+          // ChangeNotifierProxyProvider<Images, Auth>(
+          //   create: (context) => Auth(),
+          //   update: (context, image, notifier) =>
+          //       notifier!..recieveImageUrl(image),
+          // ),
           // ChangeNotifierProvider(
           //   create: (context) => Cart(),
           // ),

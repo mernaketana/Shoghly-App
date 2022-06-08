@@ -2,11 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
 // import 'package:project/models/employee.dart';
-// import 'package:project/widgets/user_image_picker.dart';
+import 'package:project/widgets/user_image_picker.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 // import '../screens/categories_screen.dart';
 import '../dummy_data.dart';
+import '../providers/images.dart';
 
 class DetailedAuthForm extends StatefulWidget {
   final String role;
@@ -30,7 +31,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   String? _dropdownVal;
   // ignore: unused_field
   String? _dropdownValCat;
-  // String? _userImage;
+  String? _userImage;
   final _items = [
     'بورسعيد',
     'القاهرة',
@@ -95,6 +96,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   }
 
   Future<void> _submit() async {
+    print(_userImage);
     final _valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (!_valid) {
@@ -147,23 +149,10 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   //   });
   // }
 
-  // void _pickedImage(File image) {
-  //   _userImage = image.path; //بفوروارد بالعكس
-  //   setState(() {
-  //     newUsers = Employee(
-  //         bDate: newUsers.bDate,
-  //         categordId: newUsers.categordId,
-  //         id: newUsers.id,
-  //         fname: newUsers.fname,
-  //         lname: newUsers.lname,
-  //         email: newUsers.email,
-  //         password: newUsers.password,
-  //         phone: newUsers.phone,
-  //         location: newUsers.location,
-  //         address: newUsers.address,
-  //         role: newUsers.role,
-  //         image: _userImage);
-  //   });
+  // void _pickedImage(String image) {
+  //   _userImage = image; //بفوروارد بالعكس
+  //   print('picked image');
+  //   print(_userImage);
   // }
 
   @override

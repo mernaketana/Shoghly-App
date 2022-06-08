@@ -2,6 +2,7 @@ import "dart:async";
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
+import 'package:project/providers/images.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import "../helpers/http_exception.dart";
 
@@ -9,6 +10,7 @@ class Auth with ChangeNotifier {
   String? _token; //tokens expire after an amount of time typically one hour
   // DateTime? _expiryDate;
   String? _userId;
+  late String imageUrl;
   // Timer? _authTimer;
 
   Future<void> signup(
@@ -24,8 +26,9 @@ class Auth with ChangeNotifier {
       String password) async {
     final url = Uri.parse(
         "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/signup");
-    // print(password);
     try {
+      print("auth signup");
+      print(imageUrl);
       final response = await http.post(
         url,
         body: json.encode({
@@ -37,6 +40,7 @@ class Auth with ChangeNotifier {
           "role": role,
           "profession": profession,
           "phone": phone,
+          "picture": imageUrl,
           "country": "مصر",
           "city": city,
           "line": address
@@ -55,13 +59,12 @@ class Auth with ChangeNotifier {
       // _autoLogOut();
       notifyListeners();
       signin(email, password);
-      // final prefs = await SharedPreferences.getInstance();
-      // final userData = json.encode({
-      //   "token": _token,
-      //   "userId": _userId,
-      //   "expiryDate": _expiryDate!.toIso8601String(),
-      // });
-      // prefs.setString("userData", userData);
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({
+        "token": _token,
+        "userId": _userId,
+      });
+      prefs.setString("userData", userData);
       // print("=====================>");
       // print(prefs.getString("userData"));
     } catch (error) {
@@ -69,6 +72,10 @@ class Auth with ChangeNotifier {
       rethrow;
       // print(error);
     }
+  }
+
+  void recieveImageUrl(Images image) {
+    imageUrl = image.imageUrl;
   }
 
   Future<void> signin(String email, String password) async {
@@ -111,7 +118,7 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> changePassword(String password) async {
+  Future<void> forgotPassword(String email) async {
     final url = Uri.parse(
         "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/signup");
     // print(password);
@@ -119,7 +126,7 @@ class Auth with ChangeNotifier {
       final response = await http.post(
         url,
         body: json.encode({
-          "password": password,
+          "email": email,
         }),
         headers: {"Content-Type": "application/json"},
       );
@@ -128,25 +135,34 @@ class Auth with ChangeNotifier {
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
-      // _token = responseData["id"];
-      _userId = responseData["id"];
-      // _expiryDate = DateTime.now()
-      //     .add(Duration(seconds: int.parse(responseData["expiresIn"])));
-      // _autoLogOut();
       notifyListeners();
-      // final prefs = await SharedPreferences.getInstance();
-      // final userData = json.encode({
-      //   "token": _token,
-      //   "userId": _userId,
-      //   "expiryDate": _expiryDate!.toIso8601String(),
-      // });
-      // prefs.setString("userData", userData);
-      // print("=====================>");
-      // print(prefs.getString("userData"));
     } catch (error) {
-      //Firebase doesn"t return an error, it doesn"t have an error status
       rethrow;
-      // print(error);
+    }
+  }
+
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    final url = Uri.parse(
+        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/change-password");
+    try {
+      final response = await http.post(
+        url,
+        body: json
+            .encode({"oldPassword": oldPassword, "newPassword": newPassword}),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer $_token'
+        },
+      );
+      final responseData = json.decode(response.body);
+      print(responseData);
+      if (responseData["error"] != null) {
+        throw HttpException(responseData["message"]);
+      }
+      _userId = responseData["id"];
+      notifyListeners();
+    } catch (error) {
+      rethrow;
     }
   }
 

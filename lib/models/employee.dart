@@ -19,6 +19,7 @@ class Employee {
   String location;
   DateTime? bDate;
   final String role;
+  String gender;
   String address;
 
   Employee(
@@ -31,6 +32,7 @@ class Employee {
       required this.email,
       required this.password,
       this.image,
+      required this.gender,
       required this.phone,
       required this.location,
       required this.role});

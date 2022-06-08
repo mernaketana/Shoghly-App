@@ -250,20 +250,39 @@ class _AuthFormState extends State<AuthForm> {
                                   MaterialStateProperty.all(Colors.white)),
                         ),
                       ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     // if (!widget.isLoading)
                     TextButton(
+                      style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                       onPressed: () {
                         setState(() {
                           _isLogin = !_isLogin;
                         });
                       },
-                      child: Text(
-                        _isLogin
-                            ? 'ليس لديك حساب؟\n\t\t\t\tقم بالتسجيل.'
-                            : 'لديك حساب بالفعل؟\n\t\t\t\t\tقم بالدخول.',
-                        style: const TextStyle(color: Colors.red),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _isLogin ? 'ليس لديك حساب؟ ' : 'لديك حساب بالفعل؟ ',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            _isLogin ? 'إنشاء حساب جديد' : 'تسجيل الدخول',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ],
                       ),
-                    )
+                    ),
+                    TextButton(
+                        style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.zero),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                        onPressed: () {},
+                        child: const Text('إعادة ضبط كلمة المرور')),
                   ],
                 ),
               ))),

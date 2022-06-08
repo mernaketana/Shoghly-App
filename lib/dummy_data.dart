@@ -27,6 +27,7 @@ const DUMMY_CATEGORIES = [
 // ignore: constant_identifier_names, non_constant_identifier_names
 var DUMMY_EMP = [
   Employee(
+      gender: 'ذكر',
       id: '1',
       categordId: DUMMY_CATEGORIES
           .firstWhere((element) => element.title == 'السباكة')
@@ -42,6 +43,7 @@ var DUMMY_EMP = [
       role: 'worker',
       address: 'تعاونيات الزهور'),
   Employee(
+      gender: 'ذكر',
       id: '2',
       image:
           'https://storage.googleapis.com/air-multi-tmbi-cpt-uploads/wp-content/uploads/2020/03/4e43e850-61u5vx9jfvl._ac_sl1000_-1024x1024.jpg',
@@ -54,6 +56,7 @@ var DUMMY_EMP = [
       role: 'client',
       address: 'معرفش اماكن في طنطا'),
   Employee(
+    gender: 'ذكر',
     image:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjGHveD6FYI8wfBYEBx8sKcof9110urFnoAQ&usqp=CAU',
     id: '3',

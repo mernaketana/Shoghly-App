@@ -12,6 +12,7 @@ class User with ChangeNotifier {
   late String authToken;
   late String userId;
   Employee _user = Employee(
+    gender: '',
     id: '',
     address: '',
     fname: '',
@@ -48,6 +49,7 @@ class User with ChangeNotifier {
     //     return null;
     //   }
     // _userId = extractedUserData['userId'] as String;
+    print('here i am');
     final url = Uri.parse(
         "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/$userId");
     try {
@@ -63,6 +65,7 @@ class User with ChangeNotifier {
       }
       Map<String, dynamic> employeeInfo = data["info"];
       _user = Employee(
+        gender: employeeInfo["gender"],
         id: userId,
         address: employeeInfo["line"],
         fname: employeeInfo["firstName"],
@@ -70,7 +73,7 @@ class User with ChangeNotifier {
         email: '',
         password: '',
         phone: int.parse(employeeInfo["phone"]),
-        location: 'مصر',
+        location: employeeInfo["city"],
         role: employeeInfo["role"],
         categordId: employeeInfo["profession"],
       );
@@ -92,9 +95,8 @@ class User with ChangeNotifier {
   ) async {
     final url = Uri.parse(
         "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile");
-    // print(password);
     try {
-      final response = await http.post(
+      final response = await http.put(
         url,
         body: json.encode({
           "firstName": fname,
@@ -105,31 +107,19 @@ class User with ChangeNotifier {
           "city": city,
           "line": address
         }),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken"
+        },
       );
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
-      // _token = responseData["id"];
-      // _expiryDate = DateTime.now()
-      //     .add(Duration(seconds: int.parse(responseData["expiresIn"])));
-      // _autoLogOut();
       notifyListeners();
-      // final prefs = await SharedPreferences.getInstance();
-      // final userData = json.encode({
-      //   "token": _token,
-      //   "userId": _userId,
-      //   "expiryDate": _expiryDate!.toIso8601String(),
-      // });
-      // prefs.setString("userData", userData);
-      // print("=====================>");
-      // print(prefs.getString("userData"));
     } catch (error) {
-      //Firebase doesn"t return an error, it doesn"t have an error status
       rethrow;
-      // print(error);
     }
   }
 

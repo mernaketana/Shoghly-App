@@ -73,93 +73,54 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             TextButton(
               child: const Text('الكاميرا'),
               onPressed: () {
-                _pickedImageCamera(userId);
+                _pickedImageCamera();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: const Text('المعرض'),
               onPressed: () {
-                _pickedImageGallery(userId);
+                // _pickedImageGallery(userId);
                 Navigator.of(context).pop();
               },
             ),
           ]),
     );
-    // Navigator.of(context).pop();
   }
 
-  Future<void> _pickedImageCamera(String userId) async {
+  Future<void> _pickedImageCamera() async {
     try {
       final picker = ImagePicker();
       final pickedImage = await picker.pickImage(source: ImageSource.camera);
       if (pickedImage == null) return;
       await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
-      // final pickedImageFile = File(pickedImage.path);
-      // setState(() {
-      //   _image = pickedImage.path;
-      // });
-      // setState(() {
-      //   if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
-      //     newWorkImage =
-      //         MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
-      //     // for (var i in DUMMY_IMAGES) {
-      //     //   // print(i.userId);
-      //     //   // print(i.url);
-      //     //   // print(i.id);
-      //     // }
-      //     // print('me');
-      //     // var new_user_img = MyImage(
-      //     //     DateTime.now().toString(), ['${pickedImage.path}'], userId);
-      //     // print(newWorkImage.url);
-      //     DUMMY_IMAGES.add(newWorkImage);
-      //   } else {
-      //     // print('or me');
-      //     DUMMY_IMAGES
-      //         .firstWhere((element) => element.userId == userId)
-      //         .url!
-      //         .add(pickedImage.path);
-      //   }
-      // });
-      // widget.imagePick(pickedImageFile);
     } on PlatformException catch (_) {
       return;
-      // ignore: avoid_print
-      // print(e);
     }
   }
 
-  Future<void> _pickedImageGallery(String userId) async {
-    try {
-      final picker = ImagePicker();
-      final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-      if (pickedImage == null) return;
-      // final pickedImageFile = File(pickedImage.path);
-      // setState(() {
-      //   _image = pickedImage.path;
-      // });
-      setState(() {
-        if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
-          newWorkImage =
-              MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
-          // var new_user_img = MyImage(
-          //     DateTime.now().toString(), ['${pickedImage.path}'], userId);
-          // print(newWorkImage.url);
-          DUMMY_IMAGES.add(newWorkImage);
-        } else {
-          DUMMY_IMAGES
-              .firstWhere((element) => element.userId == userId)
-              .url!
-              .add(pickedImage.path);
-        }
-      });
-      // widget.imagePick(pickedImageFile);
-    } on PlatformException catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
-  }
+  // Future<void> _pickedImageGallery() async {
+  //   try {
+  //     final picker = ImagePicker();
+  //     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+  //     if (pickedImage == null) return;
+  //     setState(() {
+  //       if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
+  //         newWorkImage =
+  //             MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
+  //         DUMMY_IMAGES.add(newWorkImage);
+  //       } else {
+  //         DUMMY_IMAGES
+  //             .firstWhere((element) => element.userId == userId)
+  //             .url!
+  //             .add(pickedImage.path);
+  //       }
+  //     });
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   // void showModalBottomSheetFunction() {
   //   showModalBottomSheet<void>(
@@ -198,6 +159,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   //     },
   //   );
   // }
+
+  Future<void> getCurrentUser() async {
+    await Provider.of<User>(context).getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -296,49 +261,33 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
               body: _isLoading
                   ? const CircularProgressIndicator()
-                  :
-                  // _workerPages[1],
-                  currentUser.role == 'worker'
+                  : currentUser.role == 'worker'
                       ? _workerPages[_selectedPageIndex]
                       : _userPages[_selectedPageIndex],
               bottomNavigationBar: BottomNavigationBar(
-                // fixedColor: Colors.red,
                 type: BottomNavigationBarType.fixed,
-                // fixedColor: Colors.white,
                 backgroundColor: Colors.red,
                 selectedItemColor: Colors.white,
                 unselectedItemColor: const Color.fromARGB(170, 219, 219, 219),
-                items:
-                    // [
-                    //   BottomNavigationBarItem(
-                    //       icon: Icon(Icons.account_circle), label: 'حسابي'),
-                    //   BottomNavigationBarItem(
-                    //       icon: Icon(Icons.category), label: 'الحرف'),
-                    //   BottomNavigationBarItem(
-                    //       icon: Icon(Icons.settings), label: 'الاعدادات'),
-                    // ],
-                    currentUser.role == 'worker'
-                        ? const [
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.account_circle),
-                                label: 'حسابي'),
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.category), label: 'الحرف'),
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.photo_library),
-                                label: 'معرضي'),
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.settings), label: 'الاعدادات'),
-                          ]
-                        : const [
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.account_circle),
-                                label: 'حسابي'),
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.category), label: 'الحرف'),
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.settings), label: 'الاعدادات'),
-                          ],
+                items: currentUser.role == 'worker'
+                    ? const [
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.account_circle), label: 'حسابي'),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.category), label: 'الحرف'),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.photo_library), label: 'معرضي'),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.settings), label: 'الاعدادات'),
+                      ]
+                    : const [
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.account_circle), label: 'حسابي'),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.category), label: 'الحرف'),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.settings), label: 'الاعدادات'),
+                      ],
                 onTap: onTap,
                 currentIndex: _selectedPageIndex,
               ),

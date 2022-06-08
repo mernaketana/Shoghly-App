@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserImagePicker extends StatefulWidget {
-  final void Function(File pickedImage) imagePick;
+  final void Function(String pickedImage) imagePick;
   const UserImagePicker({Key? key, required this.imagePick}) : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
       setState(() {
         _image = pickedImageFile;
       });
-      widget.imagePick(pickedImageFile);
+      widget.imagePick(pickedImage.path);
     } on PlatformException catch (e) {
       // ignore: avoid_print
       print(e);
@@ -51,7 +51,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
       setState(() {
         _image = pickedImageFile;
       });
-      widget.imagePick(pickedImageFile);
+      widget.imagePick(pickedImage.path);
     } on PlatformException catch (e) {
       // ignore: avoid_print
       print(e);

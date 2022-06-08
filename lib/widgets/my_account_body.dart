@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:project/models/employee.dart';
-// import 'package:project/screens/detailed_image_screen.dart';
+import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/settings_screen.dart';
+import 'package:provider/provider.dart';
 import 'dart:math';
 import 'dart:io';
 
 import '../models/comment.dart';
 import '../dummy_data.dart';
+import '../models/image.dart';
+import '../providers/images.dart';
 import './images_gallery_widget.dart';
 
 class MyAccountBody extends StatefulWidget {
@@ -25,6 +30,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   var _expandComment = false;
   var _expandInfo = false;
   var _expandImg = false;
+  var newWorkImage = MyImage('', [], '');
   // String age(DateTime bdate) {
   //   var myAge = DateTime.now().difference(bdate).toString();
   //   return myAge;
@@ -46,6 +52,68 @@ class _MyAccountBodyState extends State<MyAccountBody> {
     return age;
   }
 
+  Future _dialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+          content: const Text(
+            'قم باختيار مصدر الصورة',
+            textAlign: TextAlign.center,
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            TextButton(
+              child: const Text('الكاميرا'),
+              onPressed: () {
+                _pickedImageCamera();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('المعرض'),
+              onPressed: () {
+                // _pickedImageGallery(userId);
+                Navigator.of(context).pop();
+              },
+            ),
+          ]),
+    );
+  }
+
+  Future<void> _pickedImageCamera() async {
+    try {
+      final picker = ImagePicker();
+      final pickedImage = await picker.pickImage(source: ImageSource.camera);
+      if (pickedImage == null) return;
+      await Provider.of<Images>(context, listen: false)
+          .addImage(pickedImage.path);
+    } on PlatformException catch (_) {
+      return;
+    }
+  }
+
+  // Future<void> _pickedImageGallery(String userId) async {
+  //   try {
+  //     final picker = ImagePicker();
+  //     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+  //     if (pickedImage == null) return;
+  //     setState(() {
+  //       if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
+  //         newWorkImage =
+  //             MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
+  //         DUMMY_IMAGES.add(newWorkImage);
+  //       } else {
+  //         DUMMY_IMAGES
+  //             .firstWhere((element) => element.userId == userId)
+  //             .url!
+  //             .add(pickedImage.path);
+  //       }
+  //     });
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     // print(widget.currentUser.bDate);
@@ -56,32 +124,40 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Container(
-        //   width: 380,
-        //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        //   child: widget.currentUser.image != ''
-        //       ? InkWell(
-        //           onTap: () => Navigator.of(context).pushNamed(
-        //               DetailedImageScreen.routeName,
-        //               arguments: widget.currentUser.image),
-        //           child: ClipRRect(
-        //               borderRadius: BorderRadius.circular(10),
-        //               child: widget.currentUser.image!.startsWith('/data')
-        //                   ? Image.file(
-        //                       File(
-        //                         widget.currentUser.image as String,
-        //                       ),
-        //                       height: 200,
-        //                       width: 200,
-        //                       fit: BoxFit.cover,
-        //                     )
-        //                   : Image.network(
-        //                       widget.currentUser.image as String,
-        //                       fit: BoxFit.cover,
-        //                     )),
-        //         )
-        //       : Image.asset('assets/images/placeholder.png'),
-        // ),
+        Stack(
+          children: [
+            Container(
+              width: 380,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: widget.currentUser.image != ''
+                  ? InkWell(
+                      onTap: () => Navigator.of(context).pushNamed(
+                          DetailedImageScreen.routeName,
+                          arguments: widget.currentUser.image),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: true
+                              ? Image.asset('assets/images/placeholder.png')
+                              : Image.network(
+                                  Provider.of<Images>(context, listen: false)
+                                      .imageUrl,
+                                  // widget.currentUser.image as String,
+                                  fit: BoxFit.cover,
+                                )),
+                    )
+                  : Image.asset('assets/images/placeholder.png'),
+            ),
+            Positioned(
+                bottom: 20,
+                left: 10,
+                child: IconButton(
+                    onPressed: () => _dialog(context),
+                    icon: const Icon(
+                      Icons.add_a_photo,
+                      color: Color(0xFF323232),
+                    )))
+          ],
+        ),
         // CircleAvatar(
         //   backgroundImage: widget.currentUser.image != null
         //       ? NetworkImage(widget.currentUser.image as String)

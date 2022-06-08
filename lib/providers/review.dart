@@ -56,7 +56,10 @@ class Review with ChangeNotifier {
           "rating": review.rate,
           "description": review.comment,
         }),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken"
+        },
       );
       final responseData = json.decode(response.body);
       _reviewId = responseData['reviewId'];
