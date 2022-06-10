@@ -74,10 +74,6 @@ class Auth with ChangeNotifier {
     }
   }
 
-  void recieveImageUrl(Images image) {
-    imageUrl = image.imageUrl;
-  }
-
   Future<void> signin(String email, String password) async {
     // print(email);
     // print(password);

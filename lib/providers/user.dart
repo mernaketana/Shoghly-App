@@ -33,22 +33,7 @@ class User with ChangeNotifier {
     // print(userId);
   }
 
-  Future<void> getUser() async {
-    // print('getuser user provider');
-    // print(userId);
-    // final prefs = await SharedPreferences.getInstance();
-    // // print(prefs.getString('userData'));
-    // if (!prefs.containsKey('userData')) {
-    //   return null;
-    // } else {
-    //   // print('Do I get here?');
-    //   final extractedUserData =
-    //       json.decode(prefs.getString('userData') as String)
-    //           as Map<String, dynamic>;
-    //   if (extractedUserData['token'] == null) {
-    //     return null;
-    //   }
-    // _userId = extractedUserData['userId'] as String;
+  Future<Employee> getUser() async {
     print('here i am');
     final url = Uri.parse(
         "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/$userId");
@@ -58,28 +43,37 @@ class User with ChangeNotifier {
         headers: {"Content-Type": "application/json"},
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
-      // print(data);
       // ignore: unnecessary_null_comparison
       if (data == null) {
-        return;
+        return Employee(
+            id: '',
+            address: '',
+            fname: '',
+            lname: '',
+            email: '',
+            password: '',
+            gender: '',
+            phone: 0,
+            location: '',
+            role: '');
       }
       Map<String, dynamic> employeeInfo = data["info"];
       _user = Employee(
-        gender: employeeInfo["gender"],
-        id: userId,
-        address: employeeInfo["line"],
-        fname: employeeInfo["firstName"],
-        lname: employeeInfo["lastName"],
-        email: '',
-        password: '',
-        phone: int.parse(employeeInfo["phone"]),
-        location: employeeInfo["city"],
-        role: employeeInfo["role"],
-        categordId: employeeInfo["profession"],
-      );
+          gender: employeeInfo["gender"],
+          id: userId,
+          address: employeeInfo["line"],
+          fname: employeeInfo["firstName"],
+          lname: employeeInfo["lastName"],
+          email: '',
+          password: '',
+          phone: int.parse(employeeInfo["phone"]),
+          location: employeeInfo["city"],
+          role: employeeInfo["role"],
+          categordId: employeeInfo["profession"],
+          image: employeeInfo["picture"]);
+      print(_user.image);
       notifyListeners();
-      // return _user;
-      // print(data);
+      return _user;
     } catch (error) {
       rethrow;
     }

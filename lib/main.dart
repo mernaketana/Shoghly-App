@@ -3,6 +3,7 @@ import 'package:project/providers/images.dart';
 import 'package:project/providers/user.dart';
 import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/screens/settings_screen.dart';
+import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
 // import './screens/gallery_screen.dart';
 import './screens/detailed_auth_screen.dart';
@@ -10,6 +11,7 @@ import './screens/worker_details_screen.dart';
 import './screens/choice_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/employees_screen.dart';
+import './screens/controller_screen.dart';
 import './screens/categories_screen.dart';
 // import './screens/my_account_screen.dart';
 import './providers/auth.dart';
@@ -74,7 +76,7 @@ class MyApp extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20))))),
                   ),
                   home: value.isAuth
-                      ? const CategoriesScreen()
+                      ? const ControllerScreen()
                       : FutureBuilder(
                           future: value.tryAutoLogIn(),
                           builder: (context, snapshot) =>
@@ -85,8 +87,6 @@ class MyApp extends StatelessWidget {
                         ),
                   routes: {
                     // '/': (context) => const AuthScreen(),
-                    CategoriesScreen.routeName: (context) =>
-                        const CategoriesScreen(),
                     EmployeesScreen.routeName: (context) =>
                         const EmployeesScreen(),
                     ChoicesScreen.routeName: (context) => const ChoicesScreen(),
@@ -99,8 +99,7 @@ class MyApp extends StatelessWidget {
                     // GalleryScreen.routeName: (context) => const GalleryScreen(),
                     DetailedImageScreen.routeName: (context) =>
                         const DetailedImageScreen(),
-                    SettingsScreen.routeName: (context) =>
-                        const SettingsScreen(),
+                    SettingsBody.routeName: (context) => const SettingsBody(),
                   },
                 ))));
   }

@@ -38,9 +38,15 @@ class MyAccountScreen extends StatelessWidget {
     //         ),
     //         body:
 
-    return SingleChildScrollView(
-      child: Center(
-          child: MyAccountBody(comments: comments, currentUser: currentUser)),
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+      appBar: AppBar(
+        title: const Center(child: Text('حسابي الشخصي')),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+            child: MyAccountBody(comments: comments, currentUser: currentUser)),
+      ),
     );
   }
 }

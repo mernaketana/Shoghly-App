@@ -3,6 +3,7 @@ import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/my_account_screen.dart';
 import 'package:project/screens/settings_screen.dart';
 import '../screens/categories_screen.dart';
+import '../screens/controller_screen.dart';
 import '../models/employee.dart';
 // import 'package:provider/provider.dart';
 // // import '../helpers/custom_routes.dart';
@@ -120,32 +121,32 @@ class _SettingsState extends State<Settings> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextButton(
-                          onPressed: () => Navigator.of(context).pushNamed(
-                                  SettingsScreen.routeName,
-                                  arguments: {
-                                    'currentUser': widget.currentUser,
-                                    'editPass': true
-                                  }),
-                          child: const Text(
-                            'الحساب',
-                            style: TextStyle(color: Colors.black),
-                          )),
-                    ),
-                    Expanded(
-                      child: TextButton(
-                          onPressed: () => Navigator.of(context).pushNamed(
-                                  SettingsScreen.routeName,
-                                  arguments: {
-                                    'currentUser': widget.currentUser,
-                                    'editPass': false
-                                  }),
-                          child: const Text(
-                            'المعلومات الشخصية',
-                            style: TextStyle(color: Colors.black),
-                          )),
-                    )
+                    // Expanded(
+                    //   child: TextButton(
+                    //       onPressed: () => Navigator.of(context).pushNamed(
+                    //               SettingsScreen.routeName,
+                    //               arguments: {
+                    //                 'currentUser': widget.currentUser,
+                    //                 'editPass': true
+                    //               }),
+                    //       child: const Text(
+                    //         'الحساب',
+                    //         style: TextStyle(color: Colors.black),
+                    //       )),
+                    // ),
+                    // Expanded(
+                    //   child: TextButton(
+                    //       onPressed: () => Navigator.of(context).pushNamed(
+                    //               SettingsScreen.routeName,
+                    //               arguments: {
+                    //                 'currentUser': widget.currentUser,
+                    //                 'editPass': false
+                    //               }),
+                    //       child: const Text(
+                    //         'المعلومات الشخصية',
+                    //         style: TextStyle(color: Colors.black),
+                    //       )),
+                    // )
                   ],
                 ),
               ),

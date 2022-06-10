@@ -28,14 +28,45 @@ class Images with ChangeNotifier {
       request.files.add(await http.MultipartFile.fromPath('photos', image));
       print('after photos call');
       request.headers['Authorization'] = 'Bearer $authToken';
+      request.headers['Content-Type'] = 'image/jpg';
+      print('after auth');
       final response = await request.send();
+      print('after send');
       final responseData = await http.Response.fromStream(response);
+      print('response');
       final info = json.decode(responseData.body);
       print(info);
       final data = info["data"];
       print(data);
       _imageUrl = data[0]["url"];
       print(_imageUrl);
+      notifyListeners();
+      changeImage(imageUrl);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> changeImage(String imageUrl) async {
+    final url = Uri.parse(
+        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/changePicture");
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          "picture": imageUrl,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer $authToken'
+        },
+      );
+      final responseData = json.decode(response.body);
+      print('here in changeimage');
+      print(responseData);
+      if (responseData["error"] != null) {
+        throw HttpException(responseData["message"]);
+      }
       notifyListeners();
     } catch (error) {
       rethrow;
