@@ -121,16 +121,12 @@ class _ControllerScreenState extends State<ControllerScreen> {
   //   );
   // }
 
-  Future<void> getCurrentUser() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<void> getCurrentUser(BuildContext context) async {
+    _isLoading = true;
     await Provider.of<User>(context, listen: false)
         .getUser()
         .then((value) => currentUser = value);
-    setState(() {
-      _isLoading = false;
-    });
+    _isLoading = false;
   }
 
   @override
@@ -139,7 +135,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
       _isLoading
           ? Container()
           : RefreshIndicator(
-              onRefresh: () => getCurrentUser(),
+              onRefresh: () => getCurrentUser(context),
               child: MyAccountScreen(currentUser: currentUser)),
       _isLoading
           ? Container()
@@ -172,7 +168,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
               // drawer: MyDrawer(currentUser: currentUser),
 
               body: _isLoading
-                  ? const CircularProgressIndicator()
+                  ? const Center(child: CircularProgressIndicator())
                   : currentUser.role == 'worker'
                       ? _workerPages[_selectedPageIndex]
                       : _userPages[_selectedPageIndex],

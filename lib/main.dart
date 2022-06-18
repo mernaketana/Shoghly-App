@@ -13,12 +13,14 @@ import './screens/auth_screen.dart';
 import './screens/employees_screen.dart';
 import './screens/controller_screen.dart';
 import './screens/categories_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import './screens/my_account_screen.dart';
 import './providers/auth.dart';
 import 'providers/review.dart';
 import 'widgets/splashScreen.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 

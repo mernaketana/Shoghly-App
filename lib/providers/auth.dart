@@ -5,6 +5,7 @@ import "package:flutter/cupertino.dart";
 import 'package:project/providers/images.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import "../helpers/http_exception.dart";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Auth with ChangeNotifier {
   String? _token; //tokens expire after an amount of time typically one hour
@@ -12,6 +13,7 @@ class Auth with ChangeNotifier {
   String? _userId;
   late String imageUrl;
   // Timer? _authTimer;
+  final apiUrl = dotenv.env['API_URL']!;
 
   Future<void> signup(
       String fname,
@@ -24,8 +26,7 @@ class Auth with ChangeNotifier {
       String address,
       String email,
       String password) async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/signup");
+    final url = Uri.parse("${apiUrl}signup");
     try {
       print("auth signup");
       print(imageUrl);
@@ -77,8 +78,7 @@ class Auth with ChangeNotifier {
   Future<void> signin(String email, String password) async {
     // print(email);
     // print(password);
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/signin");
+    final url = Uri.parse("${apiUrl}signin");
     try {
       final response = await http.post(
         url,
@@ -115,8 +115,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> forgotPassword(String email) async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/signup");
+    final url = Uri.parse("${apiUrl}signup");
     // print(password);
     try {
       final response = await http.post(
@@ -138,8 +137,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> changePassword(String oldPassword, String newPassword) async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/change-password");
+    final url = Uri.parse("${apiUrl}change-password");
     try {
       final response = await http.post(
         url,

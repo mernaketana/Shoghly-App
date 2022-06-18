@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../models/comment.dart';
 // import '../models/employee.dart';
@@ -14,6 +15,7 @@ class Review with ChangeNotifier {
   Comment _review =
       Comment(comment: '', userId: '', workerId: '', createdAt: DateTime.now());
   late String userId;
+  final apiUrl = dotenv.env['API_URL']!;
   // Employee _user = Employee(
   //   id: '',
   //   address: '',
@@ -47,8 +49,7 @@ class Review with ChangeNotifier {
   // }
 
   Future<void> addReview(Comment review) async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/review/${review.workerId}");
+    final url = Uri.parse("${apiUrl}workers/${review.workerId}/reviews");
     try {
       final response = await http.post(
         url,
@@ -93,19 +94,22 @@ class Review with ChangeNotifier {
     return _reviewId;
   }
 
-  Future<void> getReview() async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/review/$reviewId");
+  Future<Comment> getReview(String workerId) async {
+    final url = Uri.parse("${apiUrl}profile/workers/$workerId/reviews");
     try {
       final response = await http.get(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken"
+        },
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
-      // print(data);
+      print(data);
       // ignore: unnecessary_null_comparison
       if (data == null) {
-        return;
+        return Comment(
+            comment: '', userId: '', workerId: '', createdAt: DateTime.now());
       }
       Map<String, dynamic> reviewInfo = data["info"];
       _review = Comment(
@@ -114,18 +118,21 @@ class Review with ChangeNotifier {
           workerId: reviewInfo['workerId'],
           createdAt: reviewInfo['createdAt']);
       notifyListeners();
+      return _review;
     } catch (error) {
       rethrow;
     }
   }
 
   Future<void> getAllReviews() async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/review/$userId");
+    final url = Uri.parse("${apiUrl}profile/review/$userId");
     try {
       final response = await http.get(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken"
+        },
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
       // print(data);
@@ -146,8 +153,7 @@ class Review with ChangeNotifier {
   }
 
   Future<void> deleteReview(Comment review) async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/review/$reviewId");
+    final url = Uri.parse("${apiUrl}profile/review/$reviewId");
     try {
       final response = await http.delete(
         url,

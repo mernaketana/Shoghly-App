@@ -5,6 +5,7 @@ import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/comment.dart';
 // import '../models/employee.dart';
 import 'auth.dart';
@@ -12,6 +13,7 @@ import 'auth.dart';
 class Images with ChangeNotifier {
   late String authToken;
   String? _imageUrl;
+  final apiUrl = dotenv.env['API_URL']!;
 
   void recieveToken(Auth auth) {
     authToken = auth.token;
@@ -19,21 +21,14 @@ class Images with ChangeNotifier {
 
   Future<void> addImage(String image) async {
     print(image);
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/upload");
+    final url = Uri.parse("${apiUrl}upload");
     try {
-      print('before http');
       final request = http.MultipartRequest('POST', url);
-      print('after http');
       request.files.add(await http.MultipartFile.fromPath('photos', image));
-      print('after photos call');
       request.headers['Authorization'] = 'Bearer $authToken';
       request.headers['Content-Type'] = 'image/jpg';
-      print('after auth');
       final response = await request.send();
-      print('after send');
       final responseData = await http.Response.fromStream(response);
-      print('response');
       final info = json.decode(responseData.body);
       print(info);
       final data = info["data"];
@@ -48,8 +43,7 @@ class Images with ChangeNotifier {
   }
 
   Future<void> changeImage(String imageUrl) async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/changePicture");
+    final url = Uri.parse("${apiUrl}profile/changePicture");
     try {
       final response = await http.post(
         url,
@@ -64,10 +58,10 @@ class Images with ChangeNotifier {
       final responseData = json.decode(response.body);
       print('here in changeimage');
       print(responseData);
+      notifyListeners();
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
-      notifyListeners();
     } catch (error) {
       rethrow;
     }

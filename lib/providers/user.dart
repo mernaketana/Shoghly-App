@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
 import 'package:project/models/employee.dart';
 import '../providers/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import "package:shared_preferences/shared_preferences.dart";
 // import "../helpers/http_exception.dart";
 
@@ -24,6 +25,7 @@ class User with ChangeNotifier {
     role: '',
     categordId: '',
   );
+  final apiUrl = dotenv.env['API_URL']!;
 
 // for main to get the token and the user id from auth
   void recieveToken(Auth auth) {
@@ -34,9 +36,8 @@ class User with ChangeNotifier {
   }
 
   Future<Employee> getUser() async {
-    print('here i am');
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile/$userId");
+    print(dotenv.env['API_URL']);
+    final url = Uri.parse("${apiUrl}profile/$userId");
     try {
       final response = await http.get(
         url,
@@ -87,8 +88,7 @@ class User with ChangeNotifier {
     String city,
     String address,
   ) async {
-    final url = Uri.parse(
-        "https://cjyzhu7lw2.execute-api.eu-central-1.amazonaws.com/dev/profile");
+    final url = Uri.parse("${apiUrl}profile");
     try {
       final response = await http.put(
         url,

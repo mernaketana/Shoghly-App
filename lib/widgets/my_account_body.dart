@@ -35,6 +35,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   var _expandImg = false;
   var newWorkImage = MyImage('', [], '');
   var _isLoading = false;
+  String newImageUrl = '';
   // String age(DateTime bdate) {
   //   var myAge = DateTime.now().difference(bdate).toString();
   //   return myAge;
@@ -94,6 +95,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       });
       await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
+      newImageUrl = Provider.of<Images>(context, listen: false).imageUrl;
       setState(() {
         _isLoading = false;
       });
@@ -112,6 +114,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       });
       await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
+      newImageUrl = Provider.of<Images>(context, listen: false).imageUrl;
       setState(() {
         _isLoading = false;
       });
@@ -147,18 +150,23 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                     ? Image.asset(
                                         'assets/images/placeholder.png')
                                     : CachedNetworkImage(
-                                        imageUrl:
-                                            widget.currentUser.image as String,
-                                        placeholder: (context, url) => SizedBox(
-                                            height: 480,
-                                            width: 380,
-                                            child: Transform.scale(
-                                                scale: 0.2,
-                                                child:
-                                                    const CircularProgressIndicator
-                                                        .adaptive(
-                                                  strokeWidth: 15,
-                                                ))),
+                                        imageUrl: newImageUrl !=
+                                                widget.currentUser.image
+                                            ? newImageUrl != ''
+                                                ? newImageUrl
+                                                : widget.currentUser.image
+                                                    as String
+                                            : widget.currentUser.image
+                                                as String,
+                                        placeholder: (context, url) =>
+                                            const SizedBox(
+                                                height: 480,
+                                                width: 380,
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator
+                                                          .adaptive(),
+                                                )),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
                                       )
