@@ -40,8 +40,9 @@ class _ControllerScreenState extends State<ControllerScreen> {
         _isLoading = true;
       });
       // print('didchange categories');
+      final userId = Provider.of<User>(context, listen: false).userId;
       await Provider.of<User>(context)
-          .getUser()
+          .getUser(userId)
           .then((value) => currentUser = value);
       // .then((_) {
       //   currentUser =
@@ -123,8 +124,9 @@ class _ControllerScreenState extends State<ControllerScreen> {
 
   Future<void> getCurrentUser(BuildContext context) async {
     _isLoading = true;
+    final userId = Provider.of<User>(context, listen: false).userId;
     await Provider.of<User>(context, listen: false)
-        .getUser()
+        .getUser(userId)
         .then((value) => currentUser = value);
     _isLoading = false;
   }

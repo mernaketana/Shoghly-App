@@ -35,7 +35,6 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   var _expandImg = false;
   var newWorkImage = MyImage('', [], '');
   var _isLoading = false;
-  String newImageUrl = '';
   // String age(DateTime bdate) {
   //   var myAge = DateTime.now().difference(bdate).toString();
   //   return myAge;
@@ -95,7 +94,6 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       });
       await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
-      newImageUrl = Provider.of<Images>(context, listen: false).imageUrl;
       setState(() {
         _isLoading = false;
       });
@@ -114,7 +112,6 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       });
       await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
-      newImageUrl = Provider.of<Images>(context, listen: false).imageUrl;
       setState(() {
         _isLoading = false;
       });
@@ -150,14 +147,8 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                     ? Image.asset(
                                         'assets/images/placeholder.png')
                                     : CachedNetworkImage(
-                                        imageUrl: newImageUrl !=
-                                                widget.currentUser.image
-                                            ? newImageUrl != ''
-                                                ? newImageUrl
-                                                : widget.currentUser.image
-                                                    as String
-                                            : widget.currentUser.image
-                                                as String,
+                                        imageUrl:
+                                            widget.currentUser.image as String,
                                         placeholder: (context, url) =>
                                             const SizedBox(
                                                 height: 480,

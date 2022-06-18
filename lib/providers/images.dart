@@ -69,10 +69,6 @@ class Images with ChangeNotifier {
 
   String get imageUrl {
     if (_imageUrl != null) {
-      // print(_token);
-      // print(_userId);
-      // print(_expiryDate);
-      // print('ok');
       return _imageUrl as String;
     }
     return '';

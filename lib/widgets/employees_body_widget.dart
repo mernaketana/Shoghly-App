@@ -11,15 +11,16 @@ class EmployeesBodyWidget extends StatelessWidget {
   final String name;
   final String profession;
   final String id;
-  final Employee currentUser;
-  const EmployeesBodyWidget(
-      {Key? key,
-      required this.img,
-      required this.name,
-      required this.profession,
-      required this.id,
-      required this.currentUser})
-      : super(key: key);
+  // final Employee currentUser;
+  const EmployeesBodyWidget({
+    Key? key,
+    required this.img,
+    required this.name,
+    required this.profession,
+    required this.id,
+
+    // required this.currentUser
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,129 +60,135 @@ class EmployeesBodyWidget extends StatelessWidget {
       child: Hero(
         tag: id,
         child: GestureDetector(
-          child: Card(
-            color: const Color.fromARGB(255, 254, 247, 241),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            elevation: 10,
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                            // topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                            // bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(15)),
-                        child: img.startsWith('/data')
-                            ? Image.file(File(img))
-                            : Image.network(
-                                img,
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.cover,
+            child: Card(
+              color: const Color.fromARGB(255, 254, 247, 241),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              elevation: 10,
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              // topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              // bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15)),
+                          child: img == 'assets/images/placeholder.png'
+                              ? Image.asset(
+                                  img,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.network(
+                                  img,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              child: Text(
+                                name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            // Text(currentUser.location),
+                            SizedBox(
+                              width: 100,
+                              height: 30,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: DUMMY_COMMENTS
+                                            .where((element) =>
+                                                element.workerId == id)
+                                            .toList() !=
+                                        []
+                                    ? starList
+                                    : [],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FittedBox(
-                            child: Text(
-                              name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(currentUser.location),
-                          SizedBox(
-                            width: 100,
-                            height: 30,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: DUMMY_COMMENTS
-                                          .where((element) =>
-                                              element.workerId == id)
-                                          .toList() !=
-                                      []
-                                  ? starList
-                                  : [],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Row(
-                  //   children: [
-                  //     // const Text(
-                  //     //   'التقييم',
-                  //     //   style: TextStyle(
-                  //     //       fontSize: 14, fontWeight: FontWeight.bold),
-                  //     // ),
-                  //     // const Text(
-                  //     //   ':',
-                  //     //   style: TextStyle(
-                  //     //       fontSize: 12, fontWeight: FontWeight.bold),
-                  //     // ),
-                  //     // const SizedBox(
-                  //     //   width: 2,
-                  //     // ),
+                    // Row(
+                    //   children: [
+                    //     // const Text(
+                    //     //   'التقييم',
+                    //     //   style: TextStyle(
+                    //     //       fontSize: 14, fontWeight: FontWeight.bold),
+                    //     // ),
+                    //     // const Text(
+                    //     //   ':',
+                    //     //   style: TextStyle(
+                    //     //       fontSize: 12, fontWeight: FontWeight.bold),
+                    //     // ),
+                    //     // const SizedBox(
+                    //     //   width: 2,
+                    //     // ),
 
-                  //   ],
-                  // )
+                    //   ],
+                    // )
 
-                  // Row(
-                  //   children: [
-                  //     const Text(
-                  //       'التقييم',
-                  //       style: TextStyle(
-                  //           fontSize: 16, fontWeight: FontWeight.bold),
-                  //     ),
-                  //     const SizedBox(
-                  //       width: 5,
-                  //     ),
-                  //     const Text(
-                  //       ':',
-                  //       style: TextStyle(
-                  //           fontSize: 16, fontWeight: FontWeight.bold),
-                  //     ),
-                  //     const SizedBox(
-                  //       width: 5,
-                  //     ),
-                  //     Text(
-                  //       '${rate(DUMMY_COMMENTS.where((element) => element.workerId == id).toList())}',
-                  //       style: const TextStyle(fontSize: 18),
-                  //     ),
-                  //     const SizedBox(
-                  //       width: 5,
-                  //     ),
-                  //     const Icon(
-                  //       Icons.star,
-                  //       color: Colors.amber,
-                  //     ),
-                  //   ],
-                  // ),
-                ],
+                    // Row(
+                    //   children: [
+                    //     const Text(
+                    //       'التقييم',
+                    //       style: TextStyle(
+                    //           fontSize: 16, fontWeight: FontWeight.bold),
+                    //     ),
+                    //     const SizedBox(
+                    //       width: 5,
+                    //     ),
+                    //     const Text(
+                    //       ':',
+                    //       style: TextStyle(
+                    //           fontSize: 16, fontWeight: FontWeight.bold),
+                    //     ),
+                    //     const SizedBox(
+                    //       width: 5,
+                    //     ),
+                    //     Text(
+                    //       '${rate(DUMMY_COMMENTS.where((element) => element.workerId == id).toList())}',
+                    //       style: const TextStyle(fontSize: 18),
+                    //     ),
+                    //     const SizedBox(
+                    //       width: 5,
+                    //     ),
+                    //     const Icon(
+                    //       Icons.star,
+                    //       color: Colors.amber,
+                    //     ),
+                    //   ],
+                    // ),
+                  ],
+                ),
               ),
             ),
-          ),
-          onTap: () => Navigator.of(context).pushNamed(
-              WorkerDetailsScreen.routeName,
-              arguments: {'workerId': id, 'currentUser': currentUser}),
-        ),
+            onTap: () {}
+            // Navigator.of(context).pushNamed(
+            //     WorkerDetailsScreen.routeName,
+            //     arguments: {'workerId': id, 'currentUser': currentUser}),
+            ),
       ),
     );
   }

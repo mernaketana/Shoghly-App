@@ -35,8 +35,8 @@ class User with ChangeNotifier {
     // print(userId);
   }
 
-  Future<Employee> getUser() async {
-    print(dotenv.env['API_URL']);
+  Future<Employee> getUser(String userId) async {
+    // print(dotenv.env['API_URL']);
     final url = Uri.parse("${apiUrl}profile/$userId");
     try {
       final response = await http.get(
@@ -44,6 +44,7 @@ class User with ChangeNotifier {
         headers: {"Content-Type": "application/json"},
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
+      print(data);
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return Employee(
@@ -72,9 +73,46 @@ class User with ChangeNotifier {
           role: employeeInfo["role"],
           categordId: employeeInfo["profession"],
           image: employeeInfo["picture"]);
-      print(_user.image);
+      // print(_user.image);
       notifyListeners();
       return _user;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<List<Employee>> search(String text, String city) async {
+    // print(text);
+    // print(city);
+    Map<String, String> queryParams = {'text': text, 'city': city};
+    final url = Uri.parse("${apiUrl}autoComplete");
+    final finalUrl = url.replace(queryParameters: queryParams);
+    try {
+      final response = await http.get(
+        finalUrl,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken",
+        },
+      );
+      final employee = await getUser(userId);
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      final message = data['message'];
+      final results = data['results'] as List<dynamic>;
+      List<Employee> employees = [];
+      final employeeIds = results.map((e) => e["userId"]).toList();
+      for (var i = 0; i < employeeIds.length; i++) {
+        await getUser(employeeIds[i]).then((value) {
+          print(value);
+          employees.add(value);
+        });
+      }
+      // ignore: unnecessary_null_comparison
+      if (data == null) {
+        return [];
+      }
+      notifyListeners();
+      return employees;
     } catch (error) {
       rethrow;
     }
