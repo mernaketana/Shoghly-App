@@ -16,12 +16,22 @@ const DUMMY_CATEGORIES = [
   Category(title: 'أنظمة دش', img: Icons.satellite),
   Category(title: 'تصليح أدوات منزلية', img: Icons.home_repair_service),
   Category(title: 'نقل ورفع الموبيليا', img: Icons.bedroom_parent),
-  // Category(title: 'قطر السيارات' , img: Icon),
-  // Category(title: 'سمكرة سيارات' , img: Icons.metal),
+  Category(title: 'قطر السيارات', img: Icons.emoji_transportation),
+  Category(title: 'سمكرة سيارات', img: Icons.car_repair),
   Category(title: 'أنظمة صوت', img: Icons.speaker),
-  // Category(title: 'صناعات يدوية' , img: Icons.hand),
-  Category(title: 'السباكة', img: Icons.plumbing),
-  Category(title: 'النجارة', img: Icons.handyman),
+  // Category(title: 'صناعات يدوية' , img: Icons.string),
+  Category(title: 'سباكة', img: Icons.plumbing),
+  Category(title: 'نجارة', img: Icons.handyman),
+];
+
+// ignore: non_constant_identifier_names
+final CITIES = [
+  'بورسعيد',
+  'القاهرة',
+  'الاسكندرية',
+  'الاسماعيلية',
+  'المنصورة',
+  'المنوفية'
 ];
 
 // ignore: constant_identifier_names, non_constant_identifier_names

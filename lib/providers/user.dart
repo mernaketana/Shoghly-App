@@ -37,11 +37,14 @@ class User with ChangeNotifier {
 
   Future<Employee> getUser(String userId) async {
     // print(dotenv.env['API_URL']);
-    final url = Uri.parse("${apiUrl}profile/$userId");
+    final url = Uri.parse("${apiUrl}users");
     try {
       final response = await http.get(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken",
+        },
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
       print(data);
@@ -59,20 +62,23 @@ class User with ChangeNotifier {
             location: '',
             role: '');
       }
-      Map<String, dynamic> employeeInfo = data["info"];
+      Map<String, dynamic> employeeInfo = data["data"];
       _user = Employee(
-          gender: employeeInfo["gender"],
-          id: userId,
-          address: employeeInfo["line"],
-          fname: employeeInfo["firstName"],
-          lname: employeeInfo["lastName"],
-          email: '',
-          password: '',
-          phone: int.parse(employeeInfo["phone"]),
-          location: employeeInfo["city"],
-          role: employeeInfo["role"],
-          categordId: employeeInfo["profession"],
-          image: employeeInfo["picture"]);
+        id: employeeInfo["id"],
+        fname: employeeInfo["firstName"],
+        lname: employeeInfo["lastName"],
+        phone: int.parse(employeeInfo["phone"]),
+        image: employeeInfo["picture"],
+        categordId: employeeInfo["profession"],
+        gender: employeeInfo["gender"],
+        location: employeeInfo["city"],
+        address: employeeInfo["line"],
+        reviews: employeeInfo["reviews"],
+        reviewsCount: employeeInfo["reviewsCount"],
+        email: '',
+        password: '',
+        role: employeeInfo["role"],
+      );
       // print(_user.image);
       notifyListeners();
       return _user;
@@ -84,8 +90,8 @@ class User with ChangeNotifier {
   Future<List<Employee>> search(String text, String city) async {
     // print(text);
     // print(city);
-    Map<String, String> queryParams = {'text': text, 'city': city};
     final url = Uri.parse("${apiUrl}autoComplete");
+    Map<String, String> queryParams = {'text': text, 'city': city};
     final finalUrl = url.replace(queryParameters: queryParams);
     try {
       final response = await http.get(
@@ -118,26 +124,22 @@ class User with ChangeNotifier {
     }
   }
 
-  Future<void> editUser(
-    String fname,
-    String lname,
-    String gender,
-    String phone,
-    String city,
-    String address,
-  ) async {
-    final url = Uri.parse("${apiUrl}profile");
+  Future<void> editUser(String fname, String lname, String gender, String phone,
+      String city, String address, String picture) async {
+    final url = Uri.parse("${apiUrl}users");
+    print(picture);
     try {
       final response = await http.put(
         url,
         body: json.encode({
           "firstName": fname,
           "lastName": lname,
-          "gender": gender,
           "phone": phone,
+          "gender": gender,
           "country": "مصر",
           "city": city,
-          "line": address
+          "line": address,
+          "picture": picture,
         }),
         headers: {
           "Content-Type": "application/json",

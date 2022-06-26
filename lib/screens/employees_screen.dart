@@ -1,46 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:project/dummy_data.dart';
+import 'package:project/providers/worker.dart';
+import 'package:provider/provider.dart';
 import '../widgets/employees_body_widget.dart';
 import '../models/employee.dart';
 
-class EmployeesScreen extends StatelessWidget {
+class EmployeesScreen extends StatefulWidget {
   static const routeName = '/employees-screen';
-  const EmployeesScreen({Key? key}) : super(key: key);
+  final Map<String, dynamic> arguments;
+  const EmployeesScreen({Key? key, required this.arguments}) : super(key: key);
+
+  @override
+  State<EmployeesScreen> createState() => _EmployeesScreenState();
+}
+
+class _EmployeesScreenState extends State<EmployeesScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+  late List<Employee> employees;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      for (var i = 0; i < CITIES.length; i++) {
+        await Provider.of<Worker>(context, listen: false)
+            .getWorkers(CITIES[i], widget.arguments['title']);
+      }
+      employees = Provider.of<Worker>(context, listen: false).employees;
+      print(employees);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final employees = arguments['employees'] as List<Employee>;
-    final title = arguments['title'];
+    print('Do I come here?');
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 254, 247, 241),
-        // drawer: MyDrawer(currentUser: currentUser),
         appBar: AppBar(
-          title: Text('$title'),
-          // actions: <Widget>[
-          //   IconButton(onPressed: () {}, icon: const Icon(Icons.messenger)),
-          //   IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
-          // ],
+          title: Text('${widget.arguments['title']}'),
         ),
-        body: ListView.builder(
-          itemBuilder: (context, index) {
-            // if (currentUser.id == employees[index].id) {
-            //   return const SizedBox();
-            // }
-            return EmployeesBodyWidget(
-                // currentUser: currentUser,
-                // rate: employees[index],
-                img: employees[index].image == null
-                    ? 'assets/images/placeholder.png'
-                    : employees[index].image as String,
-                name: '${employees[index].fname} ${employees[index].lname}',
-                profession: employees[index].categordId as String,
-                id: employees[index].id);
-          },
-          itemCount: employees.length,
-        ),
+        body: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                itemBuilder: (context, index) {
+                  // if (currentUser.id == employees[index].id) {
+                  //   return const SizedBox();
+                  // }
+                  return EmployeesBodyWidget(
+                      currentUser: widget.arguments['currentUser'],
+                      currentWorker: employees
+                          .where((element) =>
+                              element.categordId == widget.arguments['title'])
+                          .toList()[index]);
+                },
+                itemCount: employees
+                    .where((element) =>
+                        element.categordId == widget.arguments['title'])
+                    .toList()
+                    .length,
+              ),
       ),
     );
   }

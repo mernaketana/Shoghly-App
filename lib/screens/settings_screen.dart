@@ -61,6 +61,17 @@ class MainSettingsScreen extends StatelessWidget {
                 borderRadius: BorderRadiusDirectional.circular(10)),
             child: ListTile(
                 tileColor: const Color.fromARGB(255, 254, 247, 241),
+                title: const Text('تعطيل الحساب'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {}),
+          ),
+          Card(
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusDirectional.circular(10)),
+            child: ListTile(
+                tileColor: const Color.fromARGB(255, 254, 247, 241),
                 title: const Text('تسجيل الخروج'),
                 trailing: const Icon(Icons.logout),
                 onTap: () {

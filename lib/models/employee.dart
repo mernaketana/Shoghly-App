@@ -1,11 +1,4 @@
-// class PlaceLocation {
-//   final double latitude;
-//   final double longitude;
-//   final String? address;
-
-//   const PlaceLocation(
-//       {required this.latitude, required this.longitude, this.address});
-// }
+import 'comment.dart';
 
 class Employee {
   final String id;
@@ -21,6 +14,8 @@ class Employee {
   final String role;
   String gender;
   String address;
+  List? reviews;
+  int? reviewsCount;
 
   Employee(
       {required this.id,
@@ -35,5 +30,7 @@ class Employee {
       required this.gender,
       required this.phone,
       required this.location,
+      this.reviews,
+      this.reviewsCount,
       required this.role});
 }

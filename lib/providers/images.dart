@@ -19,7 +19,8 @@ class Images with ChangeNotifier {
     authToken = auth.token;
   }
 
-  Future<void> addImage(String image) async {
+  Future<String> addImage(String image) async {
+    print('image PROVIDEEEEEEEEEEEEEEEEEEER');
     print(image);
     final url = Uri.parse("${apiUrl}upload");
     try {
@@ -36,7 +37,8 @@ class Images with ChangeNotifier {
       _imageUrl = data[0]["url"];
       print(_imageUrl);
       notifyListeners();
-      changeImage(imageUrl);
+      // changeImage(imageUrl);
+      return imageUrl;
     } catch (error) {
       rethrow;
     }

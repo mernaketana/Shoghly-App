@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/images.dart';
 
 class UserImagePicker extends StatefulWidget {
   final void Function(String pickedImage) imagePick;
@@ -15,6 +18,7 @@ class UserImagePicker extends StatefulWidget {
 class _UserImagePickerState extends State<UserImagePicker> {
   ImageSource? source;
   File? _image;
+  var _isLoading = false;
 
 // void _pickedImage() async{
 //   final picker = ImagePicker();
@@ -31,9 +35,19 @@ class _UserImagePickerState extends State<UserImagePicker> {
       if (pickedImage == null) return;
       final pickedImageFile = File(pickedImage.path);
       setState(() {
+        _isLoading = true;
+      });
+      final pickedImageUrl = await Provider.of<Images>(context, listen: false)
+          .addImage(pickedImage.path);
+      setState(() {
+        _isLoading = false;
+      });
+      print('Here in user image picker');
+      print(pickedImageUrl);
+      setState(() {
         _image = pickedImageFile;
       });
-      widget.imagePick(pickedImage.path);
+      widget.imagePick(pickedImageUrl);
     } on PlatformException catch (e) {
       // ignore: avoid_print
       print(e);
@@ -49,9 +63,17 @@ class _UserImagePickerState extends State<UserImagePicker> {
       if (pickedImage == null) return;
       final pickedImageFile = File(pickedImage.path);
       setState(() {
+        _isLoading = true;
+      });
+      final pickedImageUrl = await Provider.of<Images>(context, listen: false)
+          .addImage(pickedImage.path);
+      setState(() {
+        _isLoading = false;
+      });
+      setState(() {
         _image = pickedImageFile;
       });
-      widget.imagePick(pickedImage.path);
+      widget.imagePick(pickedImageUrl);
     } on PlatformException catch (e) {
       // ignore: avoid_print
       print(e);
@@ -62,14 +84,16 @@ class _UserImagePickerState extends State<UserImagePicker> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 40,
-          // ignore: unnecessary_null_comparison
-          backgroundImage: _image != null
-              ? FileImage(_image as File)
-              : const AssetImage('assets/images/placeholder.png')
-                  as ImageProvider<Object>?,
-        ),
+        !_isLoading
+            ? CircleAvatar(
+                radius: 40,
+                // ignore: unnecessary_null_comparison
+                backgroundImage: _image != null
+                    ? FileImage(_image as File)
+                    : const AssetImage('assets/images/placeholder.png')
+                        as ImageProvider<Object>?,
+              )
+            : const CircularProgressIndicator(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

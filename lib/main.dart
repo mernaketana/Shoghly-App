@@ -17,6 +17,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import './screens/my_account_screen.dart';
 import './providers/auth.dart';
 import 'providers/review.dart';
+import 'providers/worker.dart';
 import 'widgets/splashScreen.dart';
 
 void main() async {
@@ -48,6 +49,13 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProxyProvider<Auth, Images>(
             create: (context) => Images(),
+            update: (context, auth, notifier) => notifier!..recieveToken(auth),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => Worker(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Worker>(
+            create: (context) => Worker(),
             update: (context, auth, notifier) => notifier!..recieveToken(auth),
           ),
           // ChangeNotifierProxyProvider<Images, Auth>(
@@ -87,15 +95,27 @@ class MyApp extends StatelessWidget {
                                   ? const SplashScreen()
                                   : const AuthScreen(),
                         ),
+                  onGenerateRoute: (RouteSettings settings) {
+                    var routes = <String, WidgetBuilder>{
+                      EmployeesScreen.routeName: (ctx) => EmployeesScreen(
+                          arguments:
+                              settings.arguments as Map<String, dynamic>),
+                      WorkerDetailsScreen.routeName: (ctx) =>
+                          WorkerDetailsScreen(
+                              arguments:
+                                  settings.arguments as Map<String, dynamic>),
+                    };
+                    WidgetBuilder? builder = routes[settings.name];
+                    return MaterialPageRoute(builder: (ctx) => builder!(ctx));
+                  },
                   routes: {
                     // '/': (context) => const AuthScreen(),
-                    EmployeesScreen.routeName: (context) =>
-                        const EmployeesScreen(),
+                    // EmployeesScreen.routeName: (context) => EmployeesScreen(),
                     ChoicesScreen.routeName: (context) => const ChoicesScreen(),
                     DetailedAuthScreen.routeName: (context) =>
                         const DetailedAuthScreen(),
-                    WorkerDetailsScreen.routeName: (context) =>
-                        const WorkerDetailsScreen(),
+                    // WorkerDetailsScreen.routeName: (context) =>
+                    //     const WorkerDetailsScreen(),
                     // MyAccountScreen.routeName: (context) =>
                     //     const MyAccountScreen(),
                     // GalleryScreen.routeName: (context) => const GalleryScreen(),
@@ -106,50 +126,3 @@ class MyApp extends StatelessWidget {
                 ))));
   }
 }
-
-          
-          
-          
-          
-        //   MaterialApp(
-        //         title: 'My Shop',
-        //         theme: ThemeData(
-        //           pageTransitionsTheme: PageTransitionsTheme(builders: {
-        //             TargetPlatform.android: CustomPageTransitionBuilder(),
-        //             TargetPlatform.iOS: CustomPageTransitionBuilder(),
-        //           }),
-        //           fontFamily: 'lato',
-        //           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
-        //               .copyWith(secondary: Colors.white54),
-        //         ),
-        //         home: value.isAuth
-        //             ? const ProductsOverviewScreen()
-        //             : FutureBuilder(
-        //                 future: value.tryAutoLogIn(),
-        //                 builder: (context, snapshot) =>
-        //                     snapshot.connectionState == ConnectionState.waiting
-        //                         ? const SplashScreen()
-        //                         : const AuthScreen(),
-        //               ),
-        //         debugShowCheckedModeBanner: false,
-        //         routes: {
-        //           ProductsOverviewScreen.routeName: (context) =>
-        //               const ProductsOverviewScreen(),
-        //           ProductDetailScreen.routeName: (context) =>
-        //               const ProductDetailScreen(),
-        //           CartScreen.routeName: (context) => const CartScreen(),
-        //           OrdersScreen.routeName: (context) => const OrdersScreen(),
-        //           UserProductsScreen.routeName: (context) =>
-        //               const UserProductsScreen(),
-        //           EditAddProductScreen.routeName: (context) =>
-        //               const EditAddProductScreen(),
-        //           AuthScreen.routeName: (context) => const AuthScreen(),
-        //         },
-        //       )),
-        // ));
-    
-    
-    
-    
-    
-   

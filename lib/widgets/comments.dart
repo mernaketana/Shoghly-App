@@ -5,17 +5,21 @@ import 'package:comment_box/comment/comment.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 // import 'package:intl/intl.dart' hide TextDirection;
 import 'package:project/models/comment.dart';
+import 'package:project/models/employee.dart';
+import 'package:project/screens/worker_details_screen.dart';
+import 'package:provider/provider.dart';
 import '../dummy_data.dart';
+import '../providers/review.dart';
 
 class Comments extends StatefulWidget {
-  final List<Comment> items;
-  final String userId;
-  final String workerId;
+  final Employee currentUser;
+  final Employee currentWorker;
+  final List<Comment> userComments;
   const Comments({
     Key? key,
-    required this.items,
-    required this.userId,
-    required this.workerId,
+    required this.currentUser,
+    required this.currentWorker,
+    required this.userComments,
   }) : super(key: key);
 
   @override
@@ -26,97 +30,227 @@ class _CommentsState extends State<Comments> {
   final formKey = GlobalKey<FormState>();
   final commentController = TextEditingController();
   double? _rate;
-  @override
-  Widget build(BuildContext context) {
-    return CommentBox(
-      userImage:
-          'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          var user = DUMMY_EMP.firstWhere((e) =>
-              e.id ==
-              widget.items
-                  .where((e) => e.workerId == widget.workerId)
-                  .toList()[index]
-                  .userId);
-          var commentTime = widget.items
-              .where((e) => e.workerId == widget.workerId)
-              .toList()[index]
-              .createdAt;
-          return Padding(
-              padding: const EdgeInsets.all(6),
-              child: ListTile(
-                leading: Container(
-                  height: 40,
-                  width: 40,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  child: CircleAvatar(
-                      maxRadius: 20,
-                      backgroundImage: user.image != ''
-                          ? user.image!.startsWith('/data')
-                              ? FileImage(File(user.image as String))
-                              : NetworkImage(user.image as String)
-                                  as ImageProvider<Object>
-                          : const AssetImage('assets/images/placeholder.png')),
-                ),
-                title: Text('${user.fname} ${user.lname}'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${commentTime.hour}:${commentTime.minute}  ${commentTime.year}-${commentTime.month}-${commentTime.day}',
-                      style: const TextStyle(fontSize: 10),
+  var _isLoading = false;
+
+  Future<void> createReview(Comment comment) async {
+    await Provider.of<Review>(context, listen: false).addReview(comment);
+    Navigator.of(context).popAndPushNamed(WorkerDetailsScreen.routeName,
+        arguments: {
+          'currentWorker': widget.currentWorker,
+          'currentUser': widget.currentUser
+        });
+  }
+
+  Future<void> editReview(Comment comment) async {
+    print('I am here');
+    print(comment.reviewId);
+    await Provider.of<Review>(context, listen: false).editReview(comment);
+    Navigator.of(context).popAndPushNamed(WorkerDetailsScreen.routeName,
+        arguments: {
+          'currentWorker': widget.currentWorker,
+          'currentUser': widget.currentUser
+        });
+  }
+
+  void deleteComment(String reviewId) async {
+    await Provider.of<Review>(context, listen: false).deleteReview(reviewId);
+    Navigator.of(context).popAndPushNamed(WorkerDetailsScreen.routeName,
+        arguments: {
+          'currentWorker': widget.currentWorker,
+          'currentUser': widget.currentUser
+        });
+  }
+
+  var starList = <Widget>[];
+  List<Widget> createStars(double rate) {
+    starList.clear();
+    print('RAAAAAAAAAAAAAAAAAAATEEEEEEEEEEEEEEe');
+    print(rate);
+    print(starList);
+    for (var i = 0; i < rate; i++) {
+      // print(i);
+      starList.add(
+        const Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: 17,
+        ),
+      );
+    }
+    print('STAAAAAAAAAAAAAAAAAAAAAR');
+    print(starList);
+    return starList;
+  }
+
+  Future<dynamic> editReviewDialog(Comment review, BuildContext bigContext) {
+    print(review.reviewId);
+    String editedReview = '';
+    return showDialog(
+        context: context,
+        builder: (context) => Directionality(
+              textDirection: TextDirection.rtl,
+              child: AlertDialog(
+                title: const Text('تعديل تعليقك'),
+                content: TextFormField(
+                  initialValue: review.comment,
+                  key: const ValueKey('comment'),
+                  onChanged: (e) {
+                    editedReview = e as String;
+                    print(e);
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    Text(widget.items
-                        .where((e) => e.workerId == widget.workerId)
-                        .toList()[index]
-                        .comment),
-                  ],
-                ),
-                trailing: SizedBox(
-                  width: 100,
-                  child: FittedBox(
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 18,
-                          ),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            '${widget.items.where((e) => e.workerId == widget.workerId).toList()[index].rate}',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  widget.items.remove(widget.items
-                                      .where(
-                                          (e) => e.workerId == widget.workerId)
-                                      .toList()[index]);
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                                size: 18,
-                              ))
-                        ]),
                   ),
                 ),
-              ));
-        },
-        itemCount: widget.items
-            .where((e) => e.workerId == widget.workerId)
-            .toList()
-            .length,
-      ),
-      labelText: 'اكتب تعليق...',
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        showRate(context).whenComplete(() {
+                          if (editedReview == '') {
+                            showDialog(
+                                context: bigContext,
+                                builder: (context) => Directionality(
+                                      textDirection: TextDirection.rtl,
+                                      child: AlertDialog(
+                                        title: const Text(
+                                            'قم بتعديل التعليق لتتمكن من تعديل التقييم'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text(
+                                                'حسنا',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18),
+                                              ))
+                                        ],
+                                      ),
+                                    ));
+                          }
+                          print(editedReview);
+                          if (formKey.currentState!.validate()) {
+                            if (_rate! > 0 && editedReview != '') {
+                              print('Here I ammmm');
+                              var value = Comment(
+                                reviewId: review.reviewId,
+                                rate: _rate,
+                                comment: editedReview,
+                                userId: widget.currentUser.id,
+                                workerId: widget.currentWorker.id,
+                              );
+                              editReview(value);
+                            }
+                          }
+                        });
+                      },
+                      child: const Text(
+                        'تم',
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ))
+                ],
+              ),
+            ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // starList.clear();
+
+    return CommentBox(
+      userImage: widget.currentUser.image == ''
+          ? 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+          : widget.currentUser.image,
+      child: widget.userComments.isEmpty
+          ? const Center(
+              child: Text('لا يوجد تعليقات'),
+            )
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                final currentComment = widget.userComments[index];
+                final commentTime = currentComment.createdAt;
+                // createStars(currentComment.rate!);
+                return Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ListTile(
+                            leading: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: CircleAvatar(
+                                  maxRadius: 20,
+                                  backgroundImage:
+                                      currentComment.user!.picture != ''
+                                          ? NetworkImage(
+                                                  currentComment.user!.picture)
+                                              as ImageProvider<Object>
+                                          : const AssetImage(
+                                              'assets/images/placeholder.png')),
+                            ),
+                            title: Text(
+                                '${currentComment.user!.fname} ${currentComment.user!.lname}'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${commentTime!.hour}:${commentTime.minute}  ${commentTime.year}-${commentTime.month}-${commentTime.day}',
+                                  style: const TextStyle(fontSize: 10),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 2),
+                                  child: Row(
+                                    children: createStars(currentComment.rate!),
+                                  ),
+                                ),
+                                Text(
+                                  currentComment.comment,
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (currentComment.user!.id == widget.currentUser.id)
+                          Row(
+                            children: [
+                              IconButton(
+                                  alignment: Alignment.centerLeft,
+                                  onPressed: () =>
+                                      editReviewDialog(currentComment, context),
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.red,
+                                    size: 20,
+                                  )),
+                              IconButton(
+                                  alignment: Alignment.centerRight,
+                                  onPressed: () =>
+                                      deleteComment(currentComment.reviewId!),
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                    size: 20,
+                                  )),
+                            ],
+                          ),
+                      ],
+                    ));
+              },
+              itemCount: widget.userComments.length,
+            ),
+      labelText: widget.userComments
+              .any((element) => element.user!.id == widget.currentUser.id)
+          ? 'لا يمكنك كتابة تعليق مرة اخرى'
+          : 'اكتب تعليق...',
       withBorder: false,
       sendButtonMethod: () {
         // ignore: avoid_print
@@ -143,15 +277,14 @@ class _CommentsState extends State<Comments> {
           }
           if (formKey.currentState!.validate()) {
             if (_rate! > 0 && commentController.text != '') {
-              setState(() {
-                var value = Comment(
-                    rate: _rate,
-                    comment: commentController.text,
-                    userId: widget.userId,
-                    workerId: widget.workerId,
-                    createdAt: DateTime.now());
-                widget.items.add(value);
-              });
+              var value = Comment(
+                  rate: _rate,
+                  comment: commentController.text,
+                  userId: widget.currentUser.id,
+                  workerId: widget.currentWorker.id,
+                  createdAt: DateTime.now());
+              // widget.items.add(value);
+              createReview(value);
             }
 
             commentController.clear();

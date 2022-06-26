@@ -16,6 +16,7 @@ import '../models/comment.dart';
 import '../dummy_data.dart';
 import '../models/image.dart';
 import '../providers/images.dart';
+import '../providers/user.dart';
 import './images_gallery_widget.dart';
 
 class MyAccountBody extends StatefulWidget {
@@ -92,8 +93,16 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       setState(() {
         _isLoading = true;
       });
-      await Provider.of<Images>(context, listen: false)
+      String userImage = await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
+      await Provider.of<User>(context, listen: false).editUser(
+          widget.currentUser.fname,
+          widget.currentUser.lname,
+          widget.currentUser.gender,
+          widget.currentUser.phone.toString(),
+          widget.currentUser.location,
+          widget.currentUser.address,
+          userImage);
       setState(() {
         _isLoading = false;
       });
@@ -110,8 +119,16 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       setState(() {
         _isLoading = true;
       });
-      await Provider.of<Images>(context, listen: false)
+      String userImage = await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
+      await Provider.of<User>(context, listen: false).editUser(
+          widget.currentUser.fname,
+          widget.currentUser.lname,
+          widget.currentUser.gender,
+          widget.currentUser.phone.toString(),
+          widget.currentUser.location,
+          widget.currentUser.address,
+          userImage);
       setState(() {
         _isLoading = false;
       });
@@ -147,6 +164,8 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                     ? Image.asset(
                                         'assets/images/placeholder.png')
                                     : CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        height: 400,
                                         imageUrl:
                                             widget.currentUser.image as String,
                                         placeholder: (context, url) =>

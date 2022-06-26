@@ -11,7 +11,7 @@ class Auth with ChangeNotifier {
   String? _token; //tokens expire after an amount of time typically one hour
   // DateTime? _expiryDate;
   String? _userId;
-  late String imageUrl;
+  String? imageUrl;
   // Timer? _authTimer;
   final apiUrl = dotenv.env['API_URL']!;
 
@@ -26,10 +26,10 @@ class Auth with ChangeNotifier {
       String address,
       String email,
       String password) async {
-    final url = Uri.parse("${apiUrl}signup");
+    final url = Uri.parse("${apiUrl}users");
     try {
       print("auth signup");
-      print(imageUrl);
+      // print(imageUrl);
       final response = await http.post(
         url,
         body: json.encode({
@@ -41,7 +41,7 @@ class Auth with ChangeNotifier {
           "role": role,
           "profession": profession,
           "phone": phone,
-          "picture": imageUrl,
+          "picture": imageUrl ?? '',
           "country": "مصر",
           "city": city,
           "line": address
@@ -202,14 +202,6 @@ class Auth with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
-
-  // Future<void> logIn(String email, String password) async {
-  //   return _authenticate(email, password, "signInWithPassword");
-  // }
-  // Future<void> logIn(String fname, String lname, String gender, String role, String profession, String phone, String city, String address,
-  //     String email, String password) async {
-  //   return _authenticate(fname, lname, gender, role, profession, phone, city, address, email, password, "signin");
-  // }
 
   bool get isAuth {
     // print('****************');

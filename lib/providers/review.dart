@@ -12,8 +12,14 @@ class Review with ChangeNotifier {
   late String authToken;
   late String _reviewId;
   // ignore: unused_field
-  Comment _review =
-      Comment(comment: '', userId: '', workerId: '', createdAt: DateTime.now());
+  Comment _review = Comment(
+      comment: '',
+      workerId: '',
+      createdAt: DateTime.now(),
+      rate: 0,
+      reviewId: '',
+      updatedAt: DateTime.now(),
+      user: Commenter(id: '', fname: '', lname: '', picture: '', gender: ''));
   late String userId;
   final apiUrl = dotenv.env['API_URL']!;
   // Employee _user = Employee(
@@ -63,30 +69,43 @@ class Review with ChangeNotifier {
         },
       );
       final responseData = json.decode(response.body);
-      _reviewId = responseData['reviewId'];
-      // print(responseData);
+      print(responseData);
+      _reviewId = responseData['data']['id'];
+      print(_reviewId);
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
-      // _token = responseData["id"];
-      // _userId = responseData["id"];
-      // _expiryDate = DateTime.now()
-      //     .add(Duration(seconds: int.parse(responseData["expiresIn"])));
-      // _autoLogOut();
       notifyListeners();
-      // final prefs = await SharedPreferences.getInstance();
-      // final userData = json.encode({
-      //   "token": _token,
-      //   "userId": _userId,
-      //   "expiryDate": _expiryDate!.toIso8601String(),
-      // });
-      // prefs.setString("userData", userData);
-      // print("=====================>");
-      // print(prefs.getString("userData"));
     } catch (error) {
-      //Firebase doesn"t return an error, it doesn"t have an error status
       rethrow;
-      // print(error);
+    }
+  }
+
+  Future<void> editReview(Comment review) async {
+    final url = Uri.parse("${apiUrl}workers/reviews/${review.reviewId}");
+    print(review.reviewId);
+    try {
+      final response = await http.put(
+        url,
+        body: json.encode({
+          "rating": review.rate,
+          "description": review.comment,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken"
+        },
+      );
+      final responseData = json.decode(response.body);
+      print(responseData);
+      // _reviewId = responseData['data']['id'];
+      // print(_reviewId);
+      if (responseData["error"] != null) {
+        throw HttpException(responseData["message"]);
+      }
+      notifyListeners();
+    } catch (error) {
+      rethrow;
     }
   }
 
@@ -94,8 +113,9 @@ class Review with ChangeNotifier {
     return _reviewId;
   }
 
-  Future<Comment> getReview(String workerId) async {
-    final url = Uri.parse("${apiUrl}profile/workers/$workerId/reviews");
+  Future<List<Comment>> getReview(String workerId) async {
+    final List<Comment> workerComments = [];
+    final url = Uri.parse("${apiUrl}workers/$workerId/reviews");
     try {
       final response = await http.get(
         url,
@@ -108,17 +128,28 @@ class Review with ChangeNotifier {
       print(data);
       // ignore: unnecessary_null_comparison
       if (data == null) {
-        return Comment(
-            comment: '', userId: '', workerId: '', createdAt: DateTime.now());
+        return [];
       }
-      Map<String, dynamic> reviewInfo = data["info"];
-      _review = Comment(
-          comment: reviewInfo['comment'],
-          userId: reviewInfo['userId'],
-          workerId: reviewInfo['workerId'],
-          createdAt: reviewInfo['createdAt']);
+      List listOfReviews = data["data"]["reviews"];
+      for (var i = 0; i < listOfReviews.length; i++) {
+        final currentComment = listOfReviews[i];
+        _review = Comment(
+            reviewId: currentComment["reviewId"],
+            updatedAt: DateTime.parse(currentComment["updatedAt"]),
+            user: Commenter(
+                id: currentComment["user"]["id"],
+                fname: currentComment["user"]["firstName"],
+                lname: currentComment["user"]["lastName"],
+                picture: currentComment["user"]["picture"],
+                gender: currentComment["user"]["gender"]),
+            comment: currentComment["description"],
+            workerId: currentComment['workerId'],
+            createdAt: DateTime.parse(currentComment['createdAt']),
+            rate: (currentComment["rating"] as int).toDouble());
+        workerComments.add(_review);
+      }
       notifyListeners();
-      return _review;
+      return workerComments;
     } catch (error) {
       rethrow;
     }
@@ -141,26 +172,29 @@ class Review with ChangeNotifier {
         return;
       }
       Map<String, dynamic> reviewInfo = data["info"];
-      _review = Comment(
-          comment: reviewInfo['comment'],
-          userId: reviewInfo['userId'],
-          workerId: reviewInfo['workerId'],
-          createdAt: reviewInfo['createdAt']);
+      // _review = Comment(
+      //     comment: reviewInfo['comment'],
+      //     userId: reviewInfo['userId'],
+      //     workerId: reviewInfo['workerId'],
+      //     createdAt: reviewInfo['createdAt']);
       notifyListeners();
     } catch (error) {
       rethrow;
     }
   }
 
-  Future<void> deleteReview(Comment review) async {
-    final url = Uri.parse("${apiUrl}profile/review/$reviewId");
+  Future<void> deleteReview(String reviewId) async {
+    final url = Uri.parse("${apiUrl}workers/reviews/$reviewId");
     try {
       final response = await http.delete(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken"
+        },
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
-      // print(data);
+      print(data);
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return;

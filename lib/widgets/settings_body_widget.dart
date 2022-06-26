@@ -30,15 +30,8 @@ class _SettingsBodyState extends State<SettingsBody> {
   late String oldPass;
   late String newPass;
   var isLoading = false;
-  final _items = [
-    'بورسعيد',
-    'القاهرة',
-    'الاسكندرية',
-    'الاسماعيلية',
-    'المنصورة',
-    'المنوفية'
-  ];
   Map<String, String> _authData = {
+    'picture': '',
     'firstName': '',
     'lastName': '',
     'email': '',
@@ -103,7 +96,9 @@ class _SettingsBodyState extends State<SettingsBody> {
         _authData["gender"] as String,
         _authData["phone"] as String,
         _authData["city"] as String,
-        _authData["line"] as String);
+        _authData["line"] as String,
+        _authData["picture"]!);
+
     setState(() {
       isLoading = false;
     });
@@ -126,25 +121,8 @@ class _SettingsBodyState extends State<SettingsBody> {
     });
   }
 
-  void _pickedImage(File image) {
-    _userImage = image.path; //بفوروارد بالعكس
-    setState(() {
-      // newUsers = Employee(
-      //     bDate: newUsers.bDate,
-      //     categordId: newUsers.categordId,
-      //     id: newUsers.id,
-      //     fname: newUsers.fname,
-      //     lname: newUsers.lname,
-      //     email: newUsers.email,
-      //     password: newUsers.password,
-      //     phone: newUsers.phone,
-      //     location: newUsers.location,
-      //     role: newUsers.role,
-      //     address: newUsers.address,
-      //     image: _userImage);
-      // print('imaaaaaaaaaaaaaaaaaaaaaaaaaaaaage');
-      // print(newUsers.image);
-    });
+  void _pickedImage(String image) {
+    _authData["picture"] = image; //بفوروارد بالعكس
   }
 
   @override
@@ -299,7 +277,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                             ),
                             obscureText: true,
                           ),
-                        // if (!editPass) UserImagePicker(imagePick: _pickedImage),
+                        if (!editPass) UserImagePicker(imagePick: _pickedImage),
                         if (!editPass)
                           TextFormField(
                             key: const ValueKey('fname'),
@@ -452,8 +430,8 @@ class _SettingsBodyState extends State<SettingsBody> {
                                   value: 'انثى',
                                 ),
                                 DropdownMenuItem(
-                                  child: Text('رجل'),
-                                  value: 'رجل',
+                                  child: Text('ذكر'),
+                                  value: 'ذكر',
                                 )
                               ],
                               onSaved: (String? e) =>
@@ -486,7 +464,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                                   labelText: 'المحافظة'),
                               isExpanded: true,
                               iconEnabledColor: Colors.white,
-                              items: _items
+                              items: CITIES
                                   .map((e) => DropdownMenuItem(
                                         child: Text(e),
                                         value: e,
