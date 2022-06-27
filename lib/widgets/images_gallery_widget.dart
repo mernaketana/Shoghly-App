@@ -13,8 +13,6 @@ class ImagesGallery extends StatefulWidget {
 class _ImagesGalleryState extends State<ImagesGallery> {
   @override
   Widget build(BuildContext context) {
-    // print('--------------------------------------------------');
-    // print(widget.images);
     // ignore: avoid_unnecessary_containers
     return Container(
       child: SingleChildScrollView(

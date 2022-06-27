@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
@@ -44,19 +42,6 @@ class _SettingsBodyState extends State<SettingsBody> {
     'city': '',
     'line': ''
   };
-  // var newUsers = Employee(
-  //     image: '',
-  //     categordId: '',
-  //     id: '',
-  //     fname: '',
-  //     lname: '',
-  //     email: '',
-  //     password: '',
-  //     phone: 0,
-  //     location: '',
-  //     address: '',
-  //     bDate: null,
-  //     role: '');
 
   Future<void> _submitPass() async {
     final _valid = _formKey.currentState!.validate();
@@ -132,10 +117,6 @@ class _SettingsBodyState extends State<SettingsBody> {
     Employee currentUser = arguments['currentUser'];
     print('hereeeeeeeeee');
     bool editPass = arguments['editPass'];
-    // print(currentUser.id);
-    // print(currentUser.fname);
-    // print(DUMMY_EMP.indexWhere((e) => e.id == currentUser.id));
-    // print(currentUser.password);
     // _pickedDate.text =
     //     '${currentUser.bDate!.day}/${currentUser.bDate!.month}/${currentUser.bDate!.year}';
     return Directionality(
@@ -154,48 +135,6 @@ class _SettingsBodyState extends State<SettingsBody> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        // if (editPass && !_canEditPass)
-                        //   const Text(
-                        //     'ادخل الرقم السري لتتمكن من تغييره',
-                        //     style: TextStyle(
-                        //       fontSize: 20,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        // if (editPass && !_canEditPass)
-                        //   const SizedBox(
-                        //     height: 14,
-                        //   ),
-                        // if (editPass && !_canEditPass)
-                        //   TextFormField(
-                        //     key: const ValueKey('canEditPass'),
-                        //     obscureText: true,
-                        //     validator: (e) {
-                        //       if (e!.isEmpty) {
-                        //         return 'يرجي ادخال الرقم السري  ';
-                        //       } else {
-                        //         return null;
-                        //       }
-                        //     },
-                        //     onSaved: (e) {
-                        //       // print(
-                        //       //     'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
-                        //       // print(e);
-                        //       verifyPass = e!;
-                        //     },
-                        //     keyboardType: TextInputType.number,
-                        //     decoration: InputDecoration(
-                        //       prefixIcon: const Icon(
-                        //         Icons.password,
-                        //         color: Colors.grey,
-                        //       ),
-                        //       border: OutlineInputBorder(
-                        //         borderRadius: BorderRadius.circular(10.0),
-                        //       ),
-                        //       labelText: 'الرقم السري',
-                        //       // labelStyle: TextStyle(color: Colors.white)
-                        //     ),
-                        //   ),
                         if (editPass)
                           TextFormField(
                             key: const ValueKey('oldPass'),
@@ -221,7 +160,6 @@ class _SettingsBodyState extends State<SettingsBody> {
                               labelText: 'ادخل الرقم السري القديم',
                               // labelStyle: TextStyle(color: Colors.white)
                             ),
-
                             // style: const TextStyle(color: Colors.white),
                           ),
                         if (editPass)
@@ -405,7 +343,6 @@ class _SettingsBodyState extends State<SettingsBody> {
                         // ),
                         if (!editPass)
                           DropdownButtonFormField(
-                              // value: currentUser.gender,
                               validator: (e) {
                                 if (e == null) {
                                   return 'يجب اختيار الجنس  ';
@@ -542,7 +479,6 @@ class _SettingsBodyState extends State<SettingsBody> {
                                 onChanged: (newVal) {
                                   _dropdownValCat = newVal as String?;
                                 }),
-                        ////////////////////////////////////////////////////////////////////
                         SizedBox(
                           height: editPass ? 40 : 20,
                         ),

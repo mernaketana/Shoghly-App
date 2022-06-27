@@ -1,16 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:project/models/employee.dart';
 import 'package:provider/provider.dart';
 import '../models/comment.dart';
-import '../providers/review.dart';
 import '../providers/worker.dart';
-import '../widgets/images_gallery_widget.dart';
 
 import '../widgets/comments.dart';
-import '../dummy_data.dart';
 
 class WorkerDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> arguments;
@@ -60,9 +54,6 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
     } else {
       avg = 0;
     }
-    // print(avg.round());
-
-    // print(avg.round());
     return avg.round();
   }
 

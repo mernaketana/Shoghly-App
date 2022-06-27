@@ -76,7 +76,6 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
                                 } else {
                                   role = '';
                                 }
-                                // print(role);
                               });
                             },
                             child: CircleAvatar(
@@ -113,7 +112,6 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
                               } else {
                                 role = '';
                               }
-                              // print(role);
                             });
                           },
                           child: CircleAvatar(
@@ -176,57 +174,3 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
     );
   }
 }
-
-//     final currentUser =
-//         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-//     print(currentUser);
-//     return Scaffold(
-//       backgroundColor: Colors.red,
-//       body: Column(
-//         mainAxisAlignment: MainAxisAlignment.spaceAround,
-//         crossAxisAlignment: CrossAxisAlignment.stretch,
-//         children: <Widget>[
-//           choice(context, true, Icons.account_box, 'اكمل كمستخدم',
-//               currentUser['userEmail'], currentUser['userPass'], Colors.amber),
-//           choice(context, false, Icons.assignment_ind, 'اكمل كعامل',
-//               currentUser['userEmail'], currentUser['userPass'], Colors.blue),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Flexible choice(BuildContext context, bool isUser, IconData icon,
-//       String choiceText, String email, String pass, Color color) {
-//     return Flexible(
-//       fit: FlexFit.tight,
-//       child: InkWell(
-//         onTap: () => Navigator.of(context)
-//             .pushNamed(DetailedAuthScreen.routeName, arguments: {
-//           'isUser': isUser,
-//           'userEmail': email,
-//           'userPass': pass
-//         }),
-//         child: Container(
-//           color: color,
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               Icon(
-//                 icon,
-//                 size: 150,
-//                 color: Colors.white,
-//               ),
-//               Text(
-//                 choiceText,
-//                 style: const TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 30,
-//                     fontWeight: FontWeight.bold),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

@@ -51,7 +51,6 @@ class _DetailedAuthScreenState extends State<DetailedAuthScreen> {
               ),
             ),
           )
-          //AuthForm(submitAuthForm: _submitAuthForm, isLoading: _isLoading),
           ),
     );
   }

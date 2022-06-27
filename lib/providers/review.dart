@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../models/comment.dart';
-// import '../models/employee.dart';
 import 'auth.dart';
 
 class Review with ChangeNotifier {
@@ -22,25 +21,10 @@ class Review with ChangeNotifier {
       user: Commenter(id: '', fname: '', lname: '', picture: '', gender: ''));
   late String userId;
   final apiUrl = dotenv.env['API_URL']!;
-  // Employee _user = Employee(
-  //   id: '',
-  //   address: '',
-  //   fname: '',
-  //   lname: '',
-  //   email: '',
-  //   password: '',
-  //   phone: 0,
-  //   location: '',
-  //   role: '',
-  //   categordId: '',
-  // );
 
-// for main to get the token and the user id from auth
   void recieveToken(Auth auth) {
     authToken = auth.token;
     userId = auth.userId;
-    // print('recieve token in user provider');
-    // print(userId);
   }
 
   // ignore: prefer_final_fields
@@ -49,10 +33,6 @@ class Review with ChangeNotifier {
   List<Comment> get items {
     return [..._items];
   }
-
-  // Comment findById(String id) {
-  //   return _items.firstWhere((e) => e. == id);
-  // }
 
   Future<void> addReview(Comment review) async {
     final url = Uri.parse("${apiUrl}workers/${review.workerId}/reviews");
@@ -99,7 +79,6 @@ class Review with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       // _reviewId = responseData['data']['id'];
-      // print(_reviewId);
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
@@ -166,7 +145,6 @@ class Review with ChangeNotifier {
         },
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
-      // print(data);
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return;

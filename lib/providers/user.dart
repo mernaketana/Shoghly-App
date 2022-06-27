@@ -6,8 +6,6 @@ import "package:flutter/cupertino.dart";
 import 'package:project/models/employee.dart';
 import '../providers/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import "package:shared_preferences/shared_preferences.dart";
-// import "../helpers/http_exception.dart";
 
 class User with ChangeNotifier {
   late String authToken;
@@ -31,12 +29,9 @@ class User with ChangeNotifier {
   void recieveToken(Auth auth) {
     authToken = auth.token;
     userId = auth.userId;
-    // print('recieve token in user provider');
-    // print(userId);
   }
 
   Future<Employee> getUser(String userId) async {
-    // print(dotenv.env['API_URL']);
     final url = Uri.parse("${apiUrl}users");
     try {
       final response = await http.get(
@@ -79,7 +74,6 @@ class User with ChangeNotifier {
         password: '',
         role: employeeInfo["role"],
       );
-      // print(_user.image);
       notifyListeners();
       return _user;
     } catch (error) {
@@ -88,8 +82,6 @@ class User with ChangeNotifier {
   }
 
   Future<List<Employee>> search(String text, String city) async {
-    // print(text);
-    // print(city);
     final url = Uri.parse("${apiUrl}autoComplete");
     Map<String, String> queryParams = {'text': text, 'city': city};
     final finalUrl = url.replace(queryParameters: queryParams);
@@ -158,13 +150,9 @@ class User with ChangeNotifier {
   }
 
   Employee? get currentUser {
-    // print(_user.id);
     if (_user.id != '') {
-      // print('****************************************');
-      // print(_user);
       return _user;
     } else {
-      // print('user is null');
       return null;
     }
   }

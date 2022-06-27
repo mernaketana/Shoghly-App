@@ -6,8 +6,6 @@ import 'package:project/screens/settings_screen.dart';
 import 'package:project/widgets/splashScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import '../providers/auth.dart';
 import '../models/image.dart';
 import '../providers/images.dart';
 import '../providers/user.dart';
@@ -39,19 +37,13 @@ class _ControllerScreenState extends State<ControllerScreen> {
       setState(() {
         _isLoading = true;
       });
-      // print('didchange categories');
       final userId = Provider.of<User>(context, listen: false).userId;
       await Provider.of<User>(context)
           .getUser(userId)
           .then((value) => currentUser = value);
-      // .then((_) {
-      //   currentUser =
-      //       Provider.of<User>(context, listen: false).currentUser as Employee;
-      //   // print(currentUser.id);
       setState(() {
         _isLoading = false;
       });
-      // });
     }
     _isInit = false;
   }
@@ -61,66 +53,6 @@ class _ControllerScreenState extends State<ControllerScreen> {
       _selectedPageIndex = index;
     });
   }
-
-  // Future<void> _pickedImageGallery() async {
-  //   try {
-  //     final picker = ImagePicker();
-  //     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-  //     if (pickedImage == null) return;
-  //     setState(() {
-  //       if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
-  //         newWorkImage =
-  //             MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
-  //         DUMMY_IMAGES.add(newWorkImage);
-  //       } else {
-  //         DUMMY_IMAGES
-  //             .firstWhere((element) => element.userId == userId)
-  //             .url!
-  //             .add(pickedImage.path);
-  //       }
-  //     });
-  //   } on PlatformException catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // void showModalBottomSheetFunction() {
-  //   showModalBottomSheet<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Container(
-  //         height: 100,
-  //         color: const Color.fromARGB(255, 254, 247, 241),
-  //         child: Center(
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: <Widget>[
-  //               TextButton(
-  //                 child: const Text('تعديل معلومات حسابي '),
-  //                 onPressed: () {
-  //                   setState(() {
-  //                     _settings == 4;
-  //                     print(_settings);
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //               TextButton(
-  //                   onPressed: () {
-  //                     setState(() {
-  //                       _settings == 5;
-  //                     });
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: const Text('تعديل معلوماتي الشخصية'))
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   Future<void> getCurrentUser(BuildContext context) async {
     _isLoading = true;
@@ -160,15 +92,12 @@ class _ControllerScreenState extends State<ControllerScreen> {
               currentUser: currentUser,
             ),
     ];
-    // print(currentUser.role);
 
     return _isLoading
         ? const SplashScreen()
         : Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-              // drawer: MyDrawer(currentUser: currentUser),
-
               body: _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : currentUser.role == 'worker'

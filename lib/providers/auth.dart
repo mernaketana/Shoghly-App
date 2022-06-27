@@ -29,7 +29,6 @@ class Auth with ChangeNotifier {
     final url = Uri.parse("${apiUrl}users");
     try {
       print("auth signup");
-      // print(imageUrl);
       final response = await http.post(
         url,
         body: json.encode({
@@ -66,18 +65,12 @@ class Auth with ChangeNotifier {
         "userId": _userId,
       });
       prefs.setString("userData", userData);
-      // print("=====================>");
-      // print(prefs.getString("userData"));
     } catch (error) {
-      //Firebase doesn"t return an error, it doesn"t have an error status
       rethrow;
-      // print(error);
     }
   }
 
   Future<void> signin(String email, String password) async {
-    // print(email);
-    // print(password);
     final url = Uri.parse("${apiUrl}signin");
     try {
       final response = await http.post(
@@ -106,17 +99,13 @@ class Auth with ChangeNotifier {
         // "expiryDate": _expiryDate!.toIso8601String(),
       });
       prefs.setString("userData", userData);
-      // print("=====================>");
-      // print(prefs.getString("userData"));
     } catch (error) {
-      //Firebase doesn"t return an error, it doesn"t have an error status
       rethrow;
     }
   }
 
   Future<void> forgotPassword(String email) async {
     final url = Uri.parse("${apiUrl}signup");
-    // print(password);
     try {
       final response = await http.post(
         url,
@@ -161,32 +150,22 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogIn() async {
-    // print('I TRIEEEEEEEEEEEEEEEEEEEEEED');
     final prefs = await SharedPreferences.getInstance();
-    // print(prefs.getString('userData'));
     if (!prefs.containsKey('userData')) {
       return false;
     } else {
-      // print('Do I get here?');
       final extractedUserData =
           json.decode(prefs.getString('userData') as String)
               as Map<String, dynamic>;
-      // print(extractedUserData);
       // final expiryDate =
       //     DateTime.parse(extractedUserData['expiryDate'] as String);
-      // print('why');
-      // if (expiryDate.isBefore(DateTime.now())) {
       if (extractedUserData['token'] == null) {
         return false;
       }
       _token = extractedUserData['token'] as String;
       _userId = extractedUserData['userId'] as String;
       // _expiryDate = expiryDate;
-      // print(_token);
-      // print(_userId);
-      // print(_expiryDate);
       notifyListeners();
-      // _autoLogOut();
     }
     return true;
   }
@@ -204,23 +183,13 @@ class Auth with ChangeNotifier {
   }
 
   bool get isAuth {
-    // print('****************');
-    // print(_token);
     return token != '';
   }
 
   String get token {
     if (_token != null) {
-      // print(_token);
-      // print(_userId);
-      // print(_expiryDate);
-      // print('ok');
       return _token as String;
     }
-    // print(_token);
-    // print(_userId);
-    // print(_expiryDate);
-    // print('not Ok');
     return '';
   }
 

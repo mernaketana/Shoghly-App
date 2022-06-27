@@ -1,15 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
-
-import '../dummy_data.dart';
 import '../models/employee.dart';
 import '../providers/auth.dart';
-import '../providers/user.dart';
-import '../widgets/user_image_picker.dart';
 
 class MainSettingsScreen extends StatelessWidget {
   const MainSettingsScreen({Key? key, required this.currentUser})
@@ -18,7 +11,6 @@ class MainSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(currentUser.gender);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 254, 247, 241),
       appBar: AppBar(

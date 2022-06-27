@@ -1,8 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import '../dummy_data.dart';
-import '../models/comment.dart';
 import '../screens/worker_details_screen.dart';
 import '../models/employee.dart';
 

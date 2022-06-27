@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-// import 'package:intl/intl.dart' hide TextDirection;
 import 'package:project/models/comment.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/screens/worker_details_screen.dart';
 import 'package:provider/provider.dart';
-import '../dummy_data.dart';
 import '../providers/review.dart';
 
 class Comments extends StatefulWidget {
@@ -291,10 +287,6 @@ class _CommentsState extends State<Comments> {
             FocusScope.of(context).unfocus();
           }
         });
-        // rate is faultyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-
-        // ignore: avoid_print
-        // print('invalid');
       },
       formKey: formKey,
       commentController: commentController,

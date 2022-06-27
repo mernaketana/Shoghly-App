@@ -20,12 +20,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
   File? _image;
   var _isLoading = false;
 
-// void _pickedImage() async{
-//   final picker = ImagePicker();
-//   final pickedImage = await picker.pickImage(source: ImageSource.camera);
-//   final pickedImageFile = File(pickedImage.path);
-// }
-
   Future<void> _pickedImageCamera() async {
     try {
       final picker = ImagePicker();

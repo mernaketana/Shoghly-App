@@ -46,9 +46,9 @@ class _MyCommentsState extends State<MyComments> {
               ),
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  var user = DUMMY_EMP.firstWhere(
-                    (e) => e.id == widget.comments[index].userId,
-                  );
+                  // var user = DUMMY_EMP.firstWhere(
+                  //   (e) => e.id == widget.comments[index].userId,
+                  // );
                   return Padding(
                     padding: const EdgeInsets.all(6),
                     child: SizedBox(
@@ -60,14 +60,15 @@ class _MyCommentsState extends State<MyComments> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10)),
                           child: CircleAvatar(
-                              maxRadius: 20,
-                              backgroundImage: user.image != null
-                                  ? NetworkImage(user.image as String)
-                                  : const AssetImage(
-                                          'assets/images/placeholder.png')
-                                      as ImageProvider),
+                              // maxRadius: 20,
+                              // backgroundImage: user.image != null
+                              //     ? NetworkImage(user.image as String)
+                              //     : const AssetImage(
+                              //             'assets/images/placeholder.png')
+                              //         as ImageProvider
+                              ),
                         ),
-                        title: Text('${user.fname} ${user.lname}'),
+                        // title: Text('${user.fname} ${user.lname}'),
                         subtitle: Text(widget.comments[index].comment),
                       ),
                     ),

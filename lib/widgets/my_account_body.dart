@@ -4,9 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/screens/gallery_screen.dart';
-import 'package:project/screens/settings_screen.dart';
 import 'package:project/widgets/settings_body_widget.dart';
-import 'package:project/widgets/splashScreen.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'dart:io';
@@ -179,14 +177,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                                 )),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
-                                      )
-
-                                // Image.network(
-                                //     widget.currentUser.image as String,
-                                //     // widget.currentUser.image as String,
-                                //     fit: BoxFit.cover,
-                                //   )
-                                ),
+                                      )),
                           )
                         : Image.asset('assets/images/placeholder.png'),
                   ),
@@ -201,14 +192,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                           )))
                 ],
               ),
-              // CircleAvatar(
-              //   backgroundImage: widget.currentUser.image != null
-              //       ? NetworkImage(widget.currentUser.image as String)
-              //       : const AssetImage('assets/images/placeholder.png')
-              //           as ImageProvider,
-              //   minRadius: 100,
-              // ),
-              myWidget(
+              boxWidget(
                 _expandInfo,
                 'معلوماتي',
                 Padding(
@@ -295,18 +279,15 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                   });
                 },
               ),
-              // const SizedBox(
-              //   height: 10,
-              // ),
               if (widget.currentUser.role == 'worker')
-                myWidget(
+                boxWidget(
                   _expandComment,
                   'اظهر التعليقات',
                   ListView.builder(
                     itemBuilder: (context, index) {
-                      var user = DUMMY_EMP.firstWhere(
-                        (e) => e.id == widget.comments[index].userId,
-                      );
+                      // var user = DUMMY_EMP.firstWhere(
+                      //   (e) => e.id == widget.comments[index].userId,
+                      // );
                       return Padding(
                         padding: const EdgeInsets.all(6),
                         child: SizedBox(
@@ -318,17 +299,18 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10)),
                               child: CircleAvatar(
-                                  maxRadius: 20,
-                                  backgroundImage: user.image != null
-                                      ? user.image!.startsWith('/data')
-                                          ? FileImage(
-                                              File(user.image as String))
-                                          : NetworkImage(user.image as String)
-                                              as ImageProvider<Object>
-                                      : const AssetImage(
-                                          'assets/images/placeholder.png')),
+                                  // maxRadius: 20,
+                                  // backgroundImage: user.image != null
+                                  //     ? user.image!.startsWith('/data')
+                                  //         ? FileImage(
+                                  //             File(user.image as String))
+                                  //         : NetworkImage(user.image as String)
+                                  //             as ImageProvider<Object>
+                                  //     : const AssetImage(
+                                  //         'assets/images/placeholder.png')
+                                  ),
                             ),
-                            title: Text('${user.fname} ${user.lname}'),
+                            // title: Text('${user.fname} ${user.lname}'),
                             subtitle: Text(widget.comments[index].comment),
                           ),
                         ),
@@ -343,46 +325,45 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                   },
                 ),
               if (widget.currentUser.role == 'worker')
-                myWidget(
+                boxWidget(
                     _expandImg,
                     'معرضي',
                     SingleChildScrollView(
-                      child: !DUMMY_IMAGES
-                              .any((e) => e.userId == widget.currentUser.id)
-                          ? Container()
-                          : Column(
-                              children: [
-                                ImagesGallery(
-                                    images: DUMMY_IMAGES
-                                        .firstWhere((e) =>
-                                            e.userId == widget.currentUser.id)
-                                        .url as List<String>),
-                                Row(
-                                  children: [
-                                    const Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: TextButton.icon(
-                                          onPressed: () => Navigator.of(context)
-                                              .pushNamed(
-                                                  GalleryScreen.routeName,
-                                                  arguments:
-                                                      widget.currentUser),
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            size: 20,
-                                          ),
-                                          label: const Text(
-                                            'تعديل',
-                                            style: TextStyle(
-                                                decoration:
-                                                    TextDecoration.underline),
-                                          )),
+                      child:
+                          // !DUMMY_IMAGES
+                          //         .any((e) => e.userId == widget.currentUser.id)
+                          //     ? Container()
+                          //     :
+                          Column(
+                        children: [
+                          // ImagesGallery(
+                          //     images: DUMMY_IMAGES
+                          //         .firstWhere((e) =>
+                          //             e.userId == widget.currentUser.id)
+                          //         .url as List<String>),
+                          Row(
+                            children: [
+                              const Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: TextButton.icon(
+                                    onPressed: () => Navigator.of(context)
+                                        .pushNamed(GalleryScreen.routeName,
+                                            arguments: widget.currentUser),
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      size: 20,
                                     ),
-                                  ],
-                                )
-                              ],
-                            ),
+                                    label: const Text(
+                                      'تعديل',
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline),
+                                    )),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ), () {
                   setState(() {
                     _expandImg = !_expandImg;
@@ -392,14 +373,13 @@ class _MyAccountBodyState extends State<MyAccountBody> {
           );
   }
 
-  AnimatedContainer myWidget(
+  AnimatedContainer boxWidget(
       bool expand, String title, Widget child, void Function()? onPressed) {
     return AnimatedContainer(
       width: 380,
       duration: const Duration(milliseconds: 300),
       height: expand ? min(widget.comments.length + 245, 300) : 68,
       child: Card(
-        // color: Colors.red,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: <Widget>[

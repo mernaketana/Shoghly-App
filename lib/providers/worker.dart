@@ -27,7 +27,6 @@ class Worker with ChangeNotifier {
   );
   final apiUrl = dotenv.env['API_URL']!;
 
-// for main to get the token and the user id from auth
   void recieveToken(Auth auth) {
     authToken = auth.token;
     userId = auth.userId;
@@ -79,7 +78,6 @@ class Worker with ChangeNotifier {
       }
       print('EMPLOYEEEEES');
       print(_employees);
-      // print(_user.image);
       notifyListeners();
 
       // return _user;
@@ -139,37 +137,7 @@ class Worker with ChangeNotifier {
       }
       final output = {"employee": employee, "workerComments": workerComments};
       return output;
-      // final employeesList = employeesData['workers'];
-      // final tot_no_of_employees = employeesData['count'];
-      // if (tot_no_of_employees > 0) {
-      //   for (var i = 0; i < tot_no_of_employees; i++) {
-      //     final currentEmp = Employee(
-      //         id: employeesList[i]['id'],
-      //         address: employeesList[i]['line'],
-      //         fname: employeesList[i]['firstName'],
-      //         lname: employeesList[i]['lastName'],
-      //         email: '',
-      //         password: '',
-      //         gender: employeesList[i]['gender'],
-      //         phone: int.parse(employeesList[i]['phone']),
-      //         location: employeesList[i]['city'],
-      //         role: employeesList[i]['role'],
-      //         image: employeesList[i]['picture'],
-      //         categordId: employeesList[i]['profession'],
-      //         reviews: employeesList[i]['reviews']);
-      //     if (!_employees.any(
-      //       (element) => element.id == currentEmp.id,
-      //     )) {
-      //       _employees.add(currentEmp);
-      //     }
-      //   }
-      // }
-      // print('EMPLOYEEEEES');
-      // print(_employees);
-      // print(_user.image);
       notifyListeners();
-
-      // return _user;
     } catch (error) {
       rethrow;
     }
