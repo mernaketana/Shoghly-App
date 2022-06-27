@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/employee.dart';
 import 'package:provider/provider.dart';
 import '../models/comment.dart';
@@ -76,7 +77,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
         child: Scaffold(
           body: _isLoading
               ? const Center(
-                  child: CircularProgressIndicator(),
+                  child: SpinKitSpinningLines(color: Colors.red),
                 )
               : CustomScrollView(// slivers are scrollable areas on the screen
                   slivers: <Widget>[

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/screens/detailed_image_screen.dart';
@@ -140,7 +141,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
     print('here in my acc');
     print(widget.currentUser.image);
     return _isLoading
-        ? const Center(child: CircularProgressIndicator.adaptive())
+        ? const Center(child: SpinKitSpinningLines(color: Colors.red))
         : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,9 +172,8 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                                 height: 480,
                                                 width: 380,
                                                 child: Center(
-                                                  child:
-                                                      CircularProgressIndicator
-                                                          .adaptive(),
+                                                  child: SpinKitSpinningLines(
+                                                      color: Colors.red),
                                                 )),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
@@ -212,6 +212,15 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                         const SizedBox(
                           height: 6,
                         ),
+                        Row(
+                          children: <Widget>[
+                            const Text('رقم الهاتف: '),
+                            Text('0${widget.currentUser.phone.toString()}')
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
                         if (widget.currentUser.role == 'worker')
                           Row(
                             children: <Widget>[
@@ -240,6 +249,15 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                           children: <Widget>[
                             const Text('المحافظة: '),
                             Text(widget.currentUser.location)
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            const Text('العنوان: '),
+                            Text(widget.currentUser.address)
                           ],
                         ),
                         const SizedBox(

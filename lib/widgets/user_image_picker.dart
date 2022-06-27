@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -87,7 +88,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
                     : const AssetImage('assets/images/placeholder.png')
                         as ImageProvider<Object>?,
               )
-            : const CircularProgressIndicator(),
+            : const SpinKitSpinningLines(color: Colors.red),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/dummy_data.dart';
 import 'package:project/providers/worker.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         ),
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: SpinKitSpinningLines(color: Colors.red),
               )
             : ListView.builder(
                 itemBuilder: (context, index) {

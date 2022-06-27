@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import '../dummy_data.dart';
@@ -381,7 +382,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                       height: 20,
                     ),
                     if (_isLoading)
-                      const CircularProgressIndicator()
+                      const SpinKitSpinningLines(color: Colors.red)
                     else
                       SizedBox(
                         width: double.infinity,

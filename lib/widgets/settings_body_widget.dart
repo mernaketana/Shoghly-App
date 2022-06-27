@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
 
@@ -486,7 +487,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                           width: isLoading ? 50 : double.infinity,
                           height: 50,
                           child: isLoading
-                              ? const CircularProgressIndicator()
+                              ? const SpinKitSpinningLines(color: Colors.red)
                               : ElevatedButton(
                                   onPressed: () =>
                                       editPass ? _submitPass() : _submitUser(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/screens/employees_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -133,7 +134,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: SpinKitSpinningLines(color: Colors.red),
             )
           : Padding(
               padding: const EdgeInsets.all(6),

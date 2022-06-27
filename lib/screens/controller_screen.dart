@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/settings_screen.dart';
-import 'package:project/widgets/splashScreen.dart';
+import 'package:project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/image.dart';
@@ -99,7 +100,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
             textDirection: TextDirection.rtl,
             child: Scaffold(
               body: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const Center(child: SpinKitSpinningLines(color: Colors.red))
                   : currentUser.role == 'worker'
                       ? _workerPages[_selectedPageIndex]
                       : _userPages[_selectedPageIndex],

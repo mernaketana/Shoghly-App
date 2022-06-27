@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/image.dart';
+import 'package:project/screens/add_project_screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../models/employee.dart';
-import '../dummy_data.dart';
 // import '../providers/user.dart';
 import '../providers/images.dart';
 import '../screens/detailed_image_screen.dart';
@@ -72,21 +72,21 @@ class _GalleryScreenState extends State<GalleryScreen> {
       // setState(() {
       //   _image = pickedImage.path;
       // });
-      setState(() {
-        if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
-          newWorkImage =
-              MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
-          // var new_user_img = MyImage(
-          //     DateTime.now().toString(), ['${pickedImage.path}'], userId);
-          // print(newWorkImage.url);
-          DUMMY_IMAGES.add(newWorkImage);
-        } else {
-          DUMMY_IMAGES
-              .firstWhere((element) => element.userId == userId)
-              .url!
-              .add(pickedImage.path);
-        }
-      });
+      // setState(() {
+      //   if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
+      //     newWorkImage =
+      //         MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
+      //     // var new_user_img = MyImage(
+      //     //     DateTime.now().toString(), ['${pickedImage.path}'], userId);
+      //     // print(newWorkImage.url);
+      //     DUMMY_IMAGES.add(newWorkImage);
+      //   } else {
+      //     DUMMY_IMAGES
+      //         .firstWhere((element) => element.userId == userId)
+      //         .url!
+      //         .add(pickedImage.path);
+      //   }
+      // });
       // widget.imagePick(pickedImageFile);
     } on PlatformException catch (e) {
       // ignore: avoid_print
@@ -101,34 +101,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // late Employee currentUser;
-    // final currentUser = ModalRoute.of(context)!.settings.arguments as Employee;
-    // print(currentUser.fname);
-
-    // Directionality(
-    //   textDirection: TextDirection.rtl,
-    //   child:
-    //   // Scaffold(
-    //   //     floatingActionButton: FloatingActionButton(
-    //   //       onPressed: () => _dialog(context, currentUser.id),
-    //   //       child: const Icon(Icons.add),
-    //   //       backgroundColor: Theme.of(context).colorScheme.primary,
-    //   //     ),
-    //   //     drawer: MyDrawer(currentUser: currentUser),
-    //   //     appBar: AppBar(
-    //   //       title: const Text('معرضي'),
-    //   //       // actions: <Widget>[
-    //   //       //   IconButton(onPressed: () {}, icon: const Icon(Icons.messenger)),
-    //   //       //   IconButton(
-    //   //       //       onPressed: () {}, icon: const Icon(Icons.notifications)),
-    //   //       // ],
-    //   //     ),
-    //       body:
-
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+      backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _dialog(context),
+        onPressed: () =>
+            Navigator.of(context).pushNamed(AddProjectScreen.routeName),
         child: const Icon(Icons.add),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
@@ -242,12 +219,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 TextButton(
                   child: const Text('نعم'),
                   onPressed: () {
-                    List<String> urls = DUMMY_IMAGES
-                        .firstWhere((element) => element.userId == userId)
-                        .url as List<String>;
+                    // List<String> urls = DUMMY_IMAGES
+                    //     .firstWhere((element) => element.userId == userId)
+                    //     .url as List<String>;
 
                     setState(() {
-                      urls.remove(img);
+                      // urls.remove(img);
 
                       Navigator.of(context).pop();
                       return;

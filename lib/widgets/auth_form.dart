@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import '../helpers/http_exception.dart';
 import '../providers/auth.dart';
@@ -164,7 +165,7 @@ class _AuthFormState extends State<AuthForm> {
                     //   const CircularProgressIndicator(),
                     // if (!widget.isLoading)
                     if (_isLoading)
-                      const CircularProgressIndicator()
+                      const SpinKitSpinningLines(color: Colors.red)
                     else
                       SizedBox(
                         width: double.infinity,

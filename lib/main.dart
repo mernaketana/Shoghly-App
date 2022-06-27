@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/providers/images.dart';
 import 'package:project/providers/user.dart';
+import 'package:project/screens/add_project_screen.dart';
 import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +13,10 @@ import './screens/employees_screen.dart';
 import './screens/controller_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './providers/auth.dart';
+import 'providers/project.dart';
 import 'providers/review.dart';
 import 'providers/worker.dart';
-import 'widgets/splashScreen.dart';
+import 'widgets/splash_screen.dart';
 
 void main() async {
   await dotenv.load();
@@ -53,11 +55,19 @@ class MyApp extends StatelessWidget {
             create: (context) => Worker(),
             update: (context, auth, notifier) => notifier!..recieveToken(auth),
           ),
+          ChangeNotifierProvider(
+            create: (context) => Project(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Project>(
+            create: (context) => Project(),
+            update: (context, auth, notifier) => notifier!..recieveToken(auth),
+          ),
         ],
         child: Consumer<Auth>(
             builder: ((context, value, _) => MaterialApp(
                   debugShowCheckedModeBanner: false,
                   theme: ThemeData(
+                    backgroundColor: const Color.fromARGB(255, 254, 247, 241),
                     colorScheme:
                         ColorScheme.fromSwatch(primarySwatch: Colors.red)
                             .copyWith(secondary: Colors.grey),
@@ -97,6 +107,8 @@ class MyApp extends StatelessWidget {
                     DetailedImageScreen.routeName: (context) =>
                         const DetailedImageScreen(),
                     SettingsBody.routeName: (context) => const SettingsBody(),
+                    AddProjectScreen.routeName: (context) =>
+                        const AddProjectScreen(),
                   },
                 ))));
   }
