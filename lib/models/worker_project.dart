@@ -1,6 +1,14 @@
 class WorkerProject {
-  final List<String>? urls;
+  final List<dynamic>? urls;
   final String desc;
+  String? projectId;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
-  WorkerProject(this.desc, this.urls);
+  WorkerProject(
+      {required this.desc,
+      required this.urls,
+      this.createdAt,
+      this.updatedAt,
+      this.projectId});
 }

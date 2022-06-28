@@ -19,8 +19,10 @@ class Project with ChangeNotifier {
   Future<void> addProject(WorkerProject workerProject) async {
     final url = Uri.parse("${apiUrl}workers/projects");
     try {
-      final response = await http.get(
+      final response = await http.post(
         url,
+        body: json.encode(
+            {"url": workerProject.urls, "description": workerProject.desc}),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $authToken",
@@ -28,6 +30,7 @@ class Project with ChangeNotifier {
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
       print(data);
+      print('hereeeeeeeeeeeeeeeeeeeeee');
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return;
@@ -39,40 +42,74 @@ class Project with ChangeNotifier {
     }
   }
 
-  // Future<List<Employee>> search(String text, String city) async {
-  //   final url = Uri.parse("${apiUrl}autoComplete");
-  //   Map<String, String> queryParams = {'text': text, 'city': city};
-  //   final finalUrl = url.replace(queryParameters: queryParams);
-  //   try {
-  //     final response = await http.get(
-  //       finalUrl,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Authorization": "Bearer $authToken",
-  //       },
-  //     );
-  //     final employee = await getUser(userId);
-  //     final data = json.decode(response.body) as Map<String, dynamic>;
-  //     final message = data['message'];
-  //     final results = data['results'] as List<dynamic>;
-  //     List<Employee> employees = [];
-  //     final employeeIds = results.map((e) => e["userId"]).toList();
-  //     for (var i = 0; i < employeeIds.length; i++) {
-  //       await getUser(employeeIds[i]).then((value) {
-  //         print(value);
-  //         employees.add(value);
-  //       });
-  //     }
-  //     // ignore: unnecessary_null_comparison
-  //     if (data == null) {
-  //       return [];
-  //     }
-  //     notifyListeners();
-  //     return employees;
-  //   } catch (error) {
-  //     rethrow;
-  //   }
-  // }
+  Future<List<WorkerProject>> getWorkerProjects(String workerId) async {
+    final url = Uri.parse("${apiUrl}workers/$workerId/projects");
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken",
+        },
+      );
+      // final employee = await getUser(userId);
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      print(data);
+      final accessProjects = data["projects"] as List;
+      List<WorkerProject> projects = [];
+      for (var i = 0; i < accessProjects.length; i++) {
+        final List<dynamic> currentPictures = accessProjects[i]["pictures"];
+        print(currentPictures);
+        final currentProject = WorkerProject(
+            desc: accessProjects[i]["description"],
+            urls: currentPictures,
+            createdAt: DateTime.parse(accessProjects[i]["createdAt"]),
+            projectId: accessProjects[i]["projectId"],
+            updatedAt: DateTime.parse(accessProjects[i]["updatedAt"]));
+        projects.add(currentProject);
+      }
+      // ignore: unnecessary_null_comparison
+      if (data == null) {
+        return [];
+      }
+      notifyListeners();
+      return projects;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<WorkerProject> getWorkerProject(String projectId) async {
+    final url = Uri.parse("${apiUrl}workers/projects/$projectId");
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken",
+        },
+      );
+      // final employee = await getUser(userId);
+      // I don't fetch the worker Id
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      final accessProject = data["project"];
+      print(data);
+      final project = WorkerProject(
+          desc: accessProject["description"],
+          urls: accessProject["photos"],
+          projectId: accessProject["projectId"],
+          createdAt: DateTime.parse(accessProject["createdAt"]),
+          updatedAt: DateTime.parse(accessProject["updatedAt"]));
+      // ignore: unnecessary_null_comparison
+      if (data == null) {
+        return WorkerProject(desc: '', urls: []);
+      }
+      notifyListeners();
+      return project;
+    } catch (error) {
+      rethrow;
+    }
+  }
 
   // Future<void> editUser(String fname, String lname, String gender, String phone,
   //     String city, String address, String picture) async {

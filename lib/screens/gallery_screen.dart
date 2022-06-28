@@ -1,7 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/image.dart';
+import 'package:project/models/worker_project.dart';
+import 'package:project/providers/project.dart';
 import 'package:project/screens/add_project_screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -22,6 +27,26 @@ class GalleryScreen extends StatefulWidget {
 class _GalleryScreenState extends State<GalleryScreen> {
   ImageSource? source;
   var newWorkImage = MyImage('', [], '');
+  var _isInit = true;
+  var _isLoading = false;
+  late List<WorkerProject> projects;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      projects = await Provider.of<Project>(context, listen: false)
+          .getWorkerProjects(widget.currentUser.id);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
+  }
 
   Future _dialog(BuildContext context) async {
     await showDialog(
@@ -94,10 +119,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
     }
   }
 
-  // void _deleteImage(String url) {
-  //   final item = DUMMY_IMAGES.firstWhere((element) => element.url == url);
-  //   DUMMY_IMAGES.remove(item);
-  // }
+  Future<void> getProject(String projectId) async {
+    await Provider.of<Project>(context, listen: false)
+        .getWorkerProject(projectId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,91 +137,75 @@ class _GalleryScreenState extends State<GalleryScreen> {
       appBar: AppBar(
         title: const Center(child: Text('معرضي')),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10, right: 10),
-            child: Row(
-              children: const [
-                Icon(
-                  Icons.info,
-                  size: 19,
-                  color: Colors.grey,
+      body: _isLoading
+          ? SpinKitSpinningLines(color: Colors.red)
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: projects.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          InkWell(
+                              onTap: () =>
+                                  getProject(projects[index].projectId!),
+                              splashColor: Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(15),
+                              child: Stack(
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(15)),
+                                    child: Image.network(
+                                      projects[index].urls![0],
+                                      height: 200,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color:
+                                            const Color.fromARGB(169, 0, 0, 0)),
+                                  ),
+                                  Positioned(
+                                    bottom: 55,
+                                    right: 5,
+                                    left: 8,
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 60,
+                                      child: Text(
+                                        (projects[index].urls!.length > 1)
+                                            ? '+${(projects[index].urls!.length - 1)}'
+                                            : '',
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 25),
+                                        softWrap: true,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )),
+                          Text(
+                            projects[index].desc,
+                            softWrap: true,
+                            maxLines: 1,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                SizedBox(
-                  width: 6,
-                ),
-                Text(
-                  'لحذف صورة قم بالضغط عليها مرتين ثم اختر نعم',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 102, 101, 101),
-                      fontWeight: FontWeight.bold),
-                )
               ],
             ),
-          ),
-          Expanded(
-            child: GridView(
-              children: <Widget>[
-                // ...DUMMY_IMAGES
-                //     .firstWhere(
-                //         (element) => element.userId == widget.currentUser.id)
-                //     .url!
-                //     .map((e) => listImages(e, context, widget.currentUser.id))
-                //     .toList(),
-
-                // SizedBox(
-                //   height: 20,
-                //   width: 20,
-                //   child: FittedBox(
-                //     child: FloatingActionButton(
-                //       onPressed: () => _dialog(context, currentUser.id),
-                //       child: const Icon(
-                //         Icons.add,
-                //       ),
-                //       backgroundColor: Theme.of(context).colorScheme.primary,
-                //     ),
-                //   ),
-                // ),
-              ],
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                childAspectRatio: 2.7 / 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-              ),
-              padding: const EdgeInsets.all(14),
-            ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 10),
-          //   child: FloatingActionButton(
-          //     elevation: 0,
-          //     onPressed: () => _dialog(context, widget.currentUser.id),
-          //     child: const Icon(Icons.add),
-          //     backgroundColor: Theme.of(context).colorScheme.primary,
-          //   ),
-          // ),
-
-          // SizedBox(
-          //   width: 150,
-          //   height: 150,
-          //   child: FittedBox(
-          //     child: RawMaterialButton(
-          //       shape: const CircleBorder(),
-          //       fillColor: Colors.red,
-          //       elevation: 0.0,
-          //       child: const Icon(
-          //         Icons.add,
-          //         color: Color.fromARGB(255, 254, 247, 241),
-          //         size: 16,
-          //       ),
-          //       onPressed: () => _dialog(context, currentUser.id),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
     );
   }
 

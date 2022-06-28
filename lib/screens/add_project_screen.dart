@@ -24,7 +24,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   final _form = GlobalKey<FormState>();
   String _albumTitle = '';
   var _isLoading = false;
-  var _savedProject = WorkerProject('', []);
+  var _savedProject = WorkerProject(desc: '', urls: []);
   ImageSource? source;
   File? _image;
 
@@ -42,7 +42,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           .addImage(pickedImage.path);
       var _finalProjectUrlList = _savedProject.urls;
       _finalProjectUrlList!.add(userImage);
-      _savedProject = WorkerProject(_savedProject.desc, _finalProjectUrlList);
+      _savedProject =
+          WorkerProject(desc: _savedProject.desc, urls: _finalProjectUrlList);
       setState(() {
         _isLoading = false;
       });
@@ -67,7 +68,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           .addImage(pickedImage.path);
       var _finalProjectUrlList = _savedProject.urls;
       _finalProjectUrlList!.add(userImage);
-      _savedProject = WorkerProject(_savedProject.desc, _finalProjectUrlList);
+      _savedProject =
+          WorkerProject(desc: _savedProject.desc, urls: _finalProjectUrlList);
       setState(() {
         _isLoading = false;
       });
@@ -79,8 +81,10 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   }
 
   Future<void> _saveProject() async {
+    print('save project');
     final _isValid = _form.currentState?.validate();
     if (!_isValid!) {
+      print('invalid');
       return;
     }
     _form.currentState?.save();
@@ -92,6 +96,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           .addProject(_savedProject);
       Navigator.of(context).pop();
     } catch (error) {
+      print(error);
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -133,39 +138,21 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             Form(
                               key: _form,
                               child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      decoration: const InputDecoration(
-                                        labelText: 'عنوان الالبوم',
-                                      ),
-                                      onSaved: (e) => _albumTitle = e as String,
-                                      validator: (e) {
-                                        if (e!.isEmpty) {
-                                          return 'برجاء كتابة عنوان الالبوم';
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                    ),
-                                    const SizedBox(height: 20),
-                                    TextFormField(
-                                      keyboardType: TextInputType.multiline,
-                                      decoration: const InputDecoration(
-                                        labelText: 'تفاصيل المشروع',
-                                      ),
-                                      onSaved: (e) => _savedProject =
-                                          WorkerProject(
-                                              e as String, _savedProject.urls),
-                                      validator: (e) {
-                                        if (e!.isEmpty) {
-                                          return 'برجاء كتابة عنوان الالبوم';
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                child: TextFormField(
+                                  keyboardType: TextInputType.multiline,
+                                  decoration: const InputDecoration(
+                                    labelText: 'تفاصيل المشروع',
+                                  ),
+                                  onSaved: (e) => _savedProject = WorkerProject(
+                                      desc: e as String,
+                                      urls: _savedProject.urls),
+                                  validator: (e) {
+                                    if (e!.isEmpty) {
+                                      return 'برجاء كتابة تفاصيل المشروع';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                 ),
                               ),
                             ),
@@ -189,51 +176,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            // ImagesGallery(images: _savedProject.urls!)
-                            // NineGridView(
-                            //   height: 500, width: 500,
-                            //   margin: const EdgeInsets.all(10),
-                            //   padding: const EdgeInsets.all(5),
-                            //   space: 10,
-                            //   type: NineGridType
-                            //       .normal, //NineGridType.weChat, NineGridType.weiBo
-                            //   itemCount: _savedProject.urls!.length,
-                            //   itemBuilder: (BuildContext context, int index) {
-                            //     return CachedNetworkImage(
-                            //       height: 20,
-                            //       width: 20,
-                            //       fit: BoxFit.cover,
-                            //       imageUrl: _savedProject.urls![index],
-                            //       placeholder: (context, url) =>
-                            //           CircularProgressIndicator(),
-                            //       errorWidget: (context, url, error) =>
-                            //           Icon(Icons.error),
-                            //     );
-                            //   },
-                            // )
-                            // SizedBox(
-                            //   height: 500,
-                            //   child: ListView.builder(
-                            //     itemBuilder: (context, index) {
-                            //       return Padding(
-                            //         padding: const EdgeInsets.all(5),
-                            //         child: InkWell(
-                            //           onTap: () {},
-                            //           splashColor:
-                            //               Theme.of(context).colorScheme.primary,
-                            //           borderRadius: BorderRadius.circular(15),
-                            //           child: Image.network(
-                            //             _savedProject.urls![index],
-                            //             height: 250,
-                            //             width: double.infinity,
-                            //             fit: BoxFit.cover,
-                            //           ),
-                            //         ),
-                            //       );
-                            //     },
-                            //     itemCount: _savedProject.urls!.length,
-                            //   ),
-                            // )
                             SizedBox(
                               height: 500,
                               child: GridView(
