@@ -11,6 +11,10 @@ class MainSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> deleteAccount() async {
+      await Provider.of<Auth>(context, listen: false).deleteAccount();
+    }
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 254, 247, 241),
       appBar: AppBar(
@@ -53,9 +57,26 @@ class MainSettingsScreen extends StatelessWidget {
                 borderRadius: BorderRadiusDirectional.circular(10)),
             child: ListTile(
                 tileColor: const Color.fromARGB(255, 254, 247, 241),
-                title: const Text('تعطيل الحساب'),
+                title: const Text('حذف الحساب'),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {}),
+                onTap: () => showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                          actionsAlignment: MainAxisAlignment.start,
+                          title: const Text(
+                            'هل انت متأكد؟ لا يمكنك استرجاع الحساب بعد حذفه.',
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () {
+                                  deleteAccount();
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: const Text('نعم'))
+                          ],
+                        ))),
           ),
           Card(
             elevation: 4,

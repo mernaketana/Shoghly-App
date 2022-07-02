@@ -104,7 +104,35 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> forgotPassword(String email) async {
+  Future<void> deleteAccount() async {
+    final url = Uri.parse("${apiUrl}users");
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer $_token'
+        },
+      );
+      final responseData = json.decode(response.body);
+      print(responseData);
+      final prefs = await SharedPreferences.getInstance();
+      if (!prefs.containsKey('userData')) {
+        return;
+      } else {
+        prefs.remove('userData');
+        print(prefs.containsKey('userData'));
+      }
+      if (responseData["error"] != null) {
+        throw HttpException(responseData["message"]);
+      }
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<String> forgotPassword(String email) async {
     final url = Uri.parse("${apiUrl}settings/forgot-password");
     try {
       final response = await http.post(
@@ -117,9 +145,10 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return "لا يوجد مستخدم بهذا الاسم";
       }
       notifyListeners();
+      return "تم بعث لينك لحسابك الشخصي";
     } catch (error) {
       rethrow;
     }

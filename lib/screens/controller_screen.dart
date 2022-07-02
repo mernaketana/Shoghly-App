@@ -84,7 +84,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
               onRefresh: () => getCurrentUser(context),
               child: MyAccountScreen(
                 currentUser: currentUser,
-                comments: comments,
+                comments: [],
               )),
       _isLoading
           ? Container()

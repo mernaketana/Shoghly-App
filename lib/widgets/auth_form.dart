@@ -63,7 +63,22 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   Future<void> forgotPassword(String email) async {
-    await Provider.of<Auth>(context, listen: false).forgotPassword(email);
+    final message =
+        await Provider.of<Auth>(context, listen: false).forgotPassword(email);
+    (showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              actionsAlignment: MainAxisAlignment.start,
+              title: Text(
+                message,
+                textAlign: TextAlign.right,
+              ),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    child: const Text('حسنا'))
+              ],
+            )));
   }
 
   @override
