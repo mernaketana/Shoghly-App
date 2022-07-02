@@ -28,14 +28,13 @@ class Project with ChangeNotifier {
           "Authorization": "Bearer $authToken",
         },
       );
-      final data = json.decode(response.body) as Map<String, dynamic>;
+      final data = json.decode(response.body);
       print(data);
       print('hereeeeeeeeeeeeeeeeeeeeee');
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return;
       }
-      Map<String, dynamic> employeeInfo = data["data"];
       notifyListeners();
     } catch (error) {
       rethrow;

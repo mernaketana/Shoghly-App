@@ -51,27 +51,31 @@ class _MyCommentsState extends State<MyComments> {
                   // );
                   return Padding(
                     padding: const EdgeInsets.all(6),
-                    child: SizedBox(
-                      height: 45,
-                      child: ListTile(
-                        leading: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: CircleAvatar(
-                              // maxRadius: 20,
-                              // backgroundImage: user.image != null
-                              //     ? NetworkImage(user.image as String)
-                              //     : const AssetImage(
-                              //             'assets/images/placeholder.png')
-                              //         as ImageProvider
+                    child: widget.comments == []
+                        ? const Center(
+                            child: Text('لا يوجد تعليقات'),
+                          )
+                        : SizedBox(
+                            height: 45,
+                            child: ListTile(
+                              leading: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: CircleAvatar(
+                                    // maxRadius: 20,
+                                    // backgroundImage: user.image != null
+                                    //     ? NetworkImage(user.image as String)
+                                    //     : const AssetImage(
+                                    //             'assets/images/placeholder.png')
+                                    //         as ImageProvider
+                                    ),
                               ),
-                        ),
-                        // title: Text('${user.fname} ${user.lname}'),
-                        subtitle: Text(widget.comments[index].comment),
-                      ),
-                    ),
+                              // title: Text('${user.fname} ${user.lname}'),
+                              subtitle: Text(widget.comments[index].comment),
+                            ),
+                          ),
                   );
                 },
                 itemCount: widget.comments.length,

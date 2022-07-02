@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:project/models/comment.dart';
 import 'package:project/models/employee.dart';
+import 'package:project/providers/review.dart';
 import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/settings_screen.dart';
 import 'package:project/widgets/splash_screen.dart';
@@ -10,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import '../models/image.dart';
 import '../providers/images.dart';
 import '../providers/user.dart';
+import '../providers/worker.dart';
 import '../screens/my_account_screen.dart';
 import '../widgets/categories_body_widget.dart';
 import '../dummy_data.dart';
@@ -26,6 +29,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
   ImageSource? source;
   var newWorkImage = MyImage('', [], '');
   late Employee currentUser;
+  late List<Comment> comments;
   int _selectedPageIndex = 0;
   var _isLoading = false;
   var _isInit =
@@ -42,6 +46,13 @@ class _ControllerScreenState extends State<ControllerScreen> {
       await Provider.of<User>(context)
           .getUser(userId)
           .then((value) => currentUser = value);
+      if (currentUser.role == 'worker') {
+        print('I am a worker');
+        final workerProfile = await Provider.of<Worker>(context, listen: false)
+            .getWorker((userId));
+        comments = workerProfile['workerComments'];
+        print(comments);
+      }
       setState(() {
         _isLoading = false;
       });
@@ -71,7 +82,10 @@ class _ControllerScreenState extends State<ControllerScreen> {
           ? Container()
           : RefreshIndicator(
               onRefresh: () => getCurrentUser(context),
-              child: MyAccountScreen(currentUser: currentUser)),
+              child: MyAccountScreen(
+                currentUser: currentUser,
+                comments: comments,
+              )),
       _isLoading
           ? Container()
           : CategoriesScreen(
@@ -85,7 +99,12 @@ class _ControllerScreenState extends State<ControllerScreen> {
             ),
     ];
     final List<Widget> _userPages = [
-      _isLoading ? Container() : MyAccountScreen(currentUser: currentUser),
+      _isLoading
+          ? Container()
+          : MyAccountScreen(
+              currentUser: currentUser,
+              comments: [],
+            ),
       _isLoading ? Container() : CategoriesScreen(currentUser: currentUser),
       _isLoading
           ? Container()

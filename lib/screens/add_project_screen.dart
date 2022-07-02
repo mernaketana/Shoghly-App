@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/worker_project.dart';
 import 'package:project/providers/project.dart';
+import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/widgets/images_gallery_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:nine_grid_view/nine_grid_view.dart';
@@ -31,9 +32,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   Future<void> _pickedImageCamera() async {
     try {
       final picker = ImagePicker();
-      final pickedImage = await picker.pickImage(
-        source: ImageSource.camera,
-      );
+      final pickedImage =
+          await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
       if (pickedImage == null) return;
       setState(() {
         _isLoading = true;
@@ -57,9 +57,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   Future<void> _pickedImageGallery() async {
     try {
       final picker = ImagePicker();
-      final pickedImage = await picker.pickImage(
-        source: ImageSource.gallery,
-      );
+      final pickedImage =
+          await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
       if (pickedImage == null) return;
       setState(() {
         _isLoading = true;
@@ -96,6 +95,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           .addProject(_savedProject);
       Navigator.of(context).pop();
     } catch (error) {
+      print('I am in error');
       print(error);
       await showDialog(
           context: context,
@@ -182,7 +182,11 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                                 children: <Widget>[
                                   ..._savedProject.urls!
                                       .map((e) => InkWell(
-                                            onTap: () {},
+                                            onTap: () => Navigator.of(context)
+                                                .pushNamed(
+                                                    DetailedImageScreen
+                                                        .routeName,
+                                                    arguments: e),
                                             splashColor:
                                                 Theme.of(context).primaryColor,
                                             borderRadius:

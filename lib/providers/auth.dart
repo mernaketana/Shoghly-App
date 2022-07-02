@@ -105,7 +105,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> forgotPassword(String email) async {
-    final url = Uri.parse("${apiUrl}signup");
+    final url = Uri.parse("${apiUrl}settings/forgot-password");
     try {
       final response = await http.post(
         url,
@@ -126,7 +126,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> changePassword(String oldPassword, String newPassword) async {
-    final url = Uri.parse("${apiUrl}change-password");
+    final url = Uri.parse("${apiUrl}settings/change-password");
     try {
       final response = await http.post(
         url,

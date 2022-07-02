@@ -62,6 +62,10 @@ class _AuthFormState extends State<AuthForm> {
     }
   }
 
+  Future<void> forgotPassword(String email) async {
+    await Provider.of<Auth>(context, listen: false).forgotPassword(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -88,6 +92,7 @@ class _AuthFormState extends State<AuthForm> {
                         }
                       },
                       onSaved: (e) => _userEmail = e as String,
+                      onChanged: (e) => _userEmail = e,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
@@ -98,10 +103,7 @@ class _AuthFormState extends State<AuthForm> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         labelText: 'ادخل بريدك الالكتروني',
-                        // labelStyle: TextStyle(color: Colors.white)
                       ),
-
-                      // style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(
                       height: 35,
@@ -216,7 +218,7 @@ class _AuthFormState extends State<AuthForm> {
                         style: ButtonStyle(
                             padding: MaterialStateProperty.all(EdgeInsets.zero),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                        onPressed: () {},
+                        onPressed: () => forgotPassword(_userEmail),
                         child: const Text('إعادة ضبط كلمة المرور')),
                   ],
                 ),

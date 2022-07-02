@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:project/models/worker_project.dart';
 import 'package:project/providers/images.dart';
 import 'package:project/providers/user.dart';
 import 'package:project/screens/add_project_screen.dart';
 import 'package:project/screens/detailed_image_screen.dart';
+import 'package:project/screens/detailed_project_screen.dart';
 import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
 import './screens/detailed_auth_screen.dart';
@@ -96,6 +98,9 @@ class MyApp extends StatelessWidget {
                           WorkerDetailsScreen(
                               arguments:
                                   settings.arguments as Map<String, dynamic>),
+                      DetailedProjectScreen.routeName: (ctx) =>
+                          DetailedProjectScreen(
+                              projectId: settings.arguments as String),
                     };
                     WidgetBuilder? builder = routes[settings.name];
                     return MaterialPageRoute(builder: (ctx) => builder!(ctx));

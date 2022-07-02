@@ -140,6 +140,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   Widget build(BuildContext context) {
     print('here in my acc');
     print(widget.currentUser.image);
+    print(widget.comments.isEmpty);
     return _isLoading
         ? const Center(child: SpinKitSpinningLines(color: Colors.red))
         : Column(
@@ -303,35 +304,38 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                   'اظهر التعليقات',
                   ListView.builder(
                     itemBuilder: (context, index) {
-                      // var user = DUMMY_EMP.firstWhere(
-                      //   (e) => e.id == widget.comments[index].userId,
-                      // );
                       return Padding(
                         padding: const EdgeInsets.all(6),
-                        child: SizedBox(
-                          height: 50,
-                          child: ListTile(
-                            leading: Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: CircleAvatar(
-                                  // maxRadius: 20,
-                                  // backgroundImage: user.image != null
-                                  //     ? user.image!.startsWith('/data')
-                                  //         ? FileImage(
-                                  //             File(user.image as String))
-                                  //         : NetworkImage(user.image as String)
-                                  //             as ImageProvider<Object>
-                                  //     : const AssetImage(
-                                  //         'assets/images/placeholder.png')
+                        child: widget.comments.isEmpty
+                            ? const Text('لا يوجد تعليقات')
+                            : SizedBox(
+                                height: 50,
+                                child: ListTile(
+                                  leading: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: CircleAvatar(
+                                        maxRadius: 20,
+                                        backgroundImage: widget.comments[index]
+                                                    .user!.picture !=
+                                                ''
+                                            ? NetworkImage(widget
+                                                    .comments[index]
+                                                    .user!
+                                                    .picture)
+                                                as ImageProvider<Object>
+                                            : const AssetImage(
+                                                'assets/images/placeholder.png')),
                                   ),
-                            ),
-                            // title: Text('${user.fname} ${user.lname}'),
-                            subtitle: Text(widget.comments[index].comment),
-                          ),
-                        ),
+                                  title: Text(
+                                      '${widget.comments[index].user!.fname} ${widget.comments[index].user!.lname}'),
+                                  subtitle:
+                                      Text(widget.comments[index].comment),
+                                ),
+                              ),
                       );
                     },
                     itemCount: widget.comments.length,
@@ -342,51 +346,6 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                     });
                   },
                 ),
-              if (widget.currentUser.role == 'worker')
-                boxWidget(
-                    _expandImg,
-                    'معرضي',
-                    SingleChildScrollView(
-                      child:
-                          // !DUMMY_IMAGES
-                          //         .any((e) => e.userId == widget.currentUser.id)
-                          //     ? Container()
-                          //     :
-                          Column(
-                        children: [
-                          // ImagesGallery(
-                          //     images: DUMMY_IMAGES
-                          //         .firstWhere((e) =>
-                          //             e.userId == widget.currentUser.id)
-                          //         .url as List<String>),
-                          Row(
-                            children: [
-                              const Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: TextButton.icon(
-                                    onPressed: () => Navigator.of(context)
-                                        .pushNamed(GalleryScreen.routeName,
-                                            arguments: widget.currentUser),
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      size: 20,
-                                    ),
-                                    label: const Text(
-                                      'تعديل',
-                                      style: TextStyle(
-                                          decoration: TextDecoration.underline),
-                                    )),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ), () {
-                  setState(() {
-                    _expandImg = !_expandImg;
-                  });
-                }),
             ],
           );
   }

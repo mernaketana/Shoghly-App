@@ -8,6 +8,7 @@ import 'package:project/models/image.dart';
 import 'package:project/models/worker_project.dart';
 import 'package:project/providers/project.dart';
 import 'package:project/screens/add_project_screen.dart';
+import 'package:project/screens/detailed_project_screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../models/employee.dart';
@@ -48,81 +49,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
     _isInit = false;
   }
 
-  Future _dialog(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-          content: const Text(
-            'قم باختيار مصدر الصورة',
-            textAlign: TextAlign.center,
-          ),
-          actionsAlignment: MainAxisAlignment.spaceEvenly,
-          actions: [
-            TextButton(
-              child: const Text('الكاميرا'),
-              onPressed: () {
-                _pickedImageCamera();
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('المعرض'),
-              onPressed: () {
-                // _pickedImageGallery(userId);
-                Navigator.of(context).pop();
-              },
-            ),
-          ]),
-    );
-  }
-
-  Future<void> _pickedImageCamera() async {
-    try {
-      final picker = ImagePicker();
-      final pickedImage = await picker.pickImage(source: ImageSource.camera);
-      if (pickedImage == null) return;
-      await Provider.of<Images>(context, listen: false)
-          .addImage(pickedImage.path);
-    } on PlatformException catch (_) {
-      return;
-    }
-  }
-
-  Future<void> _pickedImageGallery(String userId) async {
-    try {
-      final picker = ImagePicker();
-      final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-      if (pickedImage == null) return;
-      // final pickedImageFile = File(pickedImage.path);
-      // setState(() {
-      //   _image = pickedImage.path;
-      // });
-      // setState(() {
-      //   if (!DUMMY_IMAGES.any((element) => element.userId == userId)) {
-      //     newWorkImage =
-      //         MyImage(DateTime.now().toString(), [(pickedImage.path)], userId);
-      //     // var new_user_img = MyImage(
-      //     //     DateTime.now().toString(), ['${pickedImage.path}'], userId);
-      //     // print(newWorkImage.url);
-      //     DUMMY_IMAGES.add(newWorkImage);
-      //   } else {
-      //     DUMMY_IMAGES
-      //         .firstWhere((element) => element.userId == userId)
-      //         .url!
-      //         .add(pickedImage.path);
-      //   }
-      // });
-      // widget.imagePick(pickedImageFile);
-    } on PlatformException catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
-  }
-
-  Future<void> getProject(String projectId) async {
-    await Provider.of<Project>(context, listen: false)
-        .getWorkerProject(projectId);
-  }
+  // Future<void> getProject(String projectId) async {
+  //   await Provider.of<Project>(context, listen: false)
+  //       .getWorkerProject(projectId);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +68,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         title: const Center(child: Text('معرضي')),
       ),
       body: _isLoading
-          ? SpinKitSpinningLines(color: Colors.red)
+          ? const SpinKitSpinningLines(color: Colors.red)
           : Column(
               children: [
                 Expanded(
@@ -149,8 +79,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       child: Column(
                         children: [
                           InkWell(
-                              onTap: () =>
-                                  getProject(projects[index].projectId!),
+                              onTap: () => Navigator.of(context).pushNamed(
+                                  DetailedProjectScreen.routeName,
+                                  arguments: projects[index].projectId!),
                               splashColor: Theme.of(context).primaryColor,
                               borderRadius: BorderRadius.circular(15),
                               child: Stack(
