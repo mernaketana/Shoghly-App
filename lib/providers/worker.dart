@@ -120,15 +120,19 @@ class Worker with ChangeNotifier {
       final workerComments = <Comment>[];
       for (var i = 0; i < userReviews.length; i++) {
         final currentComment = userReviews[i];
+        print(currentComment);
         final review = Comment(
             reviewId: currentComment["reviewId"],
             updatedAt: DateTime.parse(currentComment["updatedAt"]),
-            user: Commenter(
-                id: currentComment["client"]["id"],
-                fname: currentComment["client"]["firstName"],
-                lname: currentComment["client"]["lastName"],
-                picture: currentComment["client"]["picture"],
-                gender: currentComment["client"]["gender"]),
+            user: currentComment["client"] == null
+                ? Commenter(
+                    id: '', fname: '', lname: '', picture: '', gender: '')
+                : Commenter(
+                    id: currentComment["client"]["id"],
+                    fname: currentComment["client"]["firstName"],
+                    lname: currentComment["client"]["lastName"],
+                    picture: currentComment["client"]["picture"],
+                    gender: currentComment["client"]["gender"]),
             comment: currentComment["description"],
             workerId: workerId,
             createdAt: DateTime.parse(currentComment['createdAt']),

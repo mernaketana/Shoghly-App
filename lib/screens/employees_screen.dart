@@ -18,27 +18,42 @@ class EmployeesScreen extends StatefulWidget {
 class _EmployeesScreenState extends State<EmployeesScreen> {
   var _isInit = true;
   var _isLoading = false;
-  late List<Employee> employees;
+  List<Employee> employees = [];
+  String _city = '';
 
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
+  // @override
+  // void didChangeDependencies() async {
+  //   super.didChangeDependencies();
+  //   if (_isInit) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
 
-      for (var i = 0; i < CITIES.length; i++) {
-        await Provider.of<Worker>(context, listen: false)
-            .getWorkers(CITIES[i], widget.arguments['title']);
-      }
-      employees = Provider.of<Worker>(context, listen: false).employees;
-      print(employees);
-      setState(() {
-        _isLoading = false;
-      });
-    }
-    _isInit = false;
+  //     for (var i = 0; i < CITIES.length; i++) {
+  //       await Provider.of<Worker>(context, listen: false)
+  //           .getWorkers(CITIES[i], widget.arguments['title']);
+  //     }
+  //     employees = Provider.of<Worker>(context, listen: false).employees;
+  //     print(employees);
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  //   _isInit = false;
+  // }
+
+  void getWorkers(String city) async {
+    print('HEREEEEEEEEEEEEE');
+    setState(() {
+      _isLoading = true;
+    });
+    await Provider.of<Worker>(context, listen: false)
+        .getWorkers(city, widget.arguments['title']);
+    employees = Provider.of<Worker>(context, listen: false).employees;
+    print(employees);
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -60,18 +75,65 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                   // if (currentUser.id == employees[index].id) {
                   //   return const SizedBox();
                   // }
-                  return EmployeesBodyWidget(
-                      currentUser: widget.arguments['currentUser'],
-                      currentWorker: employees
-                          .where((element) =>
-                              element.categordId == widget.arguments['title'])
-                          .toList()[index]);
+                  return Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.all(15),
+                        child: DropdownButtonFormField(
+                            validator: (e) {
+                              if (e == null) {
+                                return 'يجب اختيار المحافظة  ';
+                              } else {
+                                return null;
+                              }
+                            },
+                            alignment: Alignment.centerRight,
+                            decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.location_city_outlined,
+                                  color: Colors.grey,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                labelText: 'اختر المحافظة'),
+                            isExpanded: true,
+                            iconEnabledColor: Colors.white,
+                            items: CITIES
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(e),
+                                      value: e,
+                                    ))
+                                .toList(),
+                            onSaved: (String? e) {
+                              _city = e as String;
+                              getWorkers(_city);
+                            },
+                            onChanged: (newVal) {
+                              _city = newVal as String;
+                              getWorkers(_city);
+                            }),
+                      ),
+                      if (employees.isNotEmpty)
+                        EmployeesBodyWidget(
+                            currentUser: widget.arguments['currentUser'],
+                            currentWorker: employees
+                                .where((element) =>
+                                    element.categordId ==
+                                    widget.arguments['title'])
+                                .toList()[index]),
+                    ],
+                  );
                 },
-                itemCount: employees
-                    .where((element) =>
-                        element.categordId == widget.arguments['title'])
-                    .toList()
-                    .length,
+                itemCount: employees.isNotEmpty
+                    ? employees
+                        .where((element) =>
+                            element.categordId == widget.arguments['title'])
+                        .toList()
+                        .length
+                    : 1,
               ),
       ),
     );

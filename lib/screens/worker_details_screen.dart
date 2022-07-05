@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/employee.dart';
+import 'package:project/screens/detailed_project_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/comment.dart';
+import '../models/worker_project.dart';
+import '../providers/project.dart';
 import '../providers/worker.dart';
 
 import '../widgets/comments.dart';
+import '../widgets/images_gallery_widget.dart';
 
 class WorkerDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> arguments;
@@ -23,6 +27,8 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
   late Map<String, dynamic> workerProfile;
   late Employee currentWorker;
   late List<Comment> comments;
+  late List<WorkerProject> projects;
+  List<String> projectImages = [];
 
   @override
   void didChangeDependencies() async {
@@ -35,6 +41,11 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
           .getWorker((widget.arguments["currentWorker"] as Employee).id);
       currentWorker = workerProfile['employee'];
       comments = workerProfile['workerComments'];
+      projects = await Provider.of<Project>(context, listen: false)
+          .getWorkerProjects(currentWorker.id);
+      for (var element in projects) {
+        projectImages.add(element.urls![0]);
+      }
       setState(() {
         _isLoading = false;
       });
@@ -43,6 +54,81 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
   }
 
   var starList = <Widget>[];
+  List<Widget> createStars(double rate) {
+    starList.clear();
+    for (var i = 0; i < rate; i++) {
+      // print(i);
+      starList.add(
+        const Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: 17,
+        ),
+      );
+    }
+    return starList;
+  }
+
+  var galleryList = <Widget>[];
+  List<Widget> createGallery(List<WorkerProject> projects) {
+    galleryList.clear();
+    for (var i = 0; i < projects.length; i++) {
+      print(i);
+      print(projects.length);
+      print('proooooooooooooooooojectsssssssssssssss');
+      galleryList.add(
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: InkWell(
+              onTap: () => Navigator.of(context).pushNamed(
+                  DetailedProjectScreen.routeName,
+                  arguments: projects[i].projectId!),
+              splashColor: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(15),
+              child: Stack(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    child: Image.network(
+                      projects[i].urls![0],
+                      colorBlendMode: BlendMode.luminosity,
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  // Container(
+                  //   height: 155,
+                  //   decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(15),
+                  //       color: const Color.fromARGB(169, 0, 0, 0)),
+                  // ),
+                  Positioned(
+                    bottom: 30,
+                    right: 5,
+                    left: 8,
+                    child: SizedBox(
+                      width: 20,
+                      height: 60,
+                      child: Text(
+                        (projects[i].urls!.length > 1)
+                            ? '+${(projects[i].urls!.length - 1)}'
+                            : '',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 25),
+                        softWrap: true,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        ),
+      );
+    }
+    return galleryList;
+  }
+
   int rate(List<dynamic>? rates) {
     double sum = 0;
     for (var i = 0; i < rates!.length; i++) {
@@ -72,6 +158,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
     //     ),
     //   );
     // }
+
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
@@ -96,8 +183,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                               currentWorker.image as String,
                               fit: BoxFit.cover,
                             ),
-                    ) // the part that we won't always see
-                        ), //what is inside the appbar
+                    )),
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate(
@@ -125,10 +211,11 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                   width: 150,
                                   height: 30,
                                   child: ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      children: []
-                                      // currentWorker.reviews != [] ? starList : [],
-                                      ),
+                                    scrollDirection: Axis.horizontal,
+                                    children: currentWorker.reviews != []
+                                        ? starList
+                                        : [],
+                                  ),
                                 ),
                               ]),
                         ),
@@ -192,8 +279,8 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                           elevation: 4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Padding(
+                            children: [
+                              const Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 11, vertical: 9),
                                 child: Text(
@@ -203,9 +290,12 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                       fontSize: 16),
                                 ),
                               ),
-                              // ImagesGallery(
-                              //   images:currentWorker.)
-                              // )
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: createGallery(projects),
+                                ),
+                              ),
                             ],
                           ),
                         ),

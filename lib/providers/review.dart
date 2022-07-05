@@ -125,7 +125,9 @@ class Review with ChangeNotifier {
             workerId: currentComment['workerId'],
             createdAt: DateTime.parse(currentComment['createdAt']),
             rate: (currentComment["rating"] as int).toDouble());
-        workerComments.add(_review);
+        if (_review.user!.id != null) {
+          workerComments.add(_review);
+        }
       }
       notifyListeners();
       return workerComments;
