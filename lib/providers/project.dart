@@ -54,17 +54,16 @@ class Project with ChangeNotifier {
       // final employee = await getUser(userId);
       final data = json.decode(response.body) as Map<String, dynamic>;
       print(data);
-      final accessProjects = data["projects"] as List;
+      final accessProjects = data["data"]["projects"] as List;
       List<WorkerProject> projects = [];
       for (var i = 0; i < accessProjects.length; i++) {
-        final List<dynamic> currentPictures = accessProjects[i]["pictures"];
+        final String currentPictures = accessProjects[i]["pictures"][0]["url"];
         print(currentPictures);
         final currentProject = WorkerProject(
-            desc: accessProjects[i]["description"],
-            urls: currentPictures,
-            createdAt: DateTime.parse(accessProjects[i]["createdAt"]),
-            projectId: accessProjects[i]["projectId"],
-            updatedAt: DateTime.parse(accessProjects[i]["updatedAt"]));
+          desc: accessProjects[i]["description"],
+          urls: [currentPictures],
+          projectId: accessProjects[i]["projectId"],
+        );
         projects.add(currentProject);
       }
       // ignore: unnecessary_null_comparison

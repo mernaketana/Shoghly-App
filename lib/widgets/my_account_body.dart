@@ -13,13 +13,10 @@ import '../models/comment.dart';
 import '../models/image.dart';
 import '../providers/images.dart';
 import '../providers/user.dart';
+import '../providers/worker.dart';
 
 class MyAccountBody extends StatefulWidget {
-  final List<Comment> comments;
-  final Employee currentUser;
-  const MyAccountBody(
-      {Key? key, required this.comments, required this.currentUser})
-      : super(key: key);
+  const MyAccountBody({Key? key}) : super(key: key);
 
   @override
   State<MyAccountBody> createState() => _MyAccountBodyState();
@@ -34,6 +31,35 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   //   var myAge = DateTime.now().difference(bdate).toString();
   //   return myAge;
   // }
+  late Employee currentUser;
+  List<Comment> comments = [];
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      final userId = Provider.of<User>(context, listen: false).userId;
+      await Provider.of<User>(context)
+          .getUser(userId)
+          .then((value) => currentUser = value);
+      if (currentUser.role == 'worker') {
+        print('I am a worker');
+        final workerProfile = await Provider.of<Worker>(context, listen: false)
+            .getWorker((userId));
+        comments = workerProfile['workerComments'];
+        print(comments);
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
+  }
+
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
@@ -90,13 +116,16 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       String userImage = await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
       await Provider.of<User>(context, listen: false).editUser(
-          widget.currentUser.fname,
-          widget.currentUser.lname,
-          widget.currentUser.gender,
-          widget.currentUser.phone.toString(),
-          widget.currentUser.location,
-          widget.currentUser.address,
+          currentUser.fname,
+          currentUser.lname,
+          currentUser.gender,
+          currentUser.phone.toString(),
+          currentUser.location,
+          currentUser.address,
           userImage);
+      setState(() {
+        _isInit = true;
+      });
       setState(() {
         _isLoading = false;
       });
@@ -116,12 +145,12 @@ class _MyAccountBodyState extends State<MyAccountBody> {
       String userImage = await Provider.of<Images>(context, listen: false)
           .addImage(pickedImage.path);
       await Provider.of<User>(context, listen: false).editUser(
-          widget.currentUser.fname,
-          widget.currentUser.lname,
-          widget.currentUser.gender,
-          widget.currentUser.phone.toString(),
-          widget.currentUser.location,
-          widget.currentUser.address,
+          currentUser.fname,
+          currentUser.lname,
+          currentUser.gender,
+          currentUser.phone.toString(),
+          currentUser.location,
+          currentUser.address,
           userImage);
       setState(() {
         _isLoading = false;
@@ -134,8 +163,6 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   @override
   Widget build(BuildContext context) {
     print('here in my acc');
-    print(widget.currentUser.image);
-    print(widget.comments.isEmpty);
     return _isLoading
         ? const Center(child: SpinKitSpinningLines(color: Colors.red))
         : Column(
@@ -148,21 +175,20 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                     width: 380,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 20),
-                    child: widget.currentUser.image != ''
+                    child: currentUser.image != ''
                         ? InkWell(
                             onTap: () => Navigator.of(context).pushNamed(
                                 DetailedImageScreen.routeName,
-                                arguments: widget.currentUser.image),
+                                arguments: currentUser.image),
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: widget.currentUser.image == ''
+                                child: currentUser.image == ''
                                     ? Image.asset(
                                         'assets/images/placeholder.png')
                                     : CachedNetworkImage(
                                         fit: BoxFit.cover,
                                         height: 400,
-                                        imageUrl:
-                                            widget.currentUser.image as String,
+                                        imageUrl: currentUser.image as String,
                                         placeholder: (context, url) =>
                                             const SizedBox(
                                                 height: 480,
@@ -201,8 +227,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                         Row(
                           children: <Widget>[
                             const Text('الاسم: '),
-                            Text(
-                                '${widget.currentUser.fname} ${widget.currentUser.lname}')
+                            Text('${currentUser.fname} ${currentUser.lname}')
                           ],
                         ),
                         const SizedBox(
@@ -211,40 +236,39 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                         Row(
                           children: <Widget>[
                             const Text('رقم الهاتف: '),
-                            Text('0${widget.currentUser.phone.toString()}')
+                            Text('0${currentUser.phone.toString()}')
                           ],
                         ),
                         const SizedBox(
                           height: 6,
                         ),
-                        if (widget.currentUser.role == 'worker')
+                        if (currentUser.role == 'worker')
                           Row(
                             children: <Widget>[
                               const Text('الحرفة: '),
-                              Text(widget.currentUser.categordId as String)
+                              Text(currentUser.categordId as String)
                             ],
                           ),
-                        if (widget.currentUser.role == 'worker')
+                        if (currentUser.role == 'worker')
                           const SizedBox(
                             height: 6,
                           ),
-                        if (widget.currentUser.bDate != null)
+                        if (currentUser.bDate != null)
                           Row(
                             children: <Widget>[
                               const Text('السن: '),
-                              Text(calculateAge(
-                                      widget.currentUser.bDate as DateTime)
+                              Text(calculateAge(currentUser.bDate as DateTime)
                                   .toString())
                             ],
                           ),
-                        if (widget.currentUser.bDate != null)
+                        if (currentUser.bDate != null)
                           const SizedBox(
                             height: 6,
                           ),
                         Row(
                           children: <Widget>[
                             const Text('المحافظة: '),
-                            Text(widget.currentUser.location)
+                            Text(currentUser.location)
                           ],
                         ),
                         const SizedBox(
@@ -253,7 +277,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                         Row(
                           children: <Widget>[
                             const Text('العنوان: '),
-                            Text(widget.currentUser.address)
+                            Text(currentUser.address)
                           ],
                         ),
                         const SizedBox(
@@ -268,7 +292,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                   onPressed: () => Navigator.of(context)
                                           .pushNamed(SettingsBody.routeName,
                                               arguments: {
-                                            'currentUser': widget.currentUser,
+                                            'currentUser': currentUser,
                                             'editPass': false
                                           }),
                                   icon: const Icon(
@@ -293,7 +317,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                   });
                 },
               ),
-              if (widget.currentUser.role == 'worker')
+              if (currentUser.role == 'worker')
                 boxWidget(
                   _expandComment,
                   'اظهر التعليقات',
@@ -301,7 +325,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(6),
-                        child: widget.comments.isEmpty
+                        child: comments.isEmpty
                             ? const Text('لا يوجد تعليقات')
                             : SizedBox(
                                 height: 50,
@@ -314,11 +338,11 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                             BorderRadius.circular(10)),
                                     child: CircleAvatar(
                                         maxRadius: 20,
-                                        backgroundImage: widget.comments[index]
-                                                    .user!.picture !=
+                                        backgroundImage: comments[index]
+                                                    .user!
+                                                    .picture !=
                                                 ''
-                                            ? NetworkImage(widget
-                                                    .comments[index]
+                                            ? NetworkImage(comments[index]
                                                     .user!
                                                     .picture)
                                                 as ImageProvider<Object>
@@ -326,14 +350,13 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                                 'assets/images/placeholder.png')),
                                   ),
                                   title: Text(
-                                      '${widget.comments[index].user!.fname} ${widget.comments[index].user!.lname}'),
-                                  subtitle:
-                                      Text(widget.comments[index].comment),
+                                      '${comments[index].user!.fname} ${comments[index].user!.lname}'),
+                                  subtitle: Text(comments[index].comment),
                                 ),
                               ),
                       );
                     },
-                    itemCount: widget.comments.length,
+                    itemCount: comments.length,
                   ),
                   () {
                     setState(() {
@@ -350,7 +373,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
     return AnimatedContainer(
       width: 380,
       duration: const Duration(milliseconds: 300),
-      height: expand ? min(widget.comments.length + 245, 300) : 68,
+      height: expand ? min(comments.length + 245, 300) : 68,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(
@@ -370,7 +393,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
             AnimatedContainer(
               width: 380,
               duration: const Duration(milliseconds: 300),
-              height: expand ? min(widget.comments.length + 177, 250) : 0,
+              height: expand ? min(comments.length + 177, 250) : 0,
               margin: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),

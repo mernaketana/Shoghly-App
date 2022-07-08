@@ -11,7 +11,7 @@ import './screens/worker_details_screen.dart';
 import './screens/choice_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/employees_screen.dart';
-import './screens/controller_screen.dart';
+import 'screens/page_controller_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './providers/auth.dart';
 import 'providers/project.dart';
@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20))))),
                   ),
                   home: value.isAuth
-                      ? const ControllerScreen()
+                      ? const PageControllerScreen()
                       : FutureBuilder(
                           future: value.tryAutoLogIn(),
                           builder: (context, snapshot) =>

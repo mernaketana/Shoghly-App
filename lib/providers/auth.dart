@@ -69,6 +69,25 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> verifyEmail(String email, String code) async {
+    final url = Uri.parse("${apiUrl}settings/verify-email");
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({"email": email, "code": code}),
+        headers: {"Content-Type": "application/json"},
+      );
+      final responseData = json.decode(response.body);
+      print(responseData);
+      if (responseData["error"] != null) {
+        throw HttpException(responseData["message"]);
+      }
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
   Future<void> signin(String email, String password) async {
     final url = Uri.parse("${apiUrl}signin");
     try {

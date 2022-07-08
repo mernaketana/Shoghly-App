@@ -9,12 +9,12 @@ import 'package:project/screens/detailed_project_screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../models/employee.dart';
+import '../providers/user.dart';
 import '../screens/detailed_image_screen.dart';
 
 class GalleryScreen extends StatefulWidget {
   static const routeName = '/gallery-screen';
-  final Employee currentUser;
-  const GalleryScreen({Key? key, required this.currentUser}) : super(key: key);
+  const GalleryScreen({Key? key}) : super(key: key);
 
   @override
   State<GalleryScreen> createState() => _GalleryScreenState();
@@ -26,6 +26,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   var _isInit = true;
   var _isLoading = false;
   late List<WorkerProject> projects;
+  late Employee currentUser;
 
   @override
   void didChangeDependencies() async {
@@ -34,9 +35,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
       setState(() {
         _isLoading = true;
       });
-
+      final userId = Provider.of<User>(context, listen: false).userId;
+      await Provider.of<User>(context)
+          .getUser(userId)
+          .then((value) => currentUser = value);
       projects = await Provider.of<Project>(context, listen: false)
-          .getWorkerProjects(widget.currentUser.id);
+          .getWorkerProjects(currentUser.id);
       setState(() {
         _isLoading = false;
       });

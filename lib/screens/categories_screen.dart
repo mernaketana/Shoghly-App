@@ -12,10 +12,7 @@ class CategoriesScreen extends StatefulWidget {
   static const routeName = '/categories-screen';
   const CategoriesScreen({
     Key? key,
-    required this.currentUser,
   }) : super(key: key);
-
-  final Employee currentUser;
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -25,25 +22,41 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   late String searchCity;
   final _textController = TextEditingController();
   var _isLoading = false;
-  final _items = [
-    'بورسعيد',
-    'القاهرة',
-    'الاسكندرية',
-    'الاسماعيلية',
-    'المنصورة',
-    'المنوفية'
-  ];
   Icon customIcon = const Icon(Icons.search);
   Widget customSearchBar = const Text(
     'شغلي',
     style: TextStyle(
         color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
   );
+  late Employee currentUser;
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      final userId = Provider.of<User>(context, listen: false).userId;
+      await Provider.of<User>(context)
+          .getUser(userId)
+          .then((value) => currentUser = value);
+      if (currentUser.role == 'worker') {
+        print('I am a worker');
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
+  }
 
   Future<void> _search(String text, String city) async {
     print('here i am');
     print(text);
     print(city);
+    searchCity = currentUser.location;
     setState(() {
       _isLoading = true;
     });
@@ -59,7 +72,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    searchCity = widget.currentUser.location;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 254, 247, 241),
       appBar: AppBar(
@@ -73,7 +85,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     color: Colors.white,
                     size: 25,
                   ),
-                  items: _items
+                  items: CITIES
                       .map((e) => DropdownMenuItem(
                             child: Text(e),
                             value: e,
@@ -144,7 +156,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       .map((e) => CategoriesBodyWidget(
                           backgroundImg: e.img,
                           title: e.title,
-                          currentUser: widget.currentUser))
+                          currentUser: currentUser))
                       .toList(),
                 ],
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

@@ -5,9 +5,7 @@ import '../models/employee.dart';
 import '../providers/auth.dart';
 
 class MainSettingsScreen extends StatelessWidget {
-  const MainSettingsScreen({Key? key, required this.currentUser})
-      : super(key: key);
-  final Employee currentUser;
+  const MainSettingsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +29,8 @@ class MainSettingsScreen extends StatelessWidget {
                 tileColor: const Color.fromARGB(255, 254, 247, 241),
                 title: const Text('تعديل حسابي'),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => Navigator.of(context).pushNamed(
-                    SettingsBody.routeName,
-                    arguments: {'currentUser': currentUser, 'editPass': true})),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(SettingsBody.routeName, arguments: true)),
           ),
           Card(
             elevation: 4,
@@ -45,10 +42,7 @@ class MainSettingsScreen extends StatelessWidget {
                 title: const Text('تعديل معلوماتي'),
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () => Navigator.of(context)
-                        .pushNamed(SettingsBody.routeName, arguments: {
-                      'currentUser': currentUser,
-                      'editPass': false
-                    })),
+                    .pushNamed(SettingsBody.routeName, arguments: false)),
           ),
           Card(
             elevation: 4,

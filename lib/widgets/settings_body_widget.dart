@@ -44,6 +44,30 @@ class _SettingsBodyState extends State<SettingsBody> {
     'city': '',
     'line': ''
   };
+  late Employee currentUser;
+  var _isLoading = false;
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      final userId = Provider.of<User>(context, listen: false).userId;
+      await Provider.of<User>(context)
+          .getUser(userId)
+          .then((value) => currentUser = value);
+      if (currentUser.role == 'worker') {
+        print('I am a worker');
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
+  }
 
   Future<void> _submitPass() async {
     final _valid = _formKey.currentState!.validate();
@@ -114,11 +138,8 @@ class _SettingsBodyState extends State<SettingsBody> {
 
   @override
   Widget build(BuildContext context) {
-    var arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    Employee currentUser = arguments['currentUser'];
     print('hereeeeeeeeee');
-    bool editPass = arguments['editPass'];
+    bool editPass = ModalRoute.of(context)!.settings.arguments as bool;
     // _pickedDate.text =
     //     '${currentUser.bDate!.day}/${currentUser.bDate!.month}/${currentUser.bDate!.year}';
     return Directionality(

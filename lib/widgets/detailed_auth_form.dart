@@ -28,14 +28,6 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   // ignore: unused_field
   String? _dropdownValCat;
   String? _userImage;
-  final _items = [
-    'بورسعيد',
-    'القاهرة',
-    'الاسكندرية',
-    'الاسماعيلية',
-    'المنصورة',
-    'المنوفية'
-  ];
   final _categories = DUMMY_CATEGORIES.map((e) => e.title).toList();
 
   // ignore: prefer_final_fields
@@ -304,7 +296,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                             labelText: 'المحافظة'),
                         isExpanded: true,
                         iconEnabledColor: Colors.white,
-                        items: _items
+                        items: CITIES
                             .map((e) => DropdownMenuItem(
                                   child: Text(e),
                                   value: e,
