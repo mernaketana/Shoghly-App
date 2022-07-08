@@ -125,7 +125,7 @@ class Review with ChangeNotifier {
             workerId: currentComment['workerId'],
             createdAt: DateTime.parse(currentComment['createdAt']),
             rate: (currentComment["rating"] as int).toDouble());
-        if (_review.user!.id != null) {
+        if (_review.user != null) {
           workerComments.add(_review);
         }
       }
@@ -151,12 +151,6 @@ class Review with ChangeNotifier {
       if (data == null) {
         return;
       }
-      Map<String, dynamic> reviewInfo = data["info"];
-      // _review = Comment(
-      //     comment: reviewInfo['comment'],
-      //     userId: reviewInfo['userId'],
-      //     workerId: reviewInfo['workerId'],
-      //     createdAt: reviewInfo['createdAt']);
       notifyListeners();
     } catch (error) {
       rethrow;

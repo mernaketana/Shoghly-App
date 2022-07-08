@@ -20,15 +20,16 @@ class SettingsBody extends StatefulWidget {
 class _SettingsBodyState extends State<SettingsBody> {
   final _formKey = GlobalKey<FormState>();
   final _pickedDate = TextEditingController();
+  // ignore: unused_field
   String? _dropdownVal;
+  // ignore: unused_field
   String? _dropdownValCat;
-  String? _userImage;
   final _categories = DUMMY_CATEGORIES.map((e) => e.title).toList();
   final _passController = TextEditingController();
-  var _canEditPass = false;
   late String oldPass;
   late String newPass;
   var isLoading = false;
+  // ignore: prefer_final_fields
   Map<String, String> _authData = {
     'picture': '',
     'firstName': '',
@@ -91,21 +92,21 @@ class _SettingsBodyState extends State<SettingsBody> {
     Navigator.of(context).pop();
   }
 
-  Future _datePicker() async {
-    await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    ).then((date) {
-      if (date == null) {
-        return;
-      }
-      setState(() {
-        _pickedDate.text = DateFormat.yMd().format(date);
-      });
-    });
-  }
+  // Future _datePicker() async {
+  //   await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(1900),
+  //     lastDate: DateTime.now(),
+  //   ).then((date) {
+  //     if (date == null) {
+  //       return;
+  //     }
+  //     setState(() {
+  //       _pickedDate.text = DateFormat.yMd().format(date);
+  //     });
+  //   });
+  // }
 
   void _pickedImage(String image) {
     _authData["picture"] = image; //بفوروارد بالعكس

@@ -1,17 +1,13 @@
 import 'dart:io';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/worker_project.dart';
 import 'package:project/providers/project.dart';
 import 'package:project/screens/detailed_image_screen.dart';
-import 'package:project/widgets/images_gallery_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:nine_grid_view/nine_grid_view.dart';
 import '../providers/images.dart';
-import '../widgets/user_image_picker.dart';
 
 class AddProjectScreen extends StatefulWidget {
   static const routeName = '/add-project-screen';
@@ -23,11 +19,9 @@ class AddProjectScreen extends StatefulWidget {
 
 class _AddProjectScreenState extends State<AddProjectScreen> {
   final _form = GlobalKey<FormState>();
-  String _albumTitle = '';
   var _isLoading = false;
   var _savedProject = WorkerProject(desc: '', urls: []);
   ImageSource? source;
-  File? _image;
 
   Future<void> _pickedImageCamera() async {
     try {

@@ -2,7 +2,6 @@ import "dart:async";
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
-import 'package:project/providers/images.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import "../helpers/http_exception.dart";
 import 'package:flutter_dotenv/flutter_dotenv.dart';

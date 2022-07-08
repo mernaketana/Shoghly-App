@@ -1,5 +1,3 @@
-import 'comment.dart';
-
 class Employee {
   final String id;
   final String? categordId;

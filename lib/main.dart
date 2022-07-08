@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project/models/worker_project.dart';
 import 'package:project/providers/images.dart';
 import 'package:project/providers/user.dart';
 import 'package:project/screens/add_project_screen.dart';

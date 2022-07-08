@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:path/path.dart';
-import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../models/comment.dart';
 import 'auth.dart';
 
 class Images with ChangeNotifier {

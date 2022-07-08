@@ -26,7 +26,6 @@ class _CommentsState extends State<Comments> {
   final formKey = GlobalKey<FormState>();
   final commentController = TextEditingController();
   double? _rate;
-  var _isLoading = false;
 
   Future<void> createReview(Comment comment) async {
     await Provider.of<Review>(context, listen: false).addReview(comment);
@@ -91,7 +90,7 @@ class _CommentsState extends State<Comments> {
                   initialValue: review.comment,
                   key: const ValueKey('comment'),
                   onChanged: (e) {
-                    editedReview = e as String;
+                    editedReview = e;
                     print(e);
                   },
                   decoration: InputDecoration(

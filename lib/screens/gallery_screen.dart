@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/image.dart';
@@ -12,8 +9,6 @@ import 'package:project/screens/detailed_project_screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../models/employee.dart';
-// import '../providers/user.dart';
-import '../providers/images.dart';
 import '../screens/detailed_image_screen.dart';
 
 class GalleryScreen extends StatefulWidget {

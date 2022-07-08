@@ -16,7 +16,6 @@ class EmployeesScreen extends StatefulWidget {
 }
 
 class _EmployeesScreenState extends State<EmployeesScreen> {
-  var _isInit = true;
   var _isLoading = false;
   List<Employee> employees = [];
   String _city = '';

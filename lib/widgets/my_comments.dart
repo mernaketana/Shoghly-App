@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import '../models/comment.dart';
-import '../dummy_data.dart';
 
 class MyComments extends StatefulWidget {
   final List<Comment> comments;
@@ -63,7 +62,7 @@ class _MyCommentsState extends State<MyComments> {
                                 width: 40,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10)),
-                                child: CircleAvatar(
+                                child: const CircleAvatar(
                                     // maxRadius: 20,
                                     // backgroundImage: user.image != null
                                     //     ? NetworkImage(user.image as String)

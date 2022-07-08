@@ -9,7 +9,6 @@ import '../providers/project.dart';
 import '../providers/worker.dart';
 
 import '../widgets/comments.dart';
-import '../widgets/images_gallery_widget.dart';
 
 class WorkerDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> arguments;

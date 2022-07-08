@@ -1,6 +1,5 @@
 import "dart:async";
 import "dart:convert";
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
 import 'package:project/models/employee.dart';
@@ -11,20 +10,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class Worker with ChangeNotifier {
   late String authToken;
   late String userId;
+  // ignore: prefer_final_fields
   List<Employee> _employees = [];
-  Employee _user = Employee(
-    gender: '',
-    id: '',
-    address: '',
-    fname: '',
-    lname: '',
-    email: '',
-    password: '',
-    phone: 0,
-    location: '',
-    role: '',
-    categordId: '',
-  );
   final apiUrl = dotenv.env['API_URL']!;
 
   void recieveToken(Auth auth) {
@@ -52,9 +39,9 @@ class Worker with ChangeNotifier {
       }
       final employeesData = data['data'];
       final employeesList = employeesData['workers'];
-      final tot_no_of_employees = employeesData['count'];
-      if (tot_no_of_employees > 0) {
-        for (var i = 0; i < tot_no_of_employees; i++) {
+      final totalNumberofEmps = employeesData['count'];
+      if (totalNumberofEmps > 0) {
+        for (var i = 0; i < totalNumberofEmps; i++) {
           final currentEmp = Employee(
               id: employeesList[i]['id'],
               address: employeesList[i]['line'],
@@ -79,8 +66,6 @@ class Worker with ChangeNotifier {
       print('EMPLOYEEEEES');
       print(_employees);
       notifyListeners();
-
-      // return _user;
     } catch (error) {
       rethrow;
     }
@@ -140,8 +125,8 @@ class Worker with ChangeNotifier {
         workerComments.add(review);
       }
       final output = {"employee": employee, "workerComments": workerComments};
-      return output;
       notifyListeners();
+      return output;
     } catch (error) {
       rethrow;
     }

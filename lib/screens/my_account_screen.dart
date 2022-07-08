@@ -3,7 +3,6 @@ import 'package:project/models/comment.dart';
 import 'package:project/widgets/my_account_body.dart';
 // import 'package:provider/provider.dart';
 import '../models/employee.dart';
-import '../dummy_data.dart';
 // import '../providers/user.dart';
 
 class MyAccountScreen extends StatelessWidget {

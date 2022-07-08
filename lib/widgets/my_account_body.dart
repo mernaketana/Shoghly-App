@@ -4,19 +4,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/screens/detailed_image_screen.dart';
-import 'package:project/screens/gallery_screen.dart';
 import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/comment.dart';
-import '../dummy_data.dart';
 import '../models/image.dart';
 import '../providers/images.dart';
 import '../providers/user.dart';
-import './images_gallery_widget.dart';
 
 class MyAccountBody extends StatefulWidget {
   final List<Comment> comments;
@@ -32,7 +28,6 @@ class MyAccountBody extends StatefulWidget {
 class _MyAccountBodyState extends State<MyAccountBody> {
   var _expandComment = false;
   var _expandInfo = false;
-  var _expandImg = false;
   var newWorkImage = MyImage('', [], '');
   var _isLoading = false;
   // String age(DateTime bdate) {

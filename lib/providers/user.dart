@@ -93,9 +93,7 @@ class User with ChangeNotifier {
           "Authorization": "Bearer $authToken",
         },
       );
-      final employee = await getUser(userId);
       final data = json.decode(response.body) as Map<String, dynamic>;
-      final message = data['message'];
       final results = data['results'] as List<dynamic>;
       List<Employee> employees = [];
       final employeeIds = results.map((e) => e["userId"]).toList();

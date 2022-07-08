@@ -99,7 +99,8 @@ class EmployeesBodyWidget extends StatelessWidget {
                             width: 100,
                             height: 30,
                             child: ListView(
-                                scrollDirection: Axis.horizontal, children: []
+                                scrollDirection: Axis.horizontal,
+                                children: const []
                                 // currentWorker.reviews != [] ? starList : [],
                                 ),
                           ),

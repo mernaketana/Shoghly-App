@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/comment.dart';
 import 'package:project/models/employee.dart';
-import 'package:project/providers/review.dart';
 import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/settings_screen.dart';
 import 'package:project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/image.dart';
-import '../providers/images.dart';
 import '../providers/user.dart';
 import '../providers/worker.dart';
 import '../screens/my_account_screen.dart';
-import '../widgets/categories_body_widget.dart';
-import '../dummy_data.dart';
 import 'categories_screen.dart';
 
 class ControllerScreen extends StatefulWidget {
