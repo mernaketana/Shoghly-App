@@ -16,6 +16,7 @@ class EmployeesScreen extends StatefulWidget {
 }
 
 class _EmployeesScreenState extends State<EmployeesScreen> {
+  var _isInit = true;
   var _isLoading = false;
   List<Employee> employees = [];
   String _city = '';
@@ -57,13 +58,15 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final title = widget.arguments['title'];
+    final currentUser = widget.arguments['currentUser'];
     print('Do I come here?');
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 254, 247, 241),
         appBar: AppBar(
-          title: Text('${widget.arguments['title']}'),
+          title: Text(title),
         ),
         body: _isLoading
             ? const Center(
@@ -71,9 +74,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               )
             : ListView.builder(
                 itemBuilder: (context, index) {
-                  // if (currentUser.id == employees[index].id) {
-                  //   return const SizedBox();
-                  // }
                   return Column(
                     children: [
                       Container(
@@ -116,20 +116,19 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             }),
                       ),
                       if (employees.isNotEmpty)
-                        EmployeesBodyWidget(
-                            currentUser: widget.arguments['currentUser'],
-                            currentWorker: employees
-                                .where((element) =>
-                                    element.categordId ==
-                                    widget.arguments['title'])
-                                .toList()[index]),
+                        if (employees[index].id != currentUser.id)
+                          EmployeesBodyWidget(
+                              currentUser: currentUser,
+                              currentWorker: employees
+                                  .where(
+                                      (element) => element.categordId == title)
+                                  .toList()[index]),
                     ],
                   );
                 },
                 itemCount: employees.isNotEmpty
                     ? employees
-                        .where((element) =>
-                            element.categordId == widget.arguments['title'])
+                        .where((element) => element.categordId == title)
                         .toList()
                         .length
                     : 1,

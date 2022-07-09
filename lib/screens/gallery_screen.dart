@@ -39,6 +39,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       await Provider.of<User>(context)
           .getUser(userId)
           .then((value) => currentUser = value);
+      print('000000000000000000000000000000000000');
       projects = await Provider.of<Project>(context, listen: false)
           .getWorkerProjects(currentUser.id);
       setState(() {
@@ -55,6 +56,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: FloatingActionButton(

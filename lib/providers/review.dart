@@ -114,44 +114,24 @@ class Review with ChangeNotifier {
         final currentComment = listOfReviews[i];
         _review = Comment(
             reviewId: currentComment["reviewId"],
-            updatedAt: DateTime.parse(currentComment["updatedAt"]),
+            updatedAt: DateTime.parse(currentComment["updatedAt"]).toLocal(),
             user: Commenter(
-                id: currentComment["user"]["id"],
-                fname: currentComment["user"]["firstName"],
-                lname: currentComment["user"]["lastName"],
-                picture: currentComment["user"]["picture"],
-                gender: currentComment["user"]["gender"]),
+                id: currentComment["client"]["id"],
+                fname: currentComment["client"]["firstName"],
+                lname: currentComment["client"]["lastName"],
+                picture: currentComment["client"]["picture"],
+                gender: currentComment["client"]["gender"]),
             comment: currentComment["description"],
             workerId: currentComment['workerId'],
-            createdAt: DateTime.parse(currentComment['createdAt']),
+            createdAt: DateTime.parse(currentComment['createdAt']).toLocal(),
             rate: (currentComment["rating"] as int).toDouble());
+        print((_review.createdAt));
         if (_review.user != null) {
           workerComments.add(_review);
         }
       }
       notifyListeners();
       return workerComments;
-    } catch (error) {
-      rethrow;
-    }
-  }
-
-  Future<void> getAllReviews() async {
-    final url = Uri.parse("${apiUrl}profile/review/$userId");
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $authToken"
-        },
-      );
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      // ignore: unnecessary_null_comparison
-      if (data == null) {
-        return;
-      }
-      notifyListeners();
     } catch (error) {
       rethrow;
     }

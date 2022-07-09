@@ -42,6 +42,8 @@ class Project with ChangeNotifier {
   }
 
   Future<List<WorkerProject>> getWorkerProjects(String workerId) async {
+    print(authToken);
+    print(workerId);
     final url = Uri.parse("${apiUrl}workers/$workerId/projects");
     try {
       final response = await http.get(
@@ -57,11 +59,9 @@ class Project with ChangeNotifier {
       final accessProjects = data["data"]["projects"] as List;
       List<WorkerProject> projects = [];
       for (var i = 0; i < accessProjects.length; i++) {
-        final String currentPictures = accessProjects[i]["pictures"][0]["url"];
-        print(currentPictures);
         final currentProject = WorkerProject(
           desc: accessProjects[i]["description"],
-          urls: [currentPictures],
+          urls: accessProjects[i]["pictures"][0],
           projectId: accessProjects[i]["projectId"],
         );
         projects.add(currentProject);

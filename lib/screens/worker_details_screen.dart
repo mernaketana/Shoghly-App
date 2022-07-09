@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/employee.dart';
@@ -56,12 +57,11 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
   List<Widget> createStars(double rate) {
     starList.clear();
     for (var i = 0; i < rate; i++) {
-      // print(i);
       starList.add(
         const Icon(
           Icons.star,
           color: Colors.amber,
-          size: 17,
+          size: 25,
         ),
       );
     }
@@ -72,92 +72,47 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
   List<Widget> createGallery(List<WorkerProject> projects) {
     galleryList.clear();
     for (var i = 0; i < projects.length; i++) {
-      print(i);
-      print(projects.length);
-      print('proooooooooooooooooojectsssssssssssssss');
       galleryList.add(
         Padding(
           padding: const EdgeInsets.all(10),
-          child: InkWell(
-              onTap: () => Navigator.of(context).pushNamed(
-                  DetailedProjectScreen.routeName,
-                  arguments: projects[i].projectId!),
-              splashColor: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(15),
-              child: Stack(
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    child: Image.network(
-                      projects[i].urls![0],
-                      colorBlendMode: BlendMode.luminosity,
-                      height: 150,
-                      width: 150,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  // Container(
-                  //   height: 155,
-                  //   decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(15),
-                  //       color: const Color.fromARGB(169, 0, 0, 0)),
-                  // ),
-                  Positioned(
-                    bottom: 30,
-                    right: 5,
-                    left: 8,
-                    child: SizedBox(
-                      width: 20,
-                      height: 60,
-                      child: Text(
-                        (projects[i].urls!.length > 1)
-                            ? '+${(projects[i].urls!.length - 1)}'
-                            : '',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 25),
-                        softWrap: true,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                ],
-              )),
+          child: Stack(
+            children: [
+              InkWell(
+                  onTap: () => Navigator.of(context).pushNamed(
+                      DetailedProjectScreen.routeName,
+                      arguments: projects[i].projectId!),
+                  splashColor: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      child: CachedNetworkImage(
+                        imageUrl: projects[i].urls![0],
+                        height: 150,
+                        width: 150,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            const SpinKitSpinningLines(color: Colors.red),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ))),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color.fromARGB(122, 0, 0, 0)),
+                height: 150,
+                width: 150,
+              ),
+            ],
+          ),
         ),
       );
     }
     return galleryList;
   }
 
-  int rate(List<dynamic>? rates) {
-    double sum = 0;
-    for (var i = 0; i < rates!.length; i++) {
-      sum += (rates[i].rate!);
-    }
-    double avg = 0;
-    // ignore: prefer_is_empty
-    if (rates.length != 0) {
-      avg = sum / rates.length;
-    } else {
-      avg = 0;
-    }
-    return avg.round();
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentUser = widget.arguments['currentUser'] as Employee;
-    starList.clear();
-    // for (var i = 0; i < rate(currentWorker.reviews); i++) {
-    //   // print(i);
-    //   starList.add(
-    //     const Icon(
-    //       Icons.star,
-    //       color: Colors.amber,
-    //       size: 20,
-    //     ),
-    //   );
-    // }
-
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
@@ -172,17 +127,21 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
                         background: Hero(
-                      tag: currentWorker.id,
-                      child: currentWorker.image == ''
-                          ? Image.asset(
-                              'assets/images/placeholder.png',
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              currentWorker.image as String,
-                              fit: BoxFit.cover,
-                            ),
-                    )),
+                            tag: currentWorker.id,
+                            child: currentWorker.image == ''
+                                ? Image.asset(
+                                    'assets/images/placeholder.png',
+                                    fit: BoxFit.cover,
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: currentWorker.image as String,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const SpinKitSpinningLines(
+                                            color: Colors.red),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ))),
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate(
@@ -206,14 +165,15 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                       color: Colors.white, fontSize: 20),
                                   textAlign: TextAlign.right,
                                 ),
+                                const Spacer(),
                                 SizedBox(
-                                  width: 150,
+                                  width: 130,
                                   height: 30,
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
-                                    children: currentWorker.reviews != []
-                                        ? starList
-                                        : [],
+                                    children: createStars(widget
+                                        .arguments["currentWorker"].avgRate!
+                                        .toDouble()),
                                   ),
                                 ),
                               ]),
@@ -283,7 +243,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 11, vertical: 9),
                                 child: Text(
-                                  'المعرض',
+                                  'الالبومات',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
@@ -319,13 +279,14 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                   child: Comments(
                                       userComments: comments,
                                       currentUser: currentUser,
-                                      currentWorker: currentWorker)),
+                                      currentWorker:
+                                          widget.arguments["currentWorker"])),
                             ],
                           ),
                         ),
                       ],
                     ),
-                  ), //delegate tells it how to renders the content of the list
+                  ),
                 ]),
         ));
   }

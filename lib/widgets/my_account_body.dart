@@ -164,7 +164,9 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   Widget build(BuildContext context) {
     print('here in my acc');
     return _isLoading
-        ? const Center(child: SpinKitSpinningLines(color: Colors.red))
+        ? SizedBox(
+            height: MediaQuery.of(context).size.height - 150,
+            child: const SpinKitSpinningLines(color: Colors.red))
         : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

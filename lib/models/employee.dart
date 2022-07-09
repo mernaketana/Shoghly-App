@@ -13,7 +13,7 @@ class Employee {
   String gender;
   String address;
   List? reviews;
-  int? reviewsCount;
+  double? avgRate;
 
   Employee(
       {required this.id,
@@ -29,6 +29,6 @@ class Employee {
       required this.phone,
       required this.location,
       this.reviews,
-      this.reviewsCount,
+      this.avgRate,
       required this.role});
 }

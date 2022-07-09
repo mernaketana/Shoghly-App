@@ -49,6 +49,7 @@ class Worker with ChangeNotifier {
               lname: employeesList[i]['lastName'],
               email: '',
               password: '',
+              avgRate: employeesList[i]['averageRating'],
               gender: employeesList[i]['gender'],
               phone: int.parse(employeesList[i]['phone']),
               location: employeesList[i]['city'],
@@ -72,6 +73,7 @@ class Worker with ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getWorker(String workerId) async {
+    print('get worker provider');
     final url = Uri.parse("${apiUrl}workers/$workerId");
     try {
       final response = await http.get(
@@ -108,7 +110,7 @@ class Worker with ChangeNotifier {
         print(currentComment);
         final review = Comment(
             reviewId: currentComment["reviewId"],
-            updatedAt: DateTime.parse(currentComment["updatedAt"]),
+            updatedAt: DateTime.parse(currentComment["updatedAt"]).toLocal(),
             user: currentComment["client"] == null
                 ? Commenter(
                     id: '', fname: '', lname: '', picture: '', gender: '')
@@ -120,9 +122,11 @@ class Worker with ChangeNotifier {
                     gender: currentComment["client"]["gender"]),
             comment: currentComment["description"],
             workerId: workerId,
-            createdAt: DateTime.parse(currentComment['createdAt']),
+            createdAt: DateTime.parse(currentComment['createdAt']).toLocal(),
             rate: (currentComment["rating"] as int).toDouble());
-        workerComments.add(review);
+        if (review.user!.id != '') {
+          workerComments.add(review);
+        }
       }
       final output = {"employee": employee, "workerComments": workerComments};
       notifyListeners();

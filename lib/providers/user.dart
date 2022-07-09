@@ -69,7 +69,6 @@ class User with ChangeNotifier {
         location: employeeInfo["city"],
         address: employeeInfo["line"],
         reviews: employeeInfo["reviews"],
-        reviewsCount: employeeInfo["reviewsCount"],
         email: '',
         password: '',
         role: employeeInfo["role"],
@@ -82,7 +81,11 @@ class User with ChangeNotifier {
   }
 
   Future<List<Employee>> search(String text, String city) async {
+    print(authToken);
     final url = Uri.parse("${apiUrl}autoComplete");
+    print('in provider');
+    print(city);
+    print(text);
     Map<String, String> queryParams = {'text': text, 'city': city};
     final finalUrl = url.replace(queryParameters: queryParams);
     try {
@@ -94,6 +97,7 @@ class User with ChangeNotifier {
         },
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
+      print(data);
       final results = data['results'] as List<dynamic>;
       List<Employee> employees = [];
       final employeeIds = results.map((e) => e["userId"]).toList();

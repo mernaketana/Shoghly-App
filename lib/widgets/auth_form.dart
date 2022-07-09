@@ -141,10 +141,8 @@ class _AuthFormState extends State<AuthForm> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
-                          // labelStyle: TextStyle(color: Colors.white)
                         ),
                       ),
-                      // style: const TextStyle(color: Colors.white),
                       controller: _passController,
                       obscureText: true,
                     ),
@@ -170,17 +168,12 @@ class _AuthFormState extends State<AuthForm> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           labelText: 'اعد ادخال الرقم السري',
-                          // labelStyle: TextStyle(color: Colors.white)
                         ),
-                        // style: const TextStyle(color: Colors.white),
                         obscureText: true,
                       ),
                     const SizedBox(
                       height: 35,
                     ),
-                    // if (widget.isLoading)
-                    //   const CircularProgressIndicator(),
-                    // if (!widget.isLoading)
                     if (_isLoading)
                       const SpinKitSpinningLines(color: Colors.red)
                     else
@@ -205,7 +198,6 @@ class _AuthFormState extends State<AuthForm> {
                     const SizedBox(
                       height: 10,
                     ),
-                    // if (!widget.isLoading)
                     TextButton(
                       style: ButtonStyle(
                           padding: MaterialStateProperty.all(EdgeInsets.zero),

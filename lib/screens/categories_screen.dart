@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../dummy_data.dart';
 import '../models/employee.dart';
+import '../providers/auth.dart';
 import '../providers/user.dart';
 import '../widgets/categories_body_widget.dart';
 
@@ -30,6 +31,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   );
   late Employee currentUser;
   var _isInit = true;
+  var code = '';
+  final formKey = GlobalKey<FormState>();
 
   @override
   void didChangeDependencies() async {
@@ -39,12 +42,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         _isLoading = true;
       });
       final userId = Provider.of<User>(context, listen: false).userId;
-      await Provider.of<User>(context)
-          .getUser(userId)
-          .then((value) => currentUser = value);
-      if (currentUser.role == 'worker') {
-        print('I am a worker');
-      }
+      currentUser = await Provider.of<User>(context).getUser(userId);
+      searchCity = currentUser.location;
       setState(() {
         _isLoading = false;
       });
@@ -56,7 +55,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     print('here i am');
     print(text);
     print(city);
-    searchCity = currentUser.location;
     setState(() {
       _isLoading = true;
     });
@@ -67,7 +65,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     });
     Navigator.of(context).pushNamed(EmployeesScreen.routeName,
         arguments: {'employees': employees, 'title': 'نتائج البحث'});
-    print(employees[3].image);
   }
 
   @override
@@ -168,6 +165,62 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 padding: const EdgeInsets.all(25),
               ),
             ),
+      // Center(
+      //     child: Directionality(
+      //         textDirection: TextDirection.rtl,
+      //         child: AlertDialog(
+      //           title: const Text(
+      //               'برجاء ادخال الكود الذي تم بعثه الى حسابك الشخصي للتجقق من الحساب'),
+      //           content: TextFormField(
+      //             key: const ValueKey('code'),
+      //             onChanged: (e) {
+      //               code = e;
+      //               print(e);
+      //             },
+      //             keyboardType: TextInputType.number,
+      //             decoration: InputDecoration(
+      //               border: OutlineInputBorder(
+      //                 borderRadius: BorderRadius.circular(10.0),
+      //               ),
+      //             ),
+      //           ),
+      //           actions: [
+      //             TextButton(
+      //                 onPressed: () {
+      //                   if (code == '') {
+      //                     showDialog(
+      //                         context: context,
+      //                         builder: (context) => Directionality(
+      //                               textDirection: TextDirection.rtl,
+      //                               child: AlertDialog(
+      //                                 title: const Text(
+      //                                     'يجب عليك ادخال الكود'),
+      //                                 actions: [
+      //                                   TextButton(
+      //                                       onPressed: () =>
+      //                                           Navigator.of(context)
+      //                                               .pop(),
+      //                                       child: const Text(
+      //                                         'حسنا',
+      //                                         style: TextStyle(
+      //                                             color: Colors.black,
+      //                                             fontSize: 18),
+      //                                       ))
+      //                                 ],
+      //                               ),
+      //                             ));
+      //                   }
+      //                   if (formKey.currentState!.validate()) {
+      //                     verifyEmail(code);
+      //                   }
+      //                 },
+      //                 child: const Text(
+      //                   'تم',
+      //                   style: TextStyle(
+      //                       color: Colors.black, fontSize: 18),
+      //                 ))
+      //           ],
+      //         )))
     );
   }
 }
