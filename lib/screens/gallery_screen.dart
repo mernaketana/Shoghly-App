@@ -88,7 +88,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                               borderRadius: BorderRadius.circular(15),
                               child: Stack(
                                 children: <Widget>[
-                                  if (projects[index].urls != null)
+                                  if (projects[index].urls![0] != null)
                                     ClipRRect(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(15)),

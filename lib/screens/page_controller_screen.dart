@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/comment.dart';
 import 'package:project/models/employee.dart';
+import 'package:project/screens/chat_screen.dart';
 import 'package:project/screens/favourites_screen.dart';
 import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/settings_screen.dart';
@@ -79,12 +80,14 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
                 MyAccountScreen(),
                 CategoriesScreen(),
                 GalleryScreen(),
+                ChatScreen(),
                 MainSettingsScreen(),
               ]
             : const [
                 MyAccountScreen(),
                 CategoriesScreen(),
                 FavouritesScreen(),
+                ChatScreen(),
                 MainSettingsScreen(),
               ];
 
@@ -99,6 +102,8 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.photo_library), label: 'معرضي'),
                 BottomNavigationBarItem(
+                    icon: Icon(Icons.chat), label: 'المحادثات'),
+                BottomNavigationBarItem(
                     icon: Icon(Icons.settings), label: 'الاعدادات'),
               ]
             : const [
@@ -108,6 +113,8 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
                     icon: Icon(Icons.category), label: 'الحرف'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.favorite), label: 'المفضلات'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.chat), label: 'المحادثات'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.settings), label: 'الاعدادات'),
               ];

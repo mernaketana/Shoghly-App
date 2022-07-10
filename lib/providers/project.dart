@@ -67,7 +67,9 @@ class Project with ChangeNotifier {
           urls: accessProjects[i]["pictures"],
           projectId: accessProjects[i]["id"],
         );
-        projects.add(currentProject);
+        if (currentProject.urls != null) {
+          projects.add(currentProject);
+        }
       }
       // ignore: unnecessary_null_comparison
       if (data == null) {
