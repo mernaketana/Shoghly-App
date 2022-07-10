@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/providers/favourites.dart';
 import 'package:project/providers/images.dart';
 import 'package:project/providers/user.dart';
 import 'package:project/screens/add_project_screen.dart';
@@ -61,6 +62,13 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProxyProvider<Auth, Project>(
             create: (context) => Project(),
+            update: (context, auth, notifier) => notifier!..recieveToken(auth),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => Favourites(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Favourites>(
+            create: (context) => Favourites(),
             update: (context, auth, notifier) => notifier!..recieveToken(auth),
           ),
         ],

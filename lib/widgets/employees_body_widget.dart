@@ -93,8 +93,10 @@ class EmployeesBodyWidget extends StatelessWidget {
                             height: 30,
                             child: ListView(
                               scrollDirection: Axis.horizontal,
-                              children: createStars(
-                                  currentWorker.avgRate!.toDouble()),
+                              children: currentWorker.avgRate == null
+                                  ? []
+                                  : createStars(
+                                      currentWorker.avgRate!.toDouble()),
                             ),
                           ),
                         ],

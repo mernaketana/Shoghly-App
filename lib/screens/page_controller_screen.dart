@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/comment.dart';
 import 'package:project/models/employee.dart';
+import 'package:project/screens/favourites_screen.dart';
 import 'package:project/screens/gallery_screen.dart';
 import 'package:project/screens/settings_screen.dart';
 import 'package:project/widgets/splash_screen.dart';
@@ -83,6 +84,7 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
             : const [
                 MyAccountScreen(),
                 CategoriesScreen(),
+                FavouritesScreen(),
                 MainSettingsScreen(),
               ];
 
@@ -104,6 +106,8 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
                     icon: Icon(Icons.account_circle), label: 'حسابي'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.category), label: 'الحرف'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.favorite), label: 'المفضلات'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.settings), label: 'الاعدادات'),
               ];

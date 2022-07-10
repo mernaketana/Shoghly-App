@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/employee.dart';
+import 'package:project/providers/favourites.dart';
 import 'package:project/screens/detailed_project_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/comment.dart';
@@ -29,6 +30,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
   late List<Comment> comments;
   late List<WorkerProject> projects;
   List<String> projectImages = [];
+  late List<Employee> favEmployees;
 
   @override
   void didChangeDependencies() async {
@@ -46,6 +48,8 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
       for (var element in projects) {
         projectImages.add(element.urls![0]);
       }
+      favEmployees = await Provider.of<Favourites>(context, listen: false)
+          .getAllFavourites();
       setState(() {
         _isLoading = false;
       });
@@ -110,184 +114,249 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
     return galleryList;
   }
 
+  Future<void> favourite(String workerId) async {
+    await Provider.of<Favourites>(context, listen: false)
+        .addFavourite(workerId);
+    _isInit = true;
+    didChangeDependencies();
+  }
+
+  Future<void> unfavourite(String workerId) async {
+    await Provider.of<Favourites>(context, listen: false)
+        .deleteFavourite(workerId);
+    _isInit = true;
+    didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = widget.arguments['currentUser'] as Employee;
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           body: _isLoading
               ? const Center(
                   child: SpinKitSpinningLines(color: Colors.red),
                 )
-              : CustomScrollView(// slivers are scrollable areas on the screen
-                  slivers: <Widget>[
-                  SliverAppBar(
-                    expandedHeight: 300,
-                    pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                        background: Hero(
-                            tag: currentWorker.id,
-                            child: currentWorker.image == ''
-                                ? Image.asset(
-                                    'assets/images/placeholder.png',
-                                    fit: BoxFit.cover,
-                                  )
-                                : CachedNetworkImage(
-                                    imageUrl: currentWorker.image as String,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        const SpinKitSpinningLines(
-                                            color: Colors.red),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  ))),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        Container(
-                          decoration: const BoxDecoration(
-                              color: Color.fromARGB(185, 0, 0, 0),
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(5),
-                                  bottomRight: Radius.circular(5))),
-                          padding: const EdgeInsets.all(10),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${currentWorker.fname} ${currentWorker.lname}',
-                                  softWrap: true,
-                                  overflow: TextOverflow.clip,
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                  textAlign: TextAlign.right,
+              : Stack(
+                  children: [
+                    CustomScrollView(
+                        // slivers are scrollable areas on the screen
+                        slivers: <Widget>[
+                          SliverAppBar(
+                            expandedHeight: 300,
+                            pinned: true,
+                            flexibleSpace: FlexibleSpaceBar(
+                                background: Hero(
+                                    tag: currentWorker.id,
+                                    child: currentWorker.image == ''
+                                        ? Image.asset(
+                                            'assets/images/placeholder.png',
+                                            fit: BoxFit.cover,
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl:
+                                                currentWorker.image as String,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                const SpinKitSpinningLines(
+                                                    color: Colors.red),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          ))),
+                          ),
+                          SliverList(
+                            delegate: SliverChildListDelegate(
+                              [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromARGB(185, 0, 0, 0),
+                                      borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${currentWorker.fname} ${currentWorker.lname}',
+                                          softWrap: true,
+                                          overflow: TextOverflow.clip,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                        const Spacer(),
+                                        SizedBox(
+                                          width: 130,
+                                          height: 30,
+                                          child: ListView(
+                                            scrollDirection: Axis.horizontal,
+                                            children: createStars(widget
+                                                .arguments["currentWorker"]
+                                                .avgRate!
+                                                .toDouble()),
+                                          ),
+                                        ),
+                                      ]),
                                 ),
-                                const Spacer(),
-                                SizedBox(
-                                  width: 130,
-                                  height: 30,
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: createStars(widget
-                                        .arguments["currentWorker"].avgRate!
-                                        .toDouble()),
+                                Card(
+                                  color: Theme.of(context).backgroundColor,
+                                  elevation: 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 11, vertical: 9),
+                                        child: Text(
+                                          'المعلومات',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 22, bottom: 14),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              currentWorker.categordId
+                                                  as String,
+                                            ),
+                                            Text(
+                                              currentWorker.location,
+                                            ),
+                                            Text(
+                                              currentWorker.address,
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.phone,
+                                                  size: 18,
+                                                ),
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  currentWorker.phone
+                                                      .toString(),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ]),
-                        ),
-                        Card(
-                          elevation: 4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 11, vertical: 9),
-                                child: Text(
-                                  'المعلومات',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 22, bottom: 14),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      currentWorker.categordId as String,
-                                    ),
-                                    Text(
-                                      currentWorker.location,
-                                    ),
-                                    Text(
-                                      currentWorker.address,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.phone,
-                                          size: 18,
+                                Card(
+                                  color: Theme.of(context).backgroundColor,
+                                  elevation: 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 11, vertical: 9),
+                                        child: Text(
+                                          'الالبومات',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
                                         ),
-                                        const SizedBox(
-                                          width: 4,
+                                      ),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: createGallery(projects),
                                         ),
-                                        Text(
-                                          currentWorker.phone.toString(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Card(
+                                  color: Theme.of(context).backgroundColor,
+                                  elevation: 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 11, vertical: 9),
+                                        child: Text(
+                                          'التعليقات',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      SizedBox(
+                                          height: 200,
+                                          child: Comments(
+                                              userComments: comments,
+                                              currentUser: currentUser,
+                                              currentWorker: widget
+                                                  .arguments["currentWorker"])),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                        ]),
+                    if (currentUser.role == 'client')
+                      Positioned(
+                        bottom: 20,
+                        left: 20,
+                        child: FloatingActionButton(
+                          backgroundColor:
+                              const Color.fromARGB(255, 254, 247, 241),
+                          onPressed: () => favEmployees.any((element) =>
+                                  element.id ==
+                                  (widget.arguments['currentWorker']
+                                          as Employee)
+                                      .id)
+                              ? unfavourite((widget.arguments['currentWorker']
+                                      as Employee)
+                                  .id)
+                              : favourite((widget.arguments['currentWorker']
+                                      as Employee)
+                                  .id),
+                          child: Icon(Icons.favorite,
+                              color: favEmployees.any((element) =>
+                                      element.id ==
+                                      (widget.arguments['currentWorker']
+                                              as Employee)
+                                          .id)
+                                  ? Colors.red
+                                  : Colors.grey),
                         ),
-                        Card(
-                          elevation: 4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 11, vertical: 9),
-                                child: Text(
-                                  'الالبومات',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: createGallery(projects),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Card(
-                          elevation: 4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 11, vertical: 9),
-                                child: Text(
-                                  'التعليقات',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                              ),
-                              SizedBox(
-                                  height: 200,
-                                  child: Comments(
-                                      userComments: comments,
-                                      currentUser: currentUser,
-                                      currentWorker:
-                                          widget.arguments["currentWorker"])),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ]),
+                      )
+                  ],
+                ),
         ));
   }
 }

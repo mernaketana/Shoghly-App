@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/screens/employees_screen.dart';
+import 'package:project/widgets/employees_body_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../dummy_data.dart';
@@ -33,6 +34,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _isInit = true;
   var code = '';
   final formKey = GlobalKey<FormState>();
+  var _searchBool = false;
+  List<Employee> employees = [];
 
   @override
   void didChangeDependencies() async {
@@ -58,13 +61,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     setState(() {
       _isLoading = true;
     });
-    final List<Employee> employees =
+    setState(() {
+      _searchBool = true;
+    });
+    employees =
         await Provider.of<User>(context, listen: false).search(text, city);
+    print(employees.length);
     setState(() {
       _isLoading = false;
     });
-    Navigator.of(context).pushNamed(EmployeesScreen.routeName,
-        arguments: {'employees': employees, 'title': 'نتائج البحث'});
+    setState(() {
+      _isInit = true;
+    });
   }
 
   @override
@@ -121,6 +129,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     ),
                   );
                 } else {
+                  setState(() {
+                    _isInit = true;
+                    _searchBool = false;
+                  });
                   customIcon = const Icon(Icons.search);
                   customSearchBar = const Text(
                     'شغلي',
@@ -145,26 +157,34 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ? const Center(
               child: SpinKitSpinningLines(color: Colors.red),
             )
-          : Padding(
-              padding: const EdgeInsets.all(6),
-              child: GridView(
-                children: <Widget>[
-                  ...DUMMY_CATEGORIES
-                      .map((e) => CategoriesBodyWidget(
-                          backgroundImg: e.img,
-                          title: e.title,
-                          currentUser: currentUser))
-                      .toList(),
-                ],
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: 2.7 / 3,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
+          : _searchBool
+              ? ListView.builder(
+                  itemBuilder: (context, index) => EmployeesBodyWidget(
+                      currentWorker: employees[index],
+                      currentUser: currentUser),
+                  itemCount: employees.length,
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: GridView(
+                    children: <Widget>[
+                      ...DUMMY_CATEGORIES
+                          .map((e) => CategoriesBodyWidget(
+                              backgroundImg: e.img,
+                              title: e.title,
+                              currentUser: currentUser))
+                          .toList(),
+                    ],
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 2.7 / 3,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                    ),
+                    padding: const EdgeInsets.all(25),
+                  ),
                 ),
-                padding: const EdgeInsets.all(25),
-              ),
-            ),
       // Center(
       //     child: Directionality(
       //         textDirection: TextDirection.rtl,

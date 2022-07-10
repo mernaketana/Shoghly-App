@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
 import 'package:project/models/employee.dart';
+import 'package:project/providers/worker.dart';
+import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -82,7 +84,7 @@ class User with ChangeNotifier {
 
   Future<List<Employee>> search(String text, String city) async {
     print(authToken);
-    final url = Uri.parse("${apiUrl}autoComplete");
+    final url = Uri.parse("${apiUrl}search");
     print('in provider');
     print(city);
     print(text);
@@ -100,13 +102,24 @@ class User with ChangeNotifier {
       print(data);
       final results = data['results'] as List<dynamic>;
       List<Employee> employees = [];
-      final employeeIds = results.map((e) => e["userId"]).toList();
-      for (var i = 0; i < employeeIds.length; i++) {
-        await getUser(employeeIds[i]).then((value) {
-          print(value);
-          employees.add(value);
-        });
+      for (var i = 0; i < results.length; i++) {
+        final emp = Employee(
+            id: results[i]['userId'],
+            image: results[i]['picture'],
+            categordId: results[i]['profession'],
+            address: results[i]['line'],
+            fname: (results[i]['fullName'] as String).split(' ')[0],
+            lname: (results[i]['fullName'] as String).split(' ')[1],
+            email: results[i]['email'],
+            avgRate: double.parse(results[i]['rating'] as String),
+            password: '',
+            gender: '',
+            phone: int.parse(results[i]['phone'] as String),
+            location: results[i]['city'],
+            role: 'worker');
+        employees.add(emp);
       }
+      print(employees.length);
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return [];

@@ -18,11 +18,14 @@ class Project with ChangeNotifier {
 
   Future<void> addProject(WorkerProject workerProject) async {
     final url = Uri.parse("${apiUrl}workers/projects");
+    print('add project');
+    print(workerProject.urls);
+    print(workerProject.desc);
     try {
       final response = await http.post(
         url,
         body: json.encode(
-            {"url": workerProject.urls, "description": workerProject.desc}),
+            {"urls": workerProject.urls, "description": workerProject.desc}),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $authToken",
@@ -56,13 +59,13 @@ class Project with ChangeNotifier {
       // final employee = await getUser(userId);
       final data = json.decode(response.body) as Map<String, dynamic>;
       print(data);
-      final accessProjects = data["data"]["projects"] as List;
+      final accessProjects = data["data"] as List;
       List<WorkerProject> projects = [];
       for (var i = 0; i < accessProjects.length; i++) {
         final currentProject = WorkerProject(
           desc: accessProjects[i]["description"],
-          urls: accessProjects[i]["pictures"][0],
-          projectId: accessProjects[i]["projectId"],
+          urls: accessProjects[i]["pictures"],
+          projectId: accessProjects[i]["id"],
         );
         projects.add(currentProject);
       }
@@ -89,6 +92,7 @@ class Project with ChangeNotifier {
       );
       // final employee = await getUser(userId);
       // I don't fetch the worker Id
+      print('dataaaaaaaaaaaaaaaaaaaaaaaaaa');
       final data = json.decode(response.body) as Map<String, dynamic>;
       final accessProject = data["project"];
       print(data);

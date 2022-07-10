@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
@@ -87,16 +88,22 @@ class _GalleryScreenState extends State<GalleryScreen> {
                               borderRadius: BorderRadius.circular(15),
                               child: Stack(
                                 children: <Widget>[
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(15)),
-                                    child: Image.network(
-                                      projects[index].urls![0],
-                                      height: 200,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
+                                  if (projects[index].urls != null)
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(15)),
+                                      child: CachedNetworkImage(
+                                        imageUrl: projects[index].urls![0],
+                                        height: 200,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const SpinKitSpinningLines(
+                                                color: Colors.red),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
                                     ),
-                                  ),
                                   Container(
                                     height: 200,
                                     decoration: BoxDecoration(
@@ -104,24 +111,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                         color:
                                             const Color.fromARGB(169, 0, 0, 0)),
                                   ),
-                                  Positioned(
-                                    bottom: 55,
-                                    right: 5,
-                                    left: 8,
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 60,
-                                      child: Text(
-                                        (projects[index].urls!.length > 1)
-                                            ? '+${(projects[index].urls!.length - 1)}'
-                                            : '',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 25),
-                                        softWrap: true,
-                                        textAlign: TextAlign.center,
+                                  if (projects[index].urls != null)
+                                    Positioned(
+                                      bottom: 55,
+                                      right: 5,
+                                      left: 8,
+                                      child: SizedBox(
+                                        width: 20,
+                                        height: 60,
+                                        child: Text(
+                                          (projects[index].urls!.length > 1)
+                                              ? '+${(projects[index].urls!.length - 1)}'
+                                              : '',
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 25),
+                                          softWrap: true,
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
-                                    ),
-                                  )
+                                    )
                                 ],
                               )),
                           Text(
