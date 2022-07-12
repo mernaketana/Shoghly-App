@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/providers/favourites.dart';
 import 'package:project/screens/detailed_project_screen.dart';
+import 'package:project/screens/single_chat_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/comment.dart';
 import '../models/worker_project.dart';
@@ -323,38 +324,91 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                     ],
                                   ),
                                 ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                            style: ButtonStyle(
+                                                shape: MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                5)))),
+                                            onPressed: () => favEmployees.any(
+                                                    (element) =>
+                                                        element.id ==
+                                                        (widget.arguments['currentWorker']
+                                                                as Employee)
+                                                            .id)
+                                                ? unfavourite((widget.arguments['currentWorker'] as Employee).id)
+                                                : favourite((widget.arguments['currentWorker'] as Employee).id),
+                                            icon: Icon(Icons.favorite, color: favEmployees.any((element) => element.id == (widget.arguments['currentWorker'] as Employee).id) ? Color.fromARGB(255, 255, 115, 115) : Colors.white),
+                                            label: Text(favEmployees.any((element) => element.id == (widget.arguments['currentWorker'] as Employee).id) ? 'ازالة من مفضلاتي' : 'اضافة لمفضلاتي')),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      if (currentUser.role == 'client')
+                                        Expanded(
+                                          child: ElevatedButton.icon(
+                                              style: ButtonStyle(
+                                                  shape:
+                                                      MaterialStateProperty.all(
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5)))),
+                                              onPressed: () => Navigator.of(
+                                                      context)
+                                                  .pushNamed(
+                                                      SingleChatScreen
+                                                          .routeName,
+                                                      arguments: currentWorker),
+                                              icon: const Icon(
+                                                Icons.message,
+                                                color: Colors.yellow,
+                                              ),
+                                              label: const Text('الدردشة')),
+                                        ),
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
                           ),
                         ]),
-                    if (currentUser.role == 'client')
-                      Positioned(
-                        bottom: 20,
-                        left: 20,
-                        child: FloatingActionButton(
-                          backgroundColor:
-                              const Color.fromARGB(255, 254, 247, 241),
-                          onPressed: () => favEmployees.any((element) =>
-                                  element.id ==
-                                  (widget.arguments['currentWorker']
-                                          as Employee)
-                                      .id)
-                              ? unfavourite((widget.arguments['currentWorker']
-                                      as Employee)
-                                  .id)
-                              : favourite((widget.arguments['currentWorker']
-                                      as Employee)
-                                  .id),
-                          child: Icon(Icons.favorite,
-                              color: favEmployees.any((element) =>
-                                      element.id ==
-                                      (widget.arguments['currentWorker']
-                                              as Employee)
-                                          .id)
-                                  ? Colors.red
-                                  : Colors.grey),
-                        ),
-                      )
+                    // if (currentUser.role == 'client')
+                    // Positioned(
+                    //   bottom: 20,
+                    //   left: 20,
+                    //   child: FloatingActionButton(
+                    //     backgroundColor:
+                    //         const Color.fromARGB(255, 254, 247, 241),
+                    //     onPressed: () => favEmployees.any((element) =>
+                    //             element.id ==
+                    //             (widget.arguments['currentWorker']
+                    //                     as Employee)
+                    //                 .id)
+                    //         ? unfavourite((widget.arguments['currentWorker']
+                    //                 as Employee)
+                    //             .id)
+                    //         : favourite((widget.arguments['currentWorker']
+                    //                 as Employee)
+                    //             .id),
+                    //     child: Icon(Icons.favorite,
+                    //         color: favEmployees.any((element) =>
+                    //                 element.id ==
+                    //                 (widget.arguments['currentWorker']
+                    //                         as Employee)
+                    //                     .id)
+                    //             ? Colors.red
+                    //             : Colors.grey),
+                    //   ),
+                    // )
                   ],
                 ),
         ));

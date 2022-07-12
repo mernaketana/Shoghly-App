@@ -85,8 +85,8 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
               ]
             : const [
                 MyAccountScreen(),
-                CategoriesScreen(),
                 FavouritesScreen(),
+                CategoriesScreen(),
                 ChatScreen(),
                 MainSettingsScreen(),
               ];
@@ -110,9 +110,9 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle), label: 'حسابي'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.category), label: 'الحرف'),
-                BottomNavigationBarItem(
                     icon: Icon(Icons.favorite), label: 'المفضلات'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.category), label: 'الحرف'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.chat), label: 'المحادثات'),
                 BottomNavigationBarItem(

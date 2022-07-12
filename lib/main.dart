@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/providers/chat.dart';
 import 'package:project/providers/favourites.dart';
 import 'package:project/providers/images.dart';
 import 'package:project/providers/user.dart';
@@ -13,6 +14,7 @@ import './screens/worker_details_screen.dart';
 import './screens/choice_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/employees_screen.dart';
+import 'models/employee.dart';
 import 'screens/page_controller_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './providers/auth.dart';
@@ -72,6 +74,13 @@ class MyApp extends StatelessWidget {
             create: (context) => Favourites(),
             update: (context, auth, notifier) => notifier!..recieveToken(auth),
           ),
+          ChangeNotifierProvider(
+            create: (context) => Chat(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Chat>(
+            create: (context) => Chat(),
+            update: (context, auth, notifier) => notifier!..recieveToken(auth),
+          ),
         ],
         child: Consumer<Auth>(
             builder: ((context, value, _) => MaterialApp(
@@ -109,6 +118,8 @@ class MyApp extends StatelessWidget {
                       DetailedProjectScreen.routeName: (ctx) =>
                           DetailedProjectScreen(
                               projectId: settings.arguments as String),
+                      SingleChatScreen.routeName: (ctx) => SingleChatScreen(
+                          currentWorker: settings.arguments as Employee)
                     };
                     WidgetBuilder? builder = routes[settings.name];
                     return MaterialPageRoute(builder: (ctx) => builder!(ctx));
@@ -122,8 +133,6 @@ class MyApp extends StatelessWidget {
                     SettingsBody.routeName: (context) => const SettingsBody(),
                     AddProjectScreen.routeName: (context) =>
                         const AddProjectScreen(),
-                    SingleChatScreen.routeName: (context) =>
-                        const SingleChatScreen(),
                   },
                 ))));
   }

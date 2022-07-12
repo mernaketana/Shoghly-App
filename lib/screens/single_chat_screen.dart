@@ -1,17 +1,24 @@
-// ignore_for_file: library_prefixes
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:project/models/employee.dart';
+import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:project/widgets/message_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../models/message.dart';
+import '../providers/chat.dart';
+
 class SingleChatScreen extends StatefulWidget {
   static const routeName = '/single-chat-screen';
+  final Employee currentWorker;
   const SingleChatScreen({
     Key? key,
+    required this.currentWorker,
   }) : super(key: key);
 
   @override
@@ -27,28 +34,37 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
   ScrollController _scrollController = ScrollController();
   late IO.Socket socket;
   late IOWebSocketChannel channel;
+  var _isInit = true;
+  late List<Message> messages;
+  var _isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    channel = IOWebSocketChannel.connect(Uri.parse(''));
-  }
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (_isInit) {
+      Provider.of<Chat>(context).connect();
 
-  void sendMessage(String message) async {
-    try {
-      channel = IOWebSocketChannel.connect('');
-    } catch (e) {
-      print(e.toString());
+      setState(() {
+        _isLoading = true;
+      });
+      messages = await Provider.of<Chat>(context, listen: false)
+          .getSpecificChat(widget.currentWorker.id);
+      setState(() {
+        _isLoading = false;
+      });
     }
-    channel.sink.add(message);
-    channel.sink.close();
+    _isInit = false;
   }
 
-  // void sendMessage(String message, int sourceId, int targetId) {
-  //   setMessage("source", message);
-  //   socket.emit("message",
-  //       {"message": message, "sourceId": sourceId, "targetId": targetId});
-  // }
+  void sendMessage(String message, String recieverId) async {
+    _controller.clear();
+    print('send message fun');
+    await Provider.of<Chat>(context, listen: false)
+        .sendMessage(recieverId, message);
+    setState(() {
+      _isInit = true;
+    });
+  }
 
   // void setMessage(String type, String message) {
   //   MessageModel messageModel = MessageModel(
@@ -62,15 +78,8 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
   //   });
   // }
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      channel.sink.add(_controller.text);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isMe = [true, false, true, false, false];
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -86,13 +95,16 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
+                children: [
+                  const Icon(
                     Icons.arrow_back,
                     size: 24,
                   ),
                   CircleAvatar(
                     radius: 20,
+                    backgroundImage: CachedNetworkImageProvider(
+                      widget.currentWorker.image!,
+                    ),
                     backgroundColor: Colors.blueGrey,
                   ),
                 ],
@@ -100,9 +112,9 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
             ),
             title: Container(
               margin: const EdgeInsets.all(6),
-              child: const Text(
-                'widget.chatModel.name',
-                style: TextStyle(
+              child: Text(
+                '${widget.currentWorker.fname} ${widget.currentWorker.lname}',
+                style: const TextStyle(
                   fontSize: 18.5,
                   fontWeight: FontWeight.bold,
                 ),
@@ -110,86 +122,79 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.send),
-          onPressed: _sendMessage,
-        ),
-        body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Expanded(
-                // height: MediaQuery.of(context).size.height - 150,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  controller: _scrollController,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    if (index == 5) {
-                      return Container(
+        body: _isLoading
+            ? const SpinKitSpinningLines(color: Colors.red)
+            : SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    Expanded(
+                      // height: MediaQuery.of(context).size.height - 150,
+                      child: ListView.builder(
+                        reverse: true,
+                        shrinkWrap: true,
+                        controller: _scrollController,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          // if (index == 5) {
+                          //   return Container(
+                          //     height: 70,
+                          //   );
+                          // } else {
+                          return MessageCard(
+                            message: messages[index],
+                          );
+                          // }
+                        },
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
                         height: 70,
-                      );
-                    } else {
-                      return MessageCard(isMe: isMe[index]);
-                    }
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  height: 70,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Card(
-                          margin: const EdgeInsets.only(
-                              left: 2, right: 2, bottom: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: TextFormField(
-                            controller: _controller,
-                            focusNode: focusNode,
-                            textAlignVertical: TextAlignVertical.center,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 5,
-                            minLines: 1,
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                setState(() {
-                                  sendButton = true;
-                                });
-                              } else {
-                                setState(() {
-                                  sendButton = false;
-                                });
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "اكتب رسالة",
-                              hintStyle: const TextStyle(color: Colors.grey),
-                              prefixIcon: const Icon(Icons.keyboard),
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.send),
-                                onPressed: () {},
+                        child: FittedBox(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Card(
+                                  margin: const EdgeInsets.only(
+                                      left: 2, right: 2, bottom: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: TextFormField(
+                                    controller: _controller,
+                                    focusNode: focusNode,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 5,
+                                    minLines: 1,
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "اكتب رسالة",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      prefixIcon: Icon(Icons.keyboard),
+                                      contentPadding: EdgeInsets.all(5),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              contentPadding: EdgeInsets.all(5),
-                            ),
+                              IconButton(
+                                onPressed: () => sendMessage(
+                                    _controller.text, widget.currentWorker.id),
+                                icon: const Icon(Icons.send),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }

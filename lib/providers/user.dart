@@ -34,6 +34,7 @@ class User with ChangeNotifier {
   }
 
   Future<Employee> getUser(String userId) async {
+    print(authToken);
     final url = Uri.parse("${apiUrl}users");
     try {
       final response = await http.get(
@@ -111,7 +112,7 @@ class User with ChangeNotifier {
             fname: (results[i]['fullName'] as String).split(' ')[0],
             lname: (results[i]['fullName'] as String).split(' ')[1],
             email: results[i]['email'],
-            avgRate: double.parse(results[i]['rating'] as String),
+            avgRate: double.parse(results[i]['rating'] ?? '0'),
             password: '',
             gender: '',
             phone: int.parse(results[i]['phone'] as String),
