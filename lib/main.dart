@@ -5,6 +5,7 @@ import 'package:project/providers/user.dart';
 import 'package:project/screens/add_project_screen.dart';
 import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/screens/detailed_project_screen.dart';
+import 'package:project/screens/single_chat_screen.dart';
 import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
 import './screens/detailed_auth_screen.dart';
@@ -121,6 +122,8 @@ class MyApp extends StatelessWidget {
                     SettingsBody.routeName: (context) => const SettingsBody(),
                     AddProjectScreen.routeName: (context) =>
                         const AddProjectScreen(),
+                    SingleChatScreen.routeName: (context) =>
+                        const SingleChatScreen(),
                   },
                 ))));
   }

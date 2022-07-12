@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/screens/single_chat_screen.dart';
 
 class ChatCard extends StatelessWidget {
   const ChatCard({Key? key}) : super(key: key);
@@ -7,18 +8,12 @@ class ChatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (contex) => IndividualPage(
-        //               chatModel: chatModel,
-        //               sourchat: sourchat,
-        //             )));
+        Navigator.pushNamed(context, SingleChatScreen.routeName);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
         child: ListTile(
-          leading: CircleAvatar(
+          leading: const CircleAvatar(
             radius: 30,
             // child: SvgPicture.asset(
             //   chatModel.isGroup ? "assets/groups.svg" : "assets/person.svg",
@@ -28,7 +23,7 @@ class ChatCard extends StatelessWidget {
             // ),
             backgroundColor: Colors.blueGrey,
           ),
-          title: Text(
+          title: const Text(
             'chatModel.name',
             style: TextStyle(
               fontSize: 16,
@@ -37,7 +32,7 @@ class ChatCard extends StatelessWidget {
           ),
           subtitle: FittedBox(
             child: Row(
-              children: [
+              children: const [
                 Icon(Icons.done_all),
                 SizedBox(
                   width: 3,
@@ -51,7 +46,7 @@ class ChatCard extends StatelessWidget {
               ],
             ),
           ),
-          trailing: Text('chatModel.time'),
+          trailing: const Text('chatModel.time'),
         ),
       ),
     );
