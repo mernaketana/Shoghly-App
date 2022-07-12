@@ -91,7 +91,8 @@ class Favourites with ChangeNotifier {
             fname: accessWorkers[i]["worker"]['firstName'],
             lname: accessWorkers[i]["worker"]['lastName'],
             email: '',
-            avgRate: accessWorkers[i]["worker"]['averageRating'] ?? 0,
+            avgRate: double.parse(
+                accessWorkers[i]["worker"]['averageRating'].toString()),
             password: '',
             gender: accessWorkers[i]["worker"]['gender'],
             phone: 0,

@@ -4,32 +4,35 @@ import 'package:project/models/chat_card.dart';
 import 'package:project/screens/single_chat_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../models/employee.dart';
 import '../providers/worker.dart';
 
 class ChatCard extends StatelessWidget {
   final ChatCardModel message;
-  const ChatCard({Key? key, required this.message}) : super(key: key);
+  final Employee currentUser;
+  const ChatCard({Key? key, required this.message, required this.currentUser})
+      : super(key: key);
 
-  void chatScreen(String workerId, BuildContext context) async {
-    final workerProfile =
-        await Provider.of<Worker>(context, listen: false).getWorker(workerId);
-    final currentWorker = workerProfile['employee'];
-    Navigator.pushNamed(context, SingleChatScreen.routeName,
-        arguments: currentWorker);
+  void chatScreen(ChatCardModel message, BuildContext context) async {
+    Navigator.pushNamed(context, SingleChatScreen.routeName, arguments: {
+      "userId": message.userId,
+      "userImage": message.userPicture,
+      "userFirstName": message.firstName,
+      "userLastName": message.lastName
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => chatScreen(message.workerId, context),
+      onTap: () => chatScreen(message, context),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
         child: ListTile(
-          visualDensity: VisualDensity.standard,
           leading: CircleAvatar(
             radius: 30,
             backgroundColor: Colors.blueGrey,
-            backgroundImage: CachedNetworkImageProvider(message.workerPicture),
+            backgroundImage: CachedNetworkImageProvider(message.userPicture),
           ),
           title: Text(
             '${message.firstName} ${message.lastName}',
@@ -38,14 +41,19 @@ class ChatCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: FittedBox(
-            child: Row(
-              children: [
-                const Icon(Icons.done),
-                const SizedBox(
-                  width: 3,
-                ),
-                Text(
+          subtitle: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.done,
+                size: 15,
+              ),
+              const SizedBox(
+                width: 3,
+              ),
+              SizedBox(
+                width: 200,
+                child: Text(
                   message.lastMessage,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
@@ -53,8 +61,8 @@ class ChatCard extends StatelessWidget {
                     fontSize: 13,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           trailing: const Text('10:00'),
         ),

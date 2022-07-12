@@ -87,9 +87,8 @@ class Chat with ChangeNotifier {
             firstName: accessSingleMessage["user"]["firstName"],
             lastMessage: accessSingleMessage["lastMessage"],
             lastName: accessSingleMessage["user"]["lastName"],
-            userId: accessSingleMessage["lastUserId"],
-            workerId: accessSingleMessage["user"]["id"],
-            workerPicture: accessSingleMessage["user"]["picture"]);
+            userId: accessSingleMessage["user"]["id"],
+            userPicture: accessSingleMessage["user"]["picture"]);
         messages.add(currentMessage);
       }
       if (responseData["error"] != null) {

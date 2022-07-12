@@ -103,7 +103,7 @@ class Worker with ChangeNotifier {
           role: employeeData["role"],
           image: employeeData["picture"],
           categordId: employeeData["profession"]);
-      List userReviews = employeeData["reviews"];
+      List userReviews = employeeData["reviews"] ?? [];
       final workerComments = <Comment>[];
       for (var i = 0; i < userReviews.length; i++) {
         final currentComment = userReviews[i];

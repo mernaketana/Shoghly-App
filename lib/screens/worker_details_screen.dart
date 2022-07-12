@@ -199,10 +199,16 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                           height: 30,
                                           child: ListView(
                                             scrollDirection: Axis.horizontal,
-                                            children: createStars(widget
-                                                .arguments["currentWorker"]
-                                                .avgRate!
-                                                .toDouble()),
+                                            children: widget
+                                                        .arguments[
+                                                            "currentWorker"]
+                                                        .avgRate ==
+                                                    null
+                                                ? createStars(0)
+                                                : createStars(widget
+                                                    .arguments["currentWorker"]
+                                                    .avgRate!
+                                                    .toDouble()),
                                           ),
                                         ),
                                       ]),

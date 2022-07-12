@@ -15,10 +15,10 @@ import '../providers/chat.dart';
 
 class SingleChatScreen extends StatefulWidget {
   static const routeName = '/single-chat-screen';
-  final Employee currentWorker;
+  final Map<String, dynamic> arguments;
   const SingleChatScreen({
     Key? key,
-    required this.currentWorker,
+    required this.arguments,
   }) : super(key: key);
 
   @override
@@ -48,7 +48,7 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
         _isLoading = true;
       });
       messages = await Provider.of<Chat>(context, listen: false)
-          .getSpecificChat(widget.currentWorker.id);
+          .getSpecificChat(widget.arguments['userId']);
       setState(() {
         _isLoading = false;
       });
@@ -103,7 +103,7 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                   CircleAvatar(
                     radius: 20,
                     backgroundImage: CachedNetworkImageProvider(
-                      widget.currentWorker.image!,
+                      widget.arguments['userImage'],
                     ),
                     backgroundColor: Colors.blueGrey,
                   ),
@@ -113,7 +113,7 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
             title: Container(
               margin: const EdgeInsets.all(6),
               child: Text(
-                '${widget.currentWorker.fname} ${widget.currentWorker.lname}',
+                '${widget.arguments['userFirstName']} ${widget.arguments['userLastName']}',
                 style: const TextStyle(
                   fontSize: 18.5,
                   fontWeight: FontWeight.bold,
@@ -183,8 +183,8 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () => sendMessage(
-                                    _controller.text, widget.currentWorker.id),
+                                onPressed: () => sendMessage(_controller.text,
+                                    widget.arguments['userId']),
                                 icon: const Icon(Icons.send),
                               )
                             ],

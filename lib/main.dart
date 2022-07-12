@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
                           DetailedProjectScreen(
                               projectId: settings.arguments as String),
                       SingleChatScreen.routeName: (ctx) => SingleChatScreen(
-                          currentWorker: settings.arguments as Employee)
+                          arguments: settings.arguments as Map<String, dynamic>)
                     };
                     WidgetBuilder? builder = routes[settings.name];
                     return MaterialPageRoute(builder: (ctx) => builder!(ctx));
