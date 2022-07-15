@@ -2,7 +2,7 @@ class Message {
   String messageId;
   String senderId;
   String recieverId;
-  int isOwner;
+  bool isOwner;
   String text;
   bool isRead;
   DateTime createdAt;

@@ -8,6 +8,7 @@ import 'package:project/screens/single_chat_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/comment.dart';
 import '../models/worker_project.dart';
+import '../providers/auth.dart';
 import '../providers/project.dart';
 import '../providers/worker.dart';
 
@@ -368,12 +369,25 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                                                   BorderRadius
                                                                       .circular(
                                                                           5)))),
-                                              onPressed: () => Navigator.of(
-                                                      context)
-                                                  .pushNamed(
-                                                      SingleChatScreen
-                                                          .routeName,
-                                                      arguments: currentWorker),
+                                              onPressed: () {
+                                                final token = Provider.of<Auth>(
+                                                        context,
+                                                        listen: false)
+                                                    .token;
+                                                Navigator.of(context).pushNamed(
+                                                    SingleChatScreen.routeName,
+                                                    arguments: {
+                                                      "userId":
+                                                          currentWorker.id,
+                                                      "userImage":
+                                                          currentWorker.image,
+                                                      "userFirstName":
+                                                          currentWorker.fname,
+                                                      "userLastName":
+                                                          currentWorker.lname,
+                                                      "token": token
+                                                    });
+                                              },
                                               icon: const Icon(
                                                 Icons.message,
                                                 color: Colors.yellow,

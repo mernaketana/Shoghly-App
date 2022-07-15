@@ -45,6 +45,7 @@ dependencies:
   nine_grid_view: ^2.0.0
   socket_io_client: ^2.0.0-beta.4-nullsafety.0
   web_socket_channel: ^2.2.0
+  sqflite: ^2.0.2+1
 
 
   # The following adds the Cupertino Icons font to your application.

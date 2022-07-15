@@ -5,6 +5,7 @@ import 'package:project/screens/single_chat_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/employee.dart';
+import '../providers/auth.dart';
 import '../providers/worker.dart';
 
 class ChatCard extends StatelessWidget {
@@ -14,11 +15,13 @@ class ChatCard extends StatelessWidget {
       : super(key: key);
 
   void chatScreen(ChatCardModel message, BuildContext context) async {
-    Navigator.pushNamed(context, SingleChatScreen.routeName, arguments: {
+    final token = Provider.of<Auth>(context, listen: false).token;
+    Navigator.of(context).pushNamed(SingleChatScreen.routeName, arguments: {
       "userId": message.userId,
       "userImage": message.userPicture,
       "userFirstName": message.firstName,
-      "userLastName": message.lastName
+      "userLastName": message.lastName,
+      "token": token
     });
   }
 
@@ -32,7 +35,10 @@ class ChatCard extends StatelessWidget {
           leading: CircleAvatar(
             radius: 30,
             backgroundColor: Colors.blueGrey,
-            backgroundImage: CachedNetworkImageProvider(message.userPicture),
+            backgroundImage: message.userPicture == ''
+                ? const AssetImage('assets/images/placeholder.png')
+                    as ImageProvider
+                : CachedNetworkImageProvider(message.userPicture),
           ),
           title: Text(
             '${message.firstName} ${message.lastName}',
@@ -41,28 +47,30 @@ class ChatCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.done,
-                size: 15,
-              ),
-              const SizedBox(
-                width: 3,
-              ),
-              SizedBox(
-                width: 200,
-                child: Text(
-                  message.lastMessage,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
+          subtitle: FittedBox(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.done,
+                  size: 15,
+                ),
+                const SizedBox(
+                  width: 3,
+                ),
+                SizedBox(
+                  width: 200,
+                  child: Text(
+                    message.lastMessage,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           trailing: const Text('10:00'),
         ),

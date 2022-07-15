@@ -15,32 +15,24 @@ class Chat with ChangeNotifier {
   late String userId;
   late IO.Socket socket;
   final apiUrl = dotenv.env['API_URL']!;
+  List<Message> messages = [];
 
   void recieveToken(Auth auth) {
     authToken = auth.token;
     userId = auth.userId;
   }
 
-  void connect({String? message}) async {
-    socket = IO.io(
-        'http://ec2-52-59-217-155.eu-central-1.compute.amazonaws.com:8080/',
-        IO.OptionBuilder()
-            .setTransports(['websocket', 'polling'])
-            .disableAutoConnect()
-            .setQuery({"token": authToken})
-            .build());
-    socket.connect();
-    socket.onConnect((data) => print('SUCCESSSSSSSSS'));
-    socket.onConnectError((data) => print(data));
-    socket.onConnectTimeout((data) => print('TIMEOUUUUUUUUUUUUUUUUUUUUT'));
-    socket
-        .onConnecting((data) => print('CONNECTINGGGGGGGGGGGGGGGGGGGGGGGGGGGG'));
-    socket.emit("message", {"message": message});
+  List<Message> get chatmessages {
+    return messages.reversed.toList();
+  }
+
+  void addMessageToMessages(Message message) {
+    messages.add(message);
+    notifyListeners();
   }
 
   Future<void> sendMessage(String recieverId, String text) async {
     final url = Uri.parse("${apiUrl}messages");
-    connect(message: text);
     print('send message provider');
     print(recieverId);
     print(text);
@@ -79,7 +71,7 @@ class Chat with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       print(responseData);
-      List<ChatCardModel> messages = [];
+      final List<ChatCardModel> chatmessages = [];
       final accessMessages = responseData["data"] as List;
       for (var i = 0; i < accessMessages.length; i++) {
         final accessSingleMessage = accessMessages[i] as Map<String, dynamic>;
@@ -89,19 +81,20 @@ class Chat with ChangeNotifier {
             lastName: accessSingleMessage["user"]["lastName"],
             userId: accessSingleMessage["user"]["id"],
             userPicture: accessSingleMessage["user"]["picture"]);
-        messages.add(currentMessage);
+        chatmessages.add(currentMessage);
       }
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
       notifyListeners();
-      return messages;
+      return chatmessages;
     } catch (error) {
       rethrow;
     }
   }
 
   Future<List<Message>> getSpecificChat(String recieverId) async {
+    messages.clear();
     final url = Uri.parse("${apiUrl}users/$recieverId/messages");
     try {
       final response = await http.get(
@@ -113,7 +106,6 @@ class Chat with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       print(responseData);
-      List<Message> messages = [];
       final accessMessages = responseData["data"] as List;
       for (var i = 0; i < accessMessages.length; i++) {
         final accessSingleMessage = accessMessages[i] as Map<String, dynamic>;

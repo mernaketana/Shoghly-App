@@ -8,8 +8,7 @@ class MessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment:
-          message.isOwner == 1 ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: message.isOwner ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width - 45,
@@ -17,7 +16,7 @@ class MessageCard extends StatelessWidget {
         child: Card(
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          color: message.isOwner == 1
+          color: message.isOwner
               ? const Color(0xffdcf8c6)
               : const Color.fromARGB(198, 208, 207, 207),
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -27,8 +26,8 @@ class MessageCard extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  left: message.isOwner == 1 ? 10 : 8,
-                  right: message.isOwner == 1 ? 30 : 50,
+                  left: message.isOwner ? 10 : 8,
+                  right: message.isOwner ? 30 : 50,
                   top: 5,
                 ),
                 child: Text(
