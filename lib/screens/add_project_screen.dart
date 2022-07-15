@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,8 +89,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           .addProject(_savedProject);
       Navigator.of(context).pop();
     } catch (error) {
-      print('I am in error');
-      print(error);
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -114,11 +113,14 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           title: const Text('اضافة البوم'),
         ),
         body: _isLoading
-            ? const Center(child: SpinKitSpinningLines(color: Colors.red))
+            ? Center(
+                child: SpinKitSpinningLines(
+                    color: Theme.of(context).colorScheme.primary))
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -153,17 +155,32 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                TextButton.icon(
-                                    style: const ButtonStyle(),
-                                    onPressed: _pickedImageCamera,
-                                    icon: const Icon(Icons.camera_alt),
-                                    label: const Text('الكاميرا')),
+                                Expanded(
+                                  child: TextButton.icon(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .primary)),
+                                      onPressed: _pickedImageCamera,
+                                      icon: const Icon(Icons.camera_alt),
+                                      label: const Text('الكاميرا')),
+                                ),
                                 const SizedBox(width: 15),
-                                TextButton.icon(
-                                    style: const ButtonStyle(),
-                                    onPressed: _pickedImageGallery,
-                                    icon: const Icon(Icons.image),
-                                    label: const Text('المعرض')),
+                                Expanded(
+                                  child: TextButton.icon(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                      ),
+                                      onPressed: _pickedImageGallery,
+                                      icon: const Icon(Icons.image),
+                                      label: const Text('المعرض')),
+                                ),
                               ],
                             ),
                             const SizedBox(
@@ -185,14 +202,22 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                e,
-                                                height: 100,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: e,
+                                                  height: 100,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      SpinKitSpinningLines(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary),
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      const Icon(Icons.error),
+                                                )),
                                           ))
                                       .toList(),
                                 ],

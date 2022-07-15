@@ -44,10 +44,11 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(title: const Text('مفضلاتي')),
+        appBar: AppBar(title: const Center(child: Text('مفضلاتي'))),
         body: _isLoading
-            ? const Center(
-                child: SpinKitSpinningLines(color: Colors.red),
+            ? Center(
+                child: SpinKitSpinningLines(
+                    color: Theme.of(context).colorScheme.primary),
               )
             : Padding(
                 padding: const EdgeInsets.all(6),
@@ -71,8 +72,10 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                 imageUrl: e.image!,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) =>
-                                    const SpinKitSpinningLines(
-                                        color: Colors.red),
+                                    SpinKitSpinningLines(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               ),

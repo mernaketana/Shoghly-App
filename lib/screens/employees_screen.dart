@@ -16,8 +16,8 @@ class EmployeesScreen extends StatefulWidget {
 }
 
 class _EmployeesScreenState extends State<EmployeesScreen> {
-  var _isInit = true;
   var _isLoading = false;
+  var _empsExist = true;
   List<Employee> employees = [];
   String _city = '';
 
@@ -50,6 +50,9 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     await Provider.of<Worker>(context, listen: false)
         .getWorkers(city, widget.arguments['title']);
     employees = Provider.of<Worker>(context, listen: false).employees;
+    if (employees.isEmpty) {
+      _empsExist = false;
+    }
     print(employees);
     setState(() {
       _isLoading = false;
@@ -64,13 +67,14 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           title: Text(title),
         ),
         body: _isLoading
-            ? const Center(
-                child: SpinKitSpinningLines(color: Colors.red),
+            ? Center(
+                child: SpinKitSpinningLines(
+                    color: Theme.of(context).colorScheme.primary),
               )
             : ListView.builder(
                 itemBuilder: (context, index) {
@@ -123,6 +127,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   .where(
                                       (element) => element.categordId == title)
                                   .toList()[index]),
+                      if (!_empsExist)
+                        Center(
+                            child: Text(
+                          'لا يوجد عمال $title في $_city',
+                          style: const TextStyle(fontSize: 20),
+                        ))
                     ],
                   );
                 },

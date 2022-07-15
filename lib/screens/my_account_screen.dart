@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/models/comment.dart';
 import 'package:project/widgets/my_account_body.dart';
-import '../models/employee.dart';
 
 class MyAccountScreen extends StatelessWidget {
   static const routeName = '/my-account-screen';
@@ -10,7 +8,7 @@ class MyAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: const Center(child: Text('حسابي الشخصي')),
       ),

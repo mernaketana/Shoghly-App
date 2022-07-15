@@ -40,7 +40,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
       await Provider.of<User>(context)
           .getUser(userId)
           .then((value) => currentUser = value);
-      print('000000000000000000000000000000000000');
       projects = await Provider.of<Project>(context, listen: false)
           .getWorkerProjects(currentUser.id);
       setState(() {
@@ -57,20 +56,22 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
             Navigator.of(context).pushNamed(AddProjectScreen.routeName),
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       appBar: AppBar(
         title: const Center(child: Text('معرضي')),
       ),
       body: _isLoading
-          ? const SpinKitSpinningLines(color: Colors.red)
+          ? SpinKitSpinningLines(color: Theme.of(context).colorScheme.primary)
           : Column(
               children: [
                 Expanded(
@@ -98,8 +99,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                         width: double.infinity,
                                         fit: BoxFit.cover,
                                         placeholder: (context, url) =>
-                                            const SpinKitSpinningLines(
-                                                color: Colors.red),
+                                            SpinKitSpinningLines(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
                                       ),
@@ -138,7 +141,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             softWrap: true,
                             maxLines: 1,
                             style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20,
+                            ),
                           )
                         ],
                       ),

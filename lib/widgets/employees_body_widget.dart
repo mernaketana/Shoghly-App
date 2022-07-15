@@ -37,7 +37,7 @@ class EmployeesBodyWidget extends StatelessWidget {
         tag: currentWorker.id,
         child: GestureDetector(
           child: Card(
-            color: const Color.fromARGB(255, 254, 247, 241),
+            color: Theme.of(context).backgroundColor,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             elevation: 10,
@@ -63,8 +63,10 @@ class EmployeesBodyWidget extends StatelessWidget {
                                 width: 100,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) =>
-                                    const SpinKitSpinningLines(
-                                        color: Colors.red),
+                                    SpinKitSpinningLines(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               )),

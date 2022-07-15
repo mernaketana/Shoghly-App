@@ -59,9 +59,6 @@ class _SettingsBodyState extends State<SettingsBody> {
       await Provider.of<User>(context)
           .getUser(userId)
           .then((value) => currentUser = value);
-      if (currentUser.role == 'worker') {
-        print('I am a worker');
-      }
       setState(() {
         _isLoading = false;
       });
@@ -73,15 +70,12 @@ class _SettingsBodyState extends State<SettingsBody> {
     final _valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (!_valid) {
-      print('invalid');
       return;
     }
     _formKey.currentState!.save();
     setState(() {
       isLoading = true;
     });
-    print(oldPass);
-    print(newPass);
     await Provider.of<Auth>(context, listen: false)
         .changePassword(oldPass, newPass);
     setState(() {
@@ -94,7 +88,6 @@ class _SettingsBodyState extends State<SettingsBody> {
     final _valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (!_valid) {
-      print('invalid');
       return;
     }
     _formKey.currentState!.save();
@@ -138,22 +131,20 @@ class _SettingsBodyState extends State<SettingsBody> {
 
   @override
   Widget build(BuildContext context) {
-    print('hereeeeeeeeee');
     bool editPass = ModalRoute.of(context)!.settings.arguments as bool;
     // _pickedDate.text =
     //     '${currentUser.bDate!.day}/${currentUser.bDate!.month}/${currentUser.bDate!.year}';
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           title: const Text('تعديل'),
         ),
         body: _isLoading
-            ? const Center(
+            ? Center(
                 child: SpinKitSpinningLines(
-                  color: Colors.red,
-                ),
+                    color: Theme.of(context).colorScheme.primary),
               )
             : Center(
                 child: Padding(
@@ -187,9 +178,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   labelText: 'ادخل الرقم السري القديم',
-                                  // labelStyle: TextStyle(color: Colors.white)
                                 ),
-                                // style: const TextStyle(color: Colors.white),
                               ),
                             if (editPass)
                               const SizedBox(
@@ -244,8 +233,13 @@ class _SettingsBodyState extends State<SettingsBody> {
                                 ),
                                 obscureText: true,
                               ),
+
                             if (!editPass)
                               UserImagePicker(imagePick: _pickedImage),
+                            if (!editPass)
+                              const SizedBox(
+                                height: 20,
+                              ),
                             if (!editPass)
                               TextFormField(
                                 key: const ValueKey('fname'),
@@ -304,7 +298,8 @@ class _SettingsBodyState extends State<SettingsBody> {
                               ),
                             if (!editPass)
                               TextFormField(
-                                initialValue: currentUser.phone.toString(),
+                                initialValue:
+                                    '0${currentUser.phone.toString()}',
                                 key: const ValueKey('phonenum'),
                                 validator: (e) {
                                   if (e!.isEmpty) {
@@ -375,6 +370,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                             // ),
                             if (!editPass)
                               DropdownButtonFormField(
+                                  // value: currentUser.location,
                                   validator: (e) {
                                     if (e == null) {
                                       return 'يجب اختيار الجنس  ';
@@ -471,9 +467,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   labelText: 'العنوان',
-                                  // labelStyle: TextStyle(color: Colors.white)
                                 ),
-                                // style: const TextStyle(color: Colors.white),
                               ),
                             if (!editPass)
                               if (currentUser.role == 'worker')
@@ -521,8 +515,9 @@ class _SettingsBodyState extends State<SettingsBody> {
                               width: isLoading ? 50 : double.infinity,
                               height: 50,
                               child: isLoading
-                                  ? const SpinKitSpinningLines(
-                                      color: Colors.red)
+                                  ? SpinKitSpinningLines(
+                                      color:
+                                          Theme.of(context).colorScheme.primary)
                                   : ElevatedButton(
                                       onPressed: () => editPass
                                           ? _submitPass()
@@ -538,7 +533,9 @@ class _SettingsBodyState extends State<SettingsBody> {
                                               MaterialStateProperty.all(0),
                                           backgroundColor:
                                               MaterialStateProperty.all(
-                                                  Colors.red),
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .primary),
                                           foregroundColor:
                                               MaterialStateProperty.all(
                                                   Colors.white)),

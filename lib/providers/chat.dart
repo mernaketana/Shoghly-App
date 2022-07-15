@@ -78,6 +78,7 @@ class Chat with ChangeNotifier {
         final currentMessage = ChatCardModel(
             firstName: accessSingleMessage["user"]["firstName"],
             lastMessage: accessSingleMessage["lastMessage"],
+            lastMessageUserId: accessSingleMessage["lastUserId"],
             lastName: accessSingleMessage["user"]["lastName"],
             userId: accessSingleMessage["user"]["id"],
             userPicture: accessSingleMessage["user"]["picture"]);

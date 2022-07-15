@@ -7,9 +7,9 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: const Center(
-        child: SpinKitSpinningLines(color: Colors.red),
+      body: Center(
+        child:
+            SpinKitSpinningLines(color: Theme.of(context).colorScheme.primary),
       ),
     );
   }

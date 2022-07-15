@@ -58,66 +58,65 @@ class _DetailedProjectScreenState extends State<DetailedProjectScreen> {
                             padding: const EdgeInsets.all(16),
                             child: Column(
                               children: [
-                                ListTile(
-                                  title: const Text(
-                                    'تفاصيل المشروع:',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Text(
-                                    project.desc,
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                const SizedBox(height: 30),
-                                ListTile(
-                                  title: const Text('صور المشروع:',
+                                Card(
+                                  elevation: 4,
+                                  shadowColor: Colors.blue,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: ListTile(
+                                    title: const Text(
+                                      'تفاصيل المشروع',
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  subtitle: SizedBox(
-                                    height: 500,
-                                    child: GridView(
-                                      children: <Widget>[
-                                        ...project.urls!
-                                            .map((e) => InkWell(
-                                                  onTap: () => Navigator.of(
-                                                          context)
-                                                      .pushNamed(
-                                                          DetailedImageScreen
-                                                              .routeName,
-                                                          arguments: e),
-                                                  splashColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                      e,
-                                                      height: 100,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ))
-                                            .toList(),
-                                      ],
-                                      gridDelegate:
-                                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                                        mainAxisExtent: 130,
-                                        maxCrossAxisExtent: 190,
-                                        childAspectRatio: 3 / 2,
-                                        crossAxisSpacing: 20,
-                                        mainAxisSpacing: 20,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 20),
+                                          fontWeight: FontWeight.bold),
                                     ),
+                                    subtitle: Text(
+                                      project.desc,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 500,
+                                  child: GridView(
+                                    children: <Widget>[
+                                      ...project.urls!
+                                          .map((e) => InkWell(
+                                                onTap: () =>
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            DetailedImageScreen
+                                                                .routeName,
+                                                            arguments: e),
+                                                splashColor: Theme.of(context)
+                                                    .primaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.network(
+                                                    e,
+                                                    height: 100,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                    ],
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      mainAxisExtent: 130,
+                                      maxCrossAxisExtent: 190,
+                                      childAspectRatio: 3 / 2,
+                                      crossAxisSpacing: 20,
+                                      mainAxisSpacing: 20,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 20),
                                   ),
                                 )
                               ],

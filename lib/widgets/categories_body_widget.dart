@@ -25,12 +25,13 @@ class CategoriesBodyWidget extends StatelessWidget {
         child: Column(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               radius: 52,
               child: CircleAvatar(
                 radius: 50,
-                backgroundColor: const Color.fromARGB(255, 254, 247, 241),
-                child: Icon(backgroundImg, color: Colors.red, size: 50),
+                backgroundColor: Colors.white,
+                child: Icon(backgroundImg,
+                    color: Theme.of(context).colorScheme.primary, size: 50),
               ),
             ),
             const SizedBox(
@@ -38,7 +39,8 @@ class CategoriesBodyWidget extends StatelessWidget {
             ),
             Text(
               title,
-              style: const TextStyle(fontSize: 18, color: Colors.red),
+              style: TextStyle(
+                  fontSize: 18, color: Theme.of(context).colorScheme.primary),
             )
           ],
         ));

@@ -78,8 +78,8 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
         : currentUser.role == 'worker'
             ? const [
                 MyAccountScreen(),
-                CategoriesScreen(),
                 GalleryScreen(),
+                CategoriesScreen(),
                 ChatScreen(),
                 MainSettingsScreen(),
               ]
@@ -98,9 +98,9 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle), label: 'حسابي'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.category), label: 'الحرف'),
-                BottomNavigationBarItem(
                     icon: Icon(Icons.photo_library), label: 'معرضي'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.category), label: 'الحرف'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.chat), label: 'المحادثات'),
                 BottomNavigationBarItem(
@@ -129,7 +129,7 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
                   : _pages[_selectedPageIndex],
               bottomNavigationBar: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                backgroundColor: Colors.red,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 selectedItemColor: Colors.white,
                 unselectedItemColor: const Color.fromARGB(170, 219, 219, 219),
                 items: _items,

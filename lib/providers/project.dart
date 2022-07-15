@@ -96,7 +96,7 @@ class Project with ChangeNotifier {
       // I don't fetch the worker Id
       print('dataaaaaaaaaaaaaaaaaaaaaaaaaa');
       final data = json.decode(response.body) as Map<String, dynamic>;
-      final accessProject = data["project"];
+      final accessProject = data["project"][0];
       print(data);
       final project = WorkerProject(
           desc: accessProject["description"],

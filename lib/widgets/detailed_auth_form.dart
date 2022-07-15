@@ -112,7 +112,6 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    // UserImagePicker(imagePick: _pickedImage),
                     const SizedBox(
                       height: 8,
                     ),
@@ -135,9 +134,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         labelText: 'الاسم الاول',
-                        // labelStyle: TextStyle(color: Colors.white)
                       ),
-                      // style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(
                       height: 14,
@@ -161,9 +158,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         labelText: 'الاسم الاخير',
-                        // labelStyle: TextStyle(color: Colors.white)
                       ),
-                      // style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(
                       height: 14,
@@ -188,9 +183,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         labelText: 'رقم الهاتف',
-                        // labelStyle: TextStyle(color: Colors.white)
                       ),
-                      // style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(
                       height: 14,
@@ -265,8 +258,8 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                             value: 'انثى',
                           ),
                           DropdownMenuItem(
-                            child: Text('رجل'),
-                            value: 'رجل',
+                            child: Text('ذكر'),
+                            value: 'ذكر',
                           )
                         ],
                         onSaved: (String? e) =>
@@ -328,9 +321,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         labelText: 'العنوان',
-                        // labelStyle: TextStyle(color: Colors.white)
                       ),
-                      // style: const TextStyle(color: Colors.white),
                     ),
                     if (widget.role == 'worker')
                       const SizedBox(
@@ -353,10 +344,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              labelText: 'مجال العمل'
-                              // style: const TextStyle(color: Colors.white)
-                              // labelStyle: TextStyle(color: Colors.white)
-                              ),
+                              labelText: 'مجال العمل'),
                           isExpanded: true,
                           iconEnabledColor: Colors.white,
                           items: _categories
@@ -374,7 +362,8 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                       height: 20,
                     ),
                     if (_isLoading)
-                      const SpinKitSpinningLines(color: Colors.red)
+                      SpinKitSpinningLines(
+                          color: Theme.of(context).colorScheme.primary)
                     else
                       SizedBox(
                         width: double.infinity,
@@ -387,8 +376,8 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                                 fontWeight: FontWeight.bold, fontSize: 17),
                           ),
                           style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.red),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
                               foregroundColor:
                                   MaterialStateProperty.all(Colors.white)),
                         ),

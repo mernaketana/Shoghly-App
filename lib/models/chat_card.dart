@@ -4,8 +4,10 @@ class ChatCardModel {
   String userPicture;
   String firstName;
   String lastName;
+  String lastMessageUserId;
 
   ChatCardModel({
+    required this.lastMessageUserId,
     required this.firstName,
     required this.lastMessage,
     required this.lastName,

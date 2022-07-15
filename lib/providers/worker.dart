@@ -49,7 +49,7 @@ class Worker with ChangeNotifier {
               lname: employeesList[i]['lastName'],
               email: '',
               password: '',
-              avgRate: employeesList[i]['averageRating'],
+              avgRate: (employeesList[i]['averageRating'] as int).toDouble(),
               gender: employeesList[i]['gender'],
               phone: int.parse(employeesList[i]['phone']),
               location: employeesList[i]['city'],

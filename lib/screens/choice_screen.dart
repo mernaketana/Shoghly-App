@@ -20,7 +20,7 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Padding(
             padding: const EdgeInsets.only(top: 70),
             child: SingleChildScrollView(
@@ -28,18 +28,18 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      CircleAvatar(
+                    children: [
+                      const CircleAvatar(
                         child: Text('2'),
                         backgroundColor: Colors.grey,
                         foregroundColor: Colors.white,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 14,
                       ),
                       CircleAvatar(
-                        child: Text('1'),
-                        backgroundColor: Colors.red,
+                        child: const Text('1'),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         foregroundColor: Colors.white,
                       ),
                     ],
@@ -79,7 +79,8 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
                               });
                             },
                             child: CircleAvatar(
-                              backgroundColor: Colors.red,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               radius: _isChosenEmp ? 75 : 70,
                               child: const CircleAvatar(
                                 backgroundImage:
@@ -115,7 +116,8 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
                             });
                           },
                           child: CircleAvatar(
-                            backgroundColor: Colors.red,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             radius: _isChosenUser ? 75 : 70,
                             child: const CircleAvatar(
                               backgroundImage:
@@ -162,7 +164,8 @@ class _ChoicesScreenState extends State<ChoicesScreen> {
                           elevation: MaterialStateProperty.all(0),
                           backgroundColor: role == ''
                               ? MaterialStateProperty.all(Colors.grey)
-                              : MaterialStateProperty.all(Colors.red),
+                              : MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white)),
                     ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
-import '../models/employee.dart';
 import '../providers/auth.dart';
 
 class MainSettingsScreen extends StatelessWidget {
@@ -14,7 +13,7 @@ class MainSettingsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: const Center(child: Text('الاعدادات')),
       ),
@@ -26,7 +25,6 @@ class MainSettingsScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadiusDirectional.circular(10)),
             child: ListTile(
-                tileColor: const Color.fromARGB(255, 254, 247, 241),
                 title: const Text('تعديل حسابي'),
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () => Navigator.of(context)
@@ -38,7 +36,6 @@ class MainSettingsScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadiusDirectional.circular(10)),
             child: ListTile(
-                tileColor: const Color.fromARGB(255, 254, 247, 241),
                 title: const Text('تعديل معلوماتي'),
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () => Navigator.of(context)
@@ -50,9 +47,8 @@ class MainSettingsScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadiusDirectional.circular(10)),
             child: ListTile(
-                tileColor: const Color.fromARGB(255, 254, 247, 241),
                 title: const Text('حذف الحساب'),
-                trailing: const Icon(Icons.arrow_forward_ios),
+                trailing: const Icon(Icons.delete),
                 onTap: () => showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(
@@ -78,11 +74,9 @@ class MainSettingsScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadiusDirectional.circular(10)),
             child: ListTile(
-                tileColor: const Color.fromARGB(255, 254, 247, 241),
                 title: const Text('تسجيل الخروج'),
                 trailing: const Icon(Icons.logout),
                 onTap: () {
-                  // Navigator.of(context).pop();
                   Navigator.of(context).pushReplacementNamed('/');
                   Provider.of<Auth>(context, listen: false).logOut();
                 }),

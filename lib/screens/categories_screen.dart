@@ -22,6 +22,7 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   late String searchCity;
+  var searchOpen = false;
   final _textController = TextEditingController();
   var _isLoading = false;
   Icon customIcon = const Icon(Icons.search);
@@ -55,60 +56,44 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   Future<void> _search(String text, String city) async {
-    print('here i am');
-    print(text);
-    print(city);
+    if (text.isEmpty) {
+      return;
+    }
     setState(() {
       _isLoading = true;
-    });
-    setState(() {
       _searchBool = true;
+      searchOpen = false;
     });
     employees =
         await Provider.of<User>(context, listen: false).search(text, city);
-    print(employees.length);
     setState(() {
       _isLoading = false;
-    });
-    setState(() {
       _isInit = true;
     });
+    _textController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         actions: [
-          if (customIcon.icon == Icons.cancel)
-            DropdownButtonHideUnderline(
-              child: DropdownButton(
-                  elevation: 0,
-                  icon: const Icon(
-                    Icons.add_location_alt,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                  items: CITIES
-                      .map((e) => DropdownMenuItem(
-                            child: Text(e),
-                            value: e,
-                          ))
-                      .toList(),
-                  onChanged: (dynamic city) => searchCity = city as String),
-            ),
           IconButton(
             onPressed: () {
               setState(() {
+                searchOpen = true;
                 if (customIcon.icon == Icons.search) {
                   customIcon = const Icon(Icons.cancel);
                   customSearchBar = ListTile(
-                    leading: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+                    leading: IconButton(
+                        onPressed: () =>
+                            _search(_textController.text, searchCity),
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                          size: 28,
+                        )),
                     title: TextField(
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.search,
@@ -130,6 +115,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   );
                 } else {
                   setState(() {
+                    searchOpen = false;
                     _isInit = true;
                     _searchBool = false;
                   });
@@ -148,43 +134,91 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           )
         ],
         elevation: 0,
-        backgroundColor: Colors.red,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Center(
           child: customSearchBar,
         ),
       ),
       body: _isLoading
-          ? const Center(
-              child: SpinKitSpinningLines(color: Colors.red),
+          ? Center(
+              child: SpinKitSpinningLines(
+                  color: Theme.of(context).colorScheme.primary),
             )
-          : _searchBool
-              ? ListView.builder(
-                  itemBuilder: (context, index) => EmployeesBodyWidget(
-                      currentWorker: employees[index],
-                      currentUser: currentUser),
-                  itemCount: employees.length,
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: GridView(
-                    children: <Widget>[
-                      ...DUMMY_CATEGORIES
-                          .map((e) => CategoriesBodyWidget(
-                              backgroundImg: e.img,
-                              title: e.title,
-                              currentUser: currentUser))
+          : searchOpen
+              ? Container(
+                  width: double.infinity,
+                  alignment: Alignment.topCenter,
+                  padding: const EdgeInsets.all(15),
+                  child: DropdownButtonFormField(
+                      value: currentUser.location,
+                      validator: (e) {
+                        if (e == null) {
+                          return 'يجب اختيار المحافظة  ';
+                        } else {
+                          return null;
+                        }
+                      },
+                      alignment: Alignment.centerRight,
+                      decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.location_city_outlined,
+                            color: Colors.grey,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          labelText: 'اختر المحافظة'),
+                      isExpanded: true,
+                      iconEnabledColor: Colors.white,
+                      items: CITIES
+                          .map((e) => DropdownMenuItem(
+                                child: Text(e),
+                                value: e,
+                              ))
                           .toList(),
-                    ],
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 2.7 / 3,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
+                      onSaved: (String? e) {
+                        searchCity = e as String;
+                        _search(_textController.text, searchCity);
+                      },
+                      onChanged: (newVal) {
+                        searchCity = newVal as String;
+                        _search(_textController.text, searchCity);
+                      }),
+                )
+              : _searchBool
+                  ? employees.isEmpty
+                      ? Center(
+                          child: Text(
+                          'لا يوجد عامل بهذا الاسم في $searchCity',
+                          style: const TextStyle(fontSize: 20),
+                        ))
+                      : ListView.builder(
+                          itemBuilder: (context, index) => EmployeesBodyWidget(
+                              currentWorker: employees[index],
+                              currentUser: currentUser),
+                          itemCount: employees.length,
+                        )
+                  : Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: GridView(
+                        children: <Widget>[
+                          ...DUMMY_CATEGORIES
+                              .map((e) => CategoriesBodyWidget(
+                                  backgroundImg: e.img,
+                                  title: e.title,
+                                  currentUser: currentUser))
+                              .toList(),
+                        ],
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 2.7 / 3,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                        ),
+                        padding: const EdgeInsets.all(25),
+                      ),
                     ),
-                    padding: const EdgeInsets.all(25),
-                  ),
-                ),
       // Center(
       //     child: Directionality(
       //         textDirection: TextDirection.rtl,

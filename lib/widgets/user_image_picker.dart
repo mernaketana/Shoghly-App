@@ -36,10 +36,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
           .addImage(pickedImage.path);
       setState(() {
         _isLoading = false;
-      });
-      print('Here in user image picker');
-      print(pickedImageUrl);
-      setState(() {
         _image = pickedImageFile;
       });
       widget.imagePick(pickedImageUrl);
@@ -64,8 +60,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
           .addImage(pickedImage.path);
       setState(() {
         _isLoading = false;
-      });
-      setState(() {
         _image = pickedImageFile;
       });
       widget.imagePick(pickedImageUrl);
@@ -88,25 +82,37 @@ class _UserImagePickerState extends State<UserImagePicker> {
                     : const AssetImage('assets/images/placeholder.png')
                         as ImageProvider<Object>?,
               )
-            : const SpinKitSpinningLines(color: Colors.red),
+            : SpinKitSpinningLines(
+                color: Theme.of(context).colorScheme.primary),
+        const SizedBox(
+          height: 10,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextButton.icon(
-                style: const ButtonStyle(
-                    // foregroundColor: MaterialStateProperty.all(Colors.white)
-                    ),
-                onPressed: _pickedImageCamera,
-                icon: const Icon(Icons.camera_alt),
-                label: const Text('الكاميرا')),
+            Expanded(
+              child: TextButton.icon(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.primary)),
+                  onPressed: _pickedImageCamera,
+                  icon: const Icon(Icons.camera_alt),
+                  label: const Text('الكاميرا')),
+            ),
             const SizedBox(width: 15),
-            TextButton.icon(
-                style: const ButtonStyle(
-                    // foregroundColor: MaterialStateProperty.all(Colors.white)
-                    ),
-                onPressed: _pickedImageGallery,
-                icon: const Icon(Icons.image),
-                label: const Text('المعرض')),
+            Expanded(
+              child: TextButton.icon(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.primary)),
+                  onPressed: _pickedImageGallery,
+                  icon: const Icon(Icons.image),
+                  label: const Text('المعرض')),
+            ),
           ],
         ),
       ],

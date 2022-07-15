@@ -18,7 +18,7 @@ class _DetailedAuthScreenState extends State<DetailedAuthScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+          backgroundColor: Theme.of(context).backgroundColor,
           body: Padding(
             padding: const EdgeInsets.only(top: 70),
             child: SingleChildScrollView(
@@ -26,16 +26,16 @@ class _DetailedAuthScreenState extends State<DetailedAuthScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       CircleAvatar(
-                        child: Text('2'),
-                        backgroundColor: Colors.red,
+                        child: const Text('2'),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         foregroundColor: Colors.white,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 14,
                       ),
-                      CircleAvatar(
+                      const CircleAvatar(
                         child: Text('1'),
                         backgroundColor: Colors.grey,
                         foregroundColor: Colors.white,
@@ -50,8 +50,7 @@ class _DetailedAuthScreenState extends State<DetailedAuthScreen> {
                 ],
               ),
             ),
-          )
-          ),
+          )),
     );
   }
 }

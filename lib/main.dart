@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:project/providers/chat.dart';
 import 'package:project/providers/favourites.dart';
@@ -14,7 +16,6 @@ import './screens/worker_details_screen.dart';
 import './screens/choice_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/employees_screen.dart';
-import 'models/employee.dart';
 import 'screens/page_controller_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './providers/auth.dart';
@@ -86,10 +87,19 @@ class MyApp extends StatelessWidget {
             builder: ((context, value, _) => MaterialApp(
                   debugShowCheckedModeBanner: false,
                   theme: ThemeData(
-                    backgroundColor: const Color.fromARGB(255, 254, 247, 241),
-                    colorScheme:
-                        ColorScheme.fromSwatch(primarySwatch: Colors.red)
-                            .copyWith(secondary: Colors.grey),
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                    colorScheme: const ColorScheme.light(
+                      primary: Color(
+                        0xFF104fa2,
+                      ),
+                    ).copyWith(secondary: Colors.grey),
+                    iconTheme: const IconThemeData(color: Colors.white),
+                    textTheme: const TextTheme(
+                        bodyText1: TextStyle(color: Colors.white)),
+                    textButtonTheme: TextButtonThemeData(
+                        style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                    )),
                     elevatedButtonTheme: ElevatedButtonThemeData(
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all(

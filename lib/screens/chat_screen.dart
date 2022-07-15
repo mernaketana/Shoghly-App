@@ -43,11 +43,12 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: const Center(child: Text('المحادثات')),
       ),
       body: _isLoading
-          ? const SpinKitSpinningLines(color: Colors.red)
+          ? SpinKitSpinningLines(color: Theme.of(context).colorScheme.primary)
           : ListView.builder(
               itemCount: messages.length,
               itemBuilder: (contex, index) =>

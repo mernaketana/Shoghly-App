@@ -2,14 +2,11 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:project/models/employee.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/status.dart' as status;
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:project/widgets/message_card.dart';
+// ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../models/message.dart';
@@ -32,8 +29,8 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
   FocusNode focusNode = FocusNode();
   bool sendButton = false;
   // List<MessageModel> messages = [];
-  TextEditingController _controller = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   late IO.Socket socket;
   static late StreamController<Message> _socketResponse;
   late IOWebSocketChannel channel;
@@ -86,7 +83,7 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
             isOwner: data['isOwner'],
             text: data['text'],
             isRead: data['isRead'],
-            createdAt: DateTime.parse(data['createdAt']));
+            createdAt: DateTime.parse(data['createdAt']).toLocal());
         _socketResponse.sink.add(message);
       });
     });
@@ -95,8 +92,10 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
   }
 
   void sendMessage(String message, String recieverId) async {
+    if (message.isEmpty) {
+      return;
+    }
     socket.emit("message");
-    print('send message fun');
     await Provider.of<Chat>(context, listen: false)
         .sendMessage(recieverId, message);
     _controller.clear();
@@ -159,18 +158,11 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
             ),
           ),
           body: _isLoading
-              ? const SpinKitSpinningLines(color: Colors.red)
+              ? SpinKitSpinningLines(
+                  color: Theme.of(context).colorScheme.primary)
               : StreamBuilder(
                   builder: (context, snapshot) {
-                    // if (snapshot.connectionState == ConnectionState.waiting) {
-                    //   return const Center(
-                    //       child: SpinKitSpinningLines(
-                    //     color: Colors.red,
-                    //   ));
-                    // }
                     if (snapshot.hasData && snapshot.data != null) {
-                      print('streaaaaaaaaaaaaaaaaaaaaaaam');
-                      print((snapshot.data as Message).text);
                       messages.add(snapshot.data as Message);
                     }
                     _scrollDown();
@@ -180,21 +172,14 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                       child: Column(
                         children: [
                           Expanded(
-                            // height: MediaQuery.of(context).size.height - 150,
                             child: ListView.builder(
                               shrinkWrap: true,
                               controller: _scrollController,
                               itemCount: messages.length,
                               itemBuilder: (context, index) {
-                                // if (index == 5) {
-                                //   return Container(
-                                //     height: 70,
-                                //   );
-                                // } else {
                                 return MessageCard(
                                   message: messages[index],
                                 );
-                                // }
                               },
                             ),
                           ),
@@ -238,7 +223,12 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                                       onPressed: () => sendMessage(
                                           _controller.text,
                                           widget.arguments['userId']),
-                                      icon: const Icon(Icons.send),
+                                      icon: Icon(
+                                        Icons.send,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
                                     )
                                   ],
                                 ),

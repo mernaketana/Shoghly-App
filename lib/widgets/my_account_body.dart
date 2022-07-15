@@ -47,11 +47,9 @@ class _MyAccountBodyState extends State<MyAccountBody> {
           .getUser(userId)
           .then((value) => currentUser = value);
       if (currentUser.role == 'worker') {
-        print('I am a worker');
         final workerProfile = await Provider.of<Worker>(context, listen: false)
             .getWorker((userId));
         comments = workerProfile['workerComments'];
-        print(comments);
       }
       setState(() {
         _isLoading = false;
@@ -162,11 +160,11 @@ class _MyAccountBodyState extends State<MyAccountBody> {
 
   @override
   Widget build(BuildContext context) {
-    print('here in my acc');
     return _isLoading
         ? SizedBox(
             height: MediaQuery.of(context).size.height - 150,
-            child: const SpinKitSpinningLines(color: Colors.red))
+            child: SpinKitSpinningLines(
+                color: Theme.of(context).colorScheme.primary))
         : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,14 +189,15 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                                         fit: BoxFit.cover,
                                         height: 400,
                                         imageUrl: currentUser.image as String,
-                                        placeholder: (context, url) =>
-                                            const SizedBox(
-                                                height: 480,
-                                                width: 380,
-                                                child: Center(
-                                                  child: SpinKitSpinningLines(
-                                                      color: Colors.red),
-                                                )),
+                                        placeholder: (context, url) => SizedBox(
+                                            height: 480,
+                                            width: 380,
+                                            child: Center(
+                                              child: SpinKitSpinningLines(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary),
+                                            )),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
                                       )),
@@ -285,30 +284,30 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                         const SizedBox(
                           height: 6,
                         ),
-                        Row(
-                          children: [
-                            const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: TextButton.icon(
-                                  onPressed: () => Navigator.of(context)
-                                          .pushNamed(SettingsBody.routeName,
-                                              arguments: {
-                                            'currentUser': currentUser,
-                                            'editPass': false
-                                          }),
-                                  icon: const Icon(
-                                    Icons.edit,
-                                    size: 20,
-                                  ),
-                                  label: const Text(
-                                    'تعديل',
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline),
-                                  )),
-                            ),
-                          ],
-                        )
+                        // Row(
+                        // children: [
+                        // const Spacer(),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 10),
+                        //   child: TextButton.icon(
+                        //       onPressed: () => Navigator.of(context)
+                        //               .pushNamed(SettingsBody.routeName,
+                        //                   arguments: {
+                        //                 'currentUser': currentUser,
+                        //                 'editPass': false
+                        //               }),
+                        //       icon: const Icon(
+                        //         Icons.edit,
+                        //         size: 20,
+                        //       ),
+                        //       label: const Text(
+                        //         'تعديل',
+                        //         style: TextStyle(
+                        //             decoration: TextDecoration.underline),
+                        //       )),
+                        // ),
+                        // ],
+                        // )
                       ],
                     ),
                   ),
@@ -381,9 +380,9 @@ class _MyAccountBodyState extends State<MyAccountBody> {
         child: Column(
           children: <Widget>[
             ListTile(
-              tileColor: Colors.red,
-              textColor: Colors.white,
-              iconColor: Colors.white,
+              tileColor: Theme.of(context).colorScheme.primary,
+              textColor: Theme.of(context).textTheme.bodyText1!.color,
+              iconColor: Theme.of(context).iconTheme.color,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               title: Text(title),
@@ -399,7 +398,7 @@ class _MyAccountBodyState extends State<MyAccountBody> {
               margin: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: const Color.fromARGB(33, 255, 109, 64),
+                color: const Color.fromARGB(32, 74, 64, 255),
               ),
               child: child,
             )

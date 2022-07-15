@@ -11,17 +11,20 @@ class AuthScreen extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
           child: Stack(children: [
             Positioned(
-              top: 80,
-              right: 2,
-              left: 2,
-              child: Image.asset('assets/images/auth.gif'),
+              top: deviceSize.height - 810,
+              right: deviceSize.height - 865,
+              left: deviceSize.height - 880,
+              child: Image.asset(
+                'assets/images/auth.gif',
+                height: 340,
+              ),
             ),
             Positioned(
-                top: deviceSize.height / 3.002,
+                top: deviceSize.height / 2.6,
                 right: deviceSize.width / 200,
                 left: deviceSize.width / 200,
                 child: const AuthForm())

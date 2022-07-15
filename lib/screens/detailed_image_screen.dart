@@ -9,7 +9,7 @@ class DetailedImageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final image = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 254, 247, 241),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: GestureDetector(
         child: Center(
           child: Hero(

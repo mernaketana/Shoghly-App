@@ -84,11 +84,6 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Container(
-      decoration: const BoxDecoration(
-          // color: Colors.grey,
-          // borderRadius: new BorderRadius.circular(10.0),
-          ),
       child: Padding(
           padding: const EdgeInsets.all(40),
           child: Form(
@@ -175,7 +170,8 @@ class _AuthFormState extends State<AuthForm> {
                       height: 35,
                     ),
                     if (_isLoading)
-                      const SpinKitSpinningLines(color: Colors.red)
+                      SpinKitSpinningLines(
+                          color: Theme.of(context).colorScheme.primary)
                     else
                       SizedBox(
                         width: double.infinity,
@@ -189,8 +185,8 @@ class _AuthFormState extends State<AuthForm> {
                           ),
                           style: ButtonStyle(
                               elevation: MaterialStateProperty.all(0),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.red),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
                               foregroundColor:
                                   MaterialStateProperty.all(Colors.white)),
                         ),
@@ -216,7 +212,8 @@ class _AuthFormState extends State<AuthForm> {
                           ),
                           Text(
                             _isLogin ? 'إنشاء حساب جديد' : 'تسجيل الدخول',
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ],
                       ),
@@ -226,10 +223,14 @@ class _AuthFormState extends State<AuthForm> {
                             padding: MaterialStateProperty.all(EdgeInsets.zero),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                         onPressed: () => forgotPassword(_userEmail),
-                        child: const Text('إعادة ضبط كلمة المرور')),
+                        child: Text(
+                          'إعادة ضبط كلمة المرور',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        )),
                   ],
                 ),
               ))),
-    ));
+    );
   }
 }

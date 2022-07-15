@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../models/employee.dart';
 import '../providers/auth.dart';
-import '../providers/worker.dart';
 
 class ChatCard extends StatelessWidget {
   final ChatCardModel message;
@@ -51,10 +50,12 @@ class ChatCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.done,
-                  size: 15,
-                ),
+                if (message.lastMessageUserId == currentUser.id)
+                  const Icon(
+                    Icons.done,
+                    size: 15,
+                    color: Colors.black,
+                  ),
                 const SizedBox(
                   width: 3,
                 ),
@@ -72,7 +73,7 @@ class ChatCard extends StatelessWidget {
               ],
             ),
           ),
-          trailing: const Text('10:00'),
+          // trailing: const Text(message.),
         ),
       ),
     );
