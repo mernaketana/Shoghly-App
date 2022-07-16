@@ -43,11 +43,9 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
           .getUser(userId)
           .then((value) => currentUser = value);
       if (currentUser.role == 'worker') {
-        print('I am a worker');
         final workerProfile = await Provider.of<Worker>(context, listen: false)
             .getWorker((userId));
         comments = workerProfile['workerComments'];
-        print(comments);
       }
       setState(() {
         _isLoading = false;

@@ -1,18 +1,25 @@
 import "dart:async";
 import "dart:convert";
+import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "../helpers/http_exception.dart";
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:native_notify/native_notify.dart';
 
 class Auth with ChangeNotifier {
   String? _token; //tokens expire after an amount of time typically one hour
   // DateTime? _expiryDate;
   String? _userId;
   String? imageUrl;
+  String? identifier;
   // Timer? _authTimer;
   final apiUrl = dotenv.env['API_URL']!;
+  String? firebasetoken;
 
   Future<void> signup(
       String fname,
@@ -27,7 +34,6 @@ class Auth with ChangeNotifier {
       String password) async {
     final url = Uri.parse("${apiUrl}users");
     try {
-      print("auth signup");
       final response = await http.post(
         url,
         body: json.encode({
@@ -51,12 +57,30 @@ class Auth with ChangeNotifier {
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
-      // _token = responseData["id"];
       _userId = responseData["id"];
-      // _expiryDate = DateTime.now()
-      //     .add(Duration(seconds: int.parse(responseData["expiresIn"])));
-      // _autoLogOut();
+      NativeNotify.registerIndieID(_userId);
       notifyListeners();
+      // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+      // if (Platform.isAndroid) {
+      //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      //   print('Running on ${androidInfo.model}'); // e.g. "Moto G (4)"
+      //   identifier = androidInfo.id.toString();
+      //   firebasetoken = await firebaseMessaging.getToken();
+      // } else if (Platform.isIOS) {
+      //   IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      //   print('Running on ${iosInfo.utsname.machine}'); // e.g. "iPod7,1"
+      //   identifier = iosInfo.identifierForVendor; //UUID for iOS
+      //   firebasetoken = await firebaseMessaging.getToken();
+      // }
+      // if (firebasetoken != null) {
+      //   print(firebasetoken);
+      //   print(identifier);
+      //   subscribe(firebasetoken!, identifier!);
+      // }
+      // firebaseMessaging.onTokenRefresh.listen((newToken) {
+      //   subscribe(newToken, identifier!);
+      // });
       signin(email, password);
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -68,6 +92,39 @@ class Auth with ChangeNotifier {
       rethrow;
     }
   }
+
+  // subscribe(String token, String deviceId) async {
+  //   print('[subscribe] token: $token');
+
+  //   bool isProduction = const bool.fromEnvironment('dart.vm.product');
+
+  //   CreateSubscriptionParameters parameters = CreateSubscriptionParameters();
+  //   parameters.environment =
+  //       isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
+
+  //   if (Platform.isAndroid) {
+  //     parameters.channel = NotificationsChannels.GCM;
+  //     parameters.platform = CubePlatform.ANDROID;
+  //     parameters.bundleIdentifier = "com.connectycube.flutter.chat_sample";
+  //   } else if (Platform.isIOS) {
+  //     parameters.channel = NotificationsChannels.APNS;
+  //     parameters.platform = CubePlatform.IOS;
+  //     parameters.bundleIdentifier = Platform.isIOS
+  //         ? "com.connectycube.flutter.chatSample.app"
+  //         : "com.connectycube.flutter.chatSample.macOS";
+  //   }
+
+  //   parameters.udid = deviceId;
+  //   parameters.pushToken = token;
+
+  //   createSubscription(parameters.getRequestParameters())
+  //       .then((cubeSubscription) {
+  //     print('doneeeeeeeeeeeeeeeeeeeeeeee');
+  //   }).catchError((error) {
+  //     print('errooooooooooooooooooooooooooooooooooor');
+  //     print(error);
+  //   });
+  // }
 
   Future<void> verifyEmail(String email, String code) async {
     final url = Uri.parse("${apiUrl}settings/verify-email");
@@ -139,7 +196,6 @@ class Auth with ChangeNotifier {
         return;
       } else {
         prefs.remove('userData');
-        print(prefs.containsKey('userData'));
       }
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);

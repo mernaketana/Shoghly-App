@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/models/chat_card.dart';
-import 'package:project/widgets/chat_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
 import '../helpers/http_exception.dart';
@@ -33,9 +32,6 @@ class Chat with ChangeNotifier {
 
   Future<void> sendMessage(String recieverId, String text) async {
     final url = Uri.parse("${apiUrl}messages");
-    print('send message provider');
-    print(recieverId);
-    print(text);
     try {
       final response = await http.post(
         url,
@@ -81,7 +77,7 @@ class Chat with ChangeNotifier {
             lastMessageUserId: accessSingleMessage["lastUserId"],
             lastName: accessSingleMessage["user"]["lastName"],
             userId: accessSingleMessage["user"]["id"],
-            userPicture: accessSingleMessage["user"]["picture"]);
+            userPicture: accessSingleMessage["user"]["picture"] ?? '');
         chatmessages.add(currentMessage);
       }
       if (responseData["error"] != null) {

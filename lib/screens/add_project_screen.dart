@@ -11,7 +11,8 @@ import '../providers/images.dart';
 
 class AddProjectScreen extends StatefulWidget {
   static const routeName = '/add-project-screen';
-  const AddProjectScreen({Key? key}) : super(key: key);
+  final Map<String, dynamic> arguments;
+  const AddProjectScreen({Key? key, required this.arguments}) : super(key: key);
 
   @override
   State<AddProjectScreen> createState() => _AddProjectScreenState();
@@ -41,7 +42,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       setState(() {
         _isLoading = false;
       });
-      print('Here in user image picker');
     } on PlatformException catch (e) {
       // ignore: avoid_print
       print(e);
@@ -66,7 +66,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       setState(() {
         _isLoading = false;
       });
-      print('Here in user image picker');
     } on PlatformException catch (e) {
       // ignore: avoid_print
       print(e);
@@ -74,10 +73,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   }
 
   Future<void> _saveProject() async {
-    print('save project');
     final _isValid = _form.currentState?.validate();
     if (!_isValid!) {
-      print('invalid');
       return;
     }
     _form.currentState?.save();
@@ -85,8 +82,13 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       _isLoading = true;
     });
     try {
-      await Provider.of<Project>(context, listen: false)
-          .addProject(_savedProject);
+      if (widget.arguments['canEdit']) {
+        await Provider.of<Project>(context, listen: false)
+            .editProject(_savedProject);
+      } else {
+        await Provider.of<Project>(context, listen: false)
+            .addProject(_savedProject);
+      }
       Navigator.of(context).pop();
     } catch (error) {
       await showDialog(
@@ -110,12 +112,17 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.arguments['canEdit']) {
+      _savedProject = (widget.arguments['currentProject'] as WorkerProject);
+    }
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          title: const Text('اضافة البوم'),
+          title: Text((widget.arguments['canEdit'] as bool)
+              ? 'تعديل البوم'
+              : 'اضافة البوم'),
         ),
         body: _isLoading
             ? Center(
@@ -134,6 +141,11 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                               key: _form,
                               child: SingleChildScrollView(
                                 child: TextFormField(
+                                  initialValue: widget.arguments['canEdit']
+                                      ? (widget.arguments['currentProject']
+                                              as WorkerProject)
+                                          .desc
+                                      : null,
                                   keyboardType: TextInputType.multiline,
                                   decoration: const InputDecoration(
                                     labelText: 'تفاصيل المشروع',
@@ -192,6 +204,10 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                                 children: <Widget>[
                                   ..._savedProject.urls!
                                       .map((e) => InkWell(
+                                            onDoubleTap: () => widget
+                                                    .arguments['canEdit']
+                                                ? _savedProject.urls!.remove(e)
+                                                : {},
                                             onTap: () => Navigator.of(context)
                                                 .pushNamed(
                                                     DetailedImageScreen

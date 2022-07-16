@@ -83,7 +83,6 @@ class _CommentsState extends State<Comments> {
                   key: const ValueKey('comment'),
                   onChanged: (e) {
                     editedReview = e;
-                    print(e);
                   },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -120,7 +119,6 @@ class _CommentsState extends State<Comments> {
                           }
                           if (formKey.currentState!.validate()) {
                             if (_rate! > 0 && editedReview != '') {
-                              print('Here I ammmm');
                               var value = Comment(
                                 reviewId: review.reviewId,
                                 rate: _rate,

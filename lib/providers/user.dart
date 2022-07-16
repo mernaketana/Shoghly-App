@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
 import 'package:project/models/employee.dart';
-import 'package:project/providers/worker.dart';
-import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -34,7 +32,6 @@ class User with ChangeNotifier {
   }
 
   Future<Employee> getUser(String userId) async {
-    print(authToken);
     final url = Uri.parse("${apiUrl}users");
     try {
       final response = await http.get(
@@ -84,11 +81,7 @@ class User with ChangeNotifier {
   }
 
   Future<List<Employee>> search(String text, String city) async {
-    print(authToken);
     final url = Uri.parse("${apiUrl}search");
-    print('in provider');
-    print(city);
-    print(text);
     Map<String, String> queryParams = {'text': text, 'city': city};
     final finalUrl = url.replace(queryParameters: queryParams);
     try {
@@ -120,7 +113,6 @@ class User with ChangeNotifier {
             role: 'worker');
         employees.add(emp);
       }
-      print(employees.length);
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return [];
@@ -135,7 +127,6 @@ class User with ChangeNotifier {
   Future<void> editUser(String fname, String lname, String gender, String phone,
       String city, String address, String picture) async {
     final url = Uri.parse("${apiUrl}users");
-    print(picture);
     try {
       final response = await http.put(
         url,

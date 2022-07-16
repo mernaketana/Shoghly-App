@@ -86,6 +86,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                               title: Text(
                                 '${e.fname} ${e.lname}',
                                 textAlign: TextAlign.center,
+                                style: const TextStyle(fontFamily: 'ReadexPro'),
                               ),
                             ),
                           ),

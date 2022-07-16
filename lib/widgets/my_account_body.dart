@@ -4,7 +4,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/models/employee.dart';
 import 'package:project/screens/detailed_image_screen.dart';
-import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';

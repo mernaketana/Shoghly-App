@@ -59,8 +59,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Navigator.of(context).pushNamed(AddProjectScreen.routeName),
+        onPressed: () => Navigator.of(context)
+            .pushNamed(AddProjectScreen.routeName, arguments: {
+          'canEdit': false,
+          'currentProject': WorkerProject(desc: '', urls: [])
+        }),
         child: const Icon(
           Icons.add,
           color: Colors.white,
@@ -82,60 +85,48 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       child: Column(
                         children: [
                           InkWell(
-                              onTap: () => Navigator.of(context).pushNamed(
-                                  DetailedProjectScreen.routeName,
-                                  arguments: projects[index].projectId!),
-                              splashColor: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(15),
-                              child: Stack(
-                                children: <Widget>[
-                                  if (projects[index].urls![0] != null)
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(15)),
-                                      child: CachedNetworkImage(
-                                        imageUrl: projects[index].urls![0],
-                                        height: 200,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            SpinKitSpinningLines(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      ),
-                                    ),
-                                  Container(
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color:
-                                            const Color.fromARGB(169, 0, 0, 0)),
-                                  ),
-                                  if (projects[index].urls != null)
-                                    Positioned(
-                                      bottom: 55,
-                                      right: 5,
-                                      left: 8,
-                                      child: SizedBox(
-                                        width: 20,
-                                        height: 60,
-                                        child: Text(
-                                          (projects[index].urls!.length > 1)
-                                              ? '+${(projects[index].urls!.length - 1)}'
-                                              : '',
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 25),
-                                          softWrap: true,
-                                          textAlign: TextAlign.center,
+                            onTap: () => Navigator.of(context).pushNamed(
+                                DetailedProjectScreen.routeName,
+                                arguments: {
+                                  'projectId': projects[index].projectId!,
+                                  'canEdit': true
+                                }),
+                            splashColor: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(15),
+                            child: projects[index].urls![0] != null
+                                ? Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(15)),
+                                        child: CachedNetworkImage(
+                                          imageUrl: projects[index].urls![0],
+                                          height: 200,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              SpinKitSpinningLines(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
                                         ),
                                       ),
-                                    )
-                                ],
-                              )),
+                                      Container(
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: const Color.fromARGB(
+                                                169, 0, 0, 0)),
+                                      ),
+                                    ],
+                                  )
+                                : const Center(
+                                    child: Text('لا يوجد البومات'),
+                                  ),
+                          ),
                           Text(
                             projects[index].desc,
                             softWrap: true,
@@ -151,69 +142,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 ),
               ],
             ),
-    );
-  }
-
-  InkWell listImages(String img, BuildContext context, String userId) {
-    return InkWell(
-      onDoubleTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-              content: const Text(
-                'هل تريد حذف الصورة؟',
-                textAlign: TextAlign.right,
-              ),
-              actionsAlignment: MainAxisAlignment.end,
-              actions: [
-                TextButton(
-                  child: const Text('لا'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                TextButton(
-                  child: const Text('نعم'),
-                  onPressed: () {
-                    // List<String> urls = DUMMY_IMAGES
-                    //     .firstWhere((element) => element.userId == userId)
-                    //     .url as List<String>;
-
-                    setState(() {
-                      // urls.remove(img);
-
-                      Navigator.of(context).pop();
-                      return;
-                    });
-                    // Navigator.of(context).pop();
-                  },
-                ),
-              ]),
-        );
-      },
-      onTap: () => Navigator.of(context)
-          .pushNamed(DetailedImageScreen.routeName, arguments: img),
-      borderRadius: BorderRadius.circular(15),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-            bottomRight: Radius.circular(15)),
-        child: img.startsWith('/data')
-            ? Image.file(
-                File(
-                  img,
-                ),
-                height: 200,
-                width: 200,
-                fit: BoxFit.cover,
-              )
-            : Image.network(
-                img,
-                height: 200,
-                width: 200,
-                fit: BoxFit.cover,
-              ),
-      ),
     );
   }
 }

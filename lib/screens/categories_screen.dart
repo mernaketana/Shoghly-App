@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:project/screens/employees_screen.dart';
 import 'package:project/widgets/employees_body_widget.dart';
 import 'package:provider/provider.dart';
-
 import '../dummy_data.dart';
 import '../models/employee.dart';
-import '../providers/auth.dart';
 import '../providers/user.dart';
 import '../widgets/categories_body_widget.dart';
 

@@ -15,8 +15,6 @@ class Images with ChangeNotifier {
   }
 
   Future<String> addImage(String image) async {
-    print('image PROVIDEEEEEEEEEEEEEEEEEEER');
-    print(image);
     final url = Uri.parse("${apiUrl}upload");
     try {
       final request = http.MultipartRequest('POST', url);
@@ -53,7 +51,6 @@ class Images with ChangeNotifier {
         },
       );
       final responseData = json.decode(response.body);
-      print('here in changeimage');
       print(responseData);
       notifyListeners();
       if (responseData["error"] != null) {

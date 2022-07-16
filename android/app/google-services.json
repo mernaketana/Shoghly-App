@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "122272860075",
+    "project_id": "shoghly-app",
+    "storage_bucket": "shoghly-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122272860075:android:deda415b01cd603c29f4ee",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "122272860075-plohm0uittqnuq59ou2r0pvgmasdof21.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5SNuYXghYh7icCAKSq8o2ucnHWRl21cc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "122272860075-plohm0uittqnuq59ou2r0pvgmasdof21.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

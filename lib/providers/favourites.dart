@@ -2,7 +2,6 @@ import "dart:async";
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import "package:flutter/cupertino.dart";
-import 'package:project/models/worker_project.dart';
 import '../models/employee.dart';
 import '../providers/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,7 +20,6 @@ class Favourites with ChangeNotifier {
     final url = Uri.parse("${apiUrl}favorites/workers/$workerId");
     Map<String, String> queryParams = {'workerId': workerId};
     final finalUrl = url.replace(queryParameters: queryParams);
-    print('add favourite');
     try {
       final response = await http.post(
         finalUrl,
@@ -82,7 +80,6 @@ class Favourites with ChangeNotifier {
       print(data);
       List<Employee> employees = [];
       for (var i = 0; i < accessWorkers.length; i++) {
-        print(accessWorkers[i]["worker"]['averageRating'].runtimeType);
         final emp = Employee(
             id: accessWorkers[i]["worker"]['id'],
             image: accessWorkers[i]["worker"]['picture'],

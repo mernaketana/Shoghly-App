@@ -16,7 +16,8 @@ import '../widgets/comments.dart';
 
 class WorkerDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> arguments;
-  const WorkerDetailsScreen({Key? key, required this.arguments})
+  bool? editAndDelete;
+  WorkerDetailsScreen({Key? key, required this.arguments, this.editAndDelete})
       : super(key: key);
   static const routeName = '/worker-detail-screen';
 
@@ -48,7 +49,7 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
       projects = await Provider.of<Project>(context, listen: false)
           .getWorkerProjects(currentWorker.id);
       for (var element in projects) {
-        projectImages.add(element.urls![0]);
+        projectImages.add(element.urls![0] ?? 'assets/images/placeholder.png');
       }
       favEmployees = await Provider.of<Favourites>(context, listen: false)
           .getAllFavourites();
@@ -82,15 +83,18 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
         Padding(
           padding: const EdgeInsets.all(10),
           child: InkWell(
-              onTap: () => Navigator.of(context).pushNamed(
-                  DetailedProjectScreen.routeName,
-                  arguments: projects[i].projectId!),
+              onTap: () => Navigator.of(context)
+                      .pushNamed(DetailedProjectScreen.routeName, arguments: {
+                    'projectId': projects[i].projectId!,
+                    'canEdit': false
+                  }),
               splashColor: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(15),
               child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(15)),
                   child: CachedNetworkImage(
-                    imageUrl: projects[i].urls![0],
+                    imageUrl:
+                        projects[i].urls![0] ?? 'assets/images/placeholder.png',
                     height: 150,
                     width: 150,
                     fit: BoxFit.cover,
@@ -298,12 +302,23 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                                           fontSize: 16),
                                     ),
                                   ),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: createGallery(projects),
+                                  if (projects.isEmpty)
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Center(
+                                        child: Text(
+                                          'لا يوجد البومات',
+                                          style: TextStyle(fontSize: 17),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  if (projects.isNotEmpty)
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: createGallery(projects),
+                                      ),
+                                    ),
                                 ],
                               ),
                             ),

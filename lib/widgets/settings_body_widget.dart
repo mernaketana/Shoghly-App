@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
 
 import '../dummy_data.dart';
@@ -19,7 +18,7 @@ class SettingsBody extends StatefulWidget {
 
 class _SettingsBodyState extends State<SettingsBody> {
   final _formKey = GlobalKey<FormState>();
-  final _pickedDate = TextEditingController();
+  // final _pickedDate = TextEditingController();
   // ignore: unused_field
   String? _dropdownVal;
   // ignore: unused_field

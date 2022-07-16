@@ -51,7 +51,6 @@ class Review with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       _reviewId = responseData['data']['id'];
-      print(_reviewId);
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
@@ -63,7 +62,6 @@ class Review with ChangeNotifier {
 
   Future<void> editReview(Comment review) async {
     final url = Uri.parse("${apiUrl}workers/reviews/${review.reviewId}");
-    print(review.reviewId);
     try {
       final response = await http.put(
         url,
@@ -125,7 +123,6 @@ class Review with ChangeNotifier {
             workerId: currentComment['workerId'],
             createdAt: DateTime.parse(currentComment['createdAt']).toLocal(),
             rate: (currentComment["rating"] as int).toDouble());
-        print((_review.createdAt));
         if (_review.user != null) {
           workerComments.add(_review);
         }

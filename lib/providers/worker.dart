@@ -20,6 +20,7 @@ class Worker with ChangeNotifier {
   }
 
   Future<void> getWorkers(String city, String profession) async {
+    employees.clear();
     final url = Uri.parse("${apiUrl}workers");
     Map<String, String> queryParams = {'city': city, 'profession': profession};
     final finalUrl = url.replace(queryParameters: queryParams);
@@ -49,7 +50,7 @@ class Worker with ChangeNotifier {
               lname: employeesList[i]['lastName'],
               email: '',
               password: '',
-              avgRate: (employeesList[i]['averageRating'] as int).toDouble(),
+              avgRate: (employeesList[i]['averageRating'] ?? 0).toDouble(),
               gender: employeesList[i]['gender'],
               phone: int.parse(employeesList[i]['phone']),
               location: employeesList[i]['city'],
@@ -64,8 +65,6 @@ class Worker with ChangeNotifier {
           }
         }
       }
-      print('EMPLOYEEEEES');
-      print(_employees);
       notifyListeners();
     } catch (error) {
       rethrow;
@@ -73,7 +72,6 @@ class Worker with ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getWorker(String workerId) async {
-    print('get worker provider');
     final url = Uri.parse("${apiUrl}workers/$workerId");
     try {
       final response = await http.get(
@@ -107,7 +105,6 @@ class Worker with ChangeNotifier {
       final workerComments = <Comment>[];
       for (var i = 0; i < userReviews.length; i++) {
         final currentComment = userReviews[i];
-        print(currentComment);
         final review = Comment(
             reviewId: currentComment["reviewId"],
             updatedAt: DateTime.parse(currentComment["updatedAt"]).toLocal(),
@@ -118,7 +115,8 @@ class Worker with ChangeNotifier {
                     id: currentComment["client"]["id"],
                     fname: currentComment["client"]["firstName"],
                     lname: currentComment["client"]["lastName"],
-                    picture: currentComment["client"]["picture"],
+                    picture: currentComment["client"]["picture"] ??
+                        'assets/images/placeholder.png',
                     gender: currentComment["client"]["gender"]),
             comment: currentComment["description"],
             workerId: workerId,

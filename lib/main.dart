@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:project/providers/chat.dart';
 import 'package:project/providers/favourites.dart';
@@ -23,9 +22,35 @@ import 'providers/project.dart';
 import 'providers/review.dart';
 import 'providers/worker.dart';
 import 'widgets/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_app_installations/firebase_app_installations.dart';
+import 'package:native_notify/native_notify.dart';
 
 void main() async {
   await dotenv.load();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+  // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  // NotificationSettings settings = await firebaseMessaging.requestPermission(
+  //     alert: true,
+  //     announcement: false,
+  //     badge: true,
+  //     sound: true,
+  //     criticalAlert: false,
+  //     provisional: false,
+  //     carPlay: false);
+  // FirebaseMessaging.onMessage.listen((message) {
+  //   print(message.data);
+  // });
+  // FirebaseMessaging.onBackgroundMessage(FirebaseMessagingBackgroundHandler);
+  // String id = await FirebaseInstallations.instance.getId();
+  // print(id);
+  // print('user granted permission ${settings.authorizationStatus}');
+  WidgetsFlutterBinding.ensureInitialized();
+  NativeNotify.initialize(1119, 'wLzxM3KpqXUF1xxgw5Lb7r', null, null);
   runApp(const MyApp());
 }
 
@@ -87,6 +112,7 @@ class MyApp extends StatelessWidget {
             builder: ((context, value, _) => MaterialApp(
                   debugShowCheckedModeBanner: false,
                   theme: ThemeData(
+                    fontFamily: 'ReadexPro',
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     colorScheme: const ColorScheme.light(
                       primary: Color(
@@ -127,8 +153,12 @@ class MyApp extends StatelessWidget {
                                   settings.arguments as Map<String, dynamic>),
                       DetailedProjectScreen.routeName: (ctx) =>
                           DetailedProjectScreen(
-                              projectId: settings.arguments as String),
+                              arguments:
+                                  settings.arguments as Map<String, dynamic>),
                       SingleChatScreen.routeName: (ctx) => SingleChatScreen(
+                          arguments:
+                              settings.arguments as Map<String, dynamic>),
+                      AddProjectScreen.routeName: (ctx) => AddProjectScreen(
                           arguments: settings.arguments as Map<String, dynamic>)
                     };
                     WidgetBuilder? builder = routes[settings.name];
@@ -141,8 +171,6 @@ class MyApp extends StatelessWidget {
                     DetailedImageScreen.routeName: (context) =>
                         const DetailedImageScreen(),
                     SettingsBody.routeName: (context) => const SettingsBody(),
-                    AddProjectScreen.routeName: (context) =>
-                        const AddProjectScreen(),
                   },
                 ))));
   }

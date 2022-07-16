@@ -50,7 +50,7 @@ class EmployeesBodyWidget extends StatelessWidget {
                         borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(15),
                             bottomRight: Radius.circular(15)),
-                        child: currentWorker.image == ''
+                        child: currentWorker.image == null
                             ? Image.asset(
                                 'assets/images/placeholder.png',
                                 height: 100,

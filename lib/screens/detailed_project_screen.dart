@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/models/worker_project.dart';
+import 'package:project/screens/add_project_screen.dart';
 import 'package:project/screens/detailed_image_screen.dart';
 import 'package:project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +9,8 @@ import '../providers/project.dart';
 
 class DetailedProjectScreen extends StatefulWidget {
   static const routeName = '/detailed-project-screen';
-  final String projectId;
-  const DetailedProjectScreen({Key? key, required this.projectId})
+  final Map<String, dynamic> arguments;
+  const DetailedProjectScreen({Key? key, required this.arguments})
       : super(key: key);
 
   @override
@@ -30,7 +31,7 @@ class _DetailedProjectScreenState extends State<DetailedProjectScreen> {
       });
 
       project = await Provider.of<Project>(context, listen: false)
-          .getWorkerProject(widget.projectId);
+          .getWorkerProject(widget.arguments['projectId']);
       setState(() {
         _isLoading = false;
       });
@@ -123,7 +124,23 @@ class _DetailedProjectScreenState extends State<DetailedProjectScreen> {
                             ),
                           ),
                         ),
-                      )
+                      ),
+                      if (widget.arguments['canEdit'])
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 10),
+                          child: ElevatedButton.icon(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)))),
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.delete,
+                              ),
+                              label: const Text('حذف')),
+                        ),
                     ])),
           );
   }

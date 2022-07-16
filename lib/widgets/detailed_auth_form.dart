@@ -27,7 +27,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   String? _dropdownVal;
   // ignore: unused_field
   String? _dropdownValCat;
-  String? _userImage;
+  // String? _userImage;
   final _categories = DUMMY_CATEGORIES.map((e) => e.title).toList();
 
   // ignore: prefer_final_fields
@@ -61,7 +61,6 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
   }
 
   Future<void> _submit() async {
-    print(_userImage);
     final _valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (!_valid) {

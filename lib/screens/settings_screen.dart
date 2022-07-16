@@ -9,7 +9,7 @@ class MainSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<void> deleteAccount() async {
-      await Provider.of<Auth>(context, listen: false).deleteAccount();
+      await Provider.of<Auth>(context, listen: false).logOut();
     }
 
     return Scaffold(
@@ -64,7 +64,12 @@ class MainSettingsScreen extends StatelessWidget {
                                   deleteAccount();
                                   Navigator.of(ctx).pop();
                                 },
-                                child: const Text('نعم'))
+                                child: const Text(
+                                  'نعم',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ))
                           ],
                         ))),
           ),
