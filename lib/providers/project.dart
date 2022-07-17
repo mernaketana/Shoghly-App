@@ -5,7 +5,6 @@ import "package:flutter/foundation.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 
 import "../models/worker_project.dart";
-import "../helpers/http_exception.dart";
 import "./auth.dart";
 
 class Project with ChangeNotifier {
@@ -121,7 +120,7 @@ class Project with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       notifyListeners();
     } catch (error) {
@@ -142,7 +141,7 @@ class Project with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       notifyListeners();
     } catch (error) {

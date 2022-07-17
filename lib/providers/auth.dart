@@ -5,8 +5,6 @@ import "package:flutter/foundation.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 
-import "../helpers/http_exception.dart";
-
 class Auth with ChangeNotifier {
   String? _token;
   String? _userId;
@@ -49,7 +47,7 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       _userId = responseData["id"];
       notifyListeners();
@@ -76,7 +74,7 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       notifyListeners();
     } catch (error) {
@@ -98,7 +96,7 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       _token = responseData["accessToken"];
       _userId = responseData["userId"];
@@ -133,7 +131,7 @@ class Auth with ChangeNotifier {
         prefs.remove("userData");
       }
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       notifyListeners();
     } catch (error) {
@@ -178,7 +176,7 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       _userId = responseData["id"];
       notifyListeners();

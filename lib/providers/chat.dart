@@ -6,7 +6,6 @@ import "package:http/http.dart" as http;
 
 import "../models/chat_card.dart";
 import "../models/message.dart";
-import "../helpers/http_exception.dart";
 import "./auth.dart";
 
 class Chat with ChangeNotifier {
@@ -47,7 +46,7 @@ class Chat with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       notifyListeners();
     } catch (error) {
@@ -81,7 +80,7 @@ class Chat with ChangeNotifier {
         chatmessages.add(currentMessage);
       }
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return [];
       }
       notifyListeners();
       return chatmessages;
@@ -118,7 +117,7 @@ class Chat with ChangeNotifier {
         messages.add(currentMessage);
       }
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return [];
       }
       notifyListeners();
       return messages;
@@ -140,7 +139,7 @@ class Chat with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData["error"] != null) {
-        throw HttpException(responseData["message"]);
+        return;
       }
       notifyListeners();
     } catch (error) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-import '../dummy_data.dart';
+import '../categories_and_governorates.dart';
 import '../models/employee.dart';
 import '../providers/auth.dart';
 import '../providers/user.dart';

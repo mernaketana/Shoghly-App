@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
-import '../dummy_data.dart';
+import '../categories_and_governorates.dart';
 
 class DetailedAuthForm extends StatefulWidget {
   final String role;

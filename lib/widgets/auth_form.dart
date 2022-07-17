@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-import '../helpers/http_exception.dart';
 import '../providers/auth.dart';
 import '../screens/choice_screen.dart';
 
@@ -48,18 +47,17 @@ class _AuthFormState extends State<AuthForm> {
     if (!_isLogin) {
       Navigator.of(context).pushNamed(ChoicesScreen.routeName,
           arguments: {'userEmail': _userEmail, 'userPass': _userPass});
+      setState(() {
+        _isLoading = false;
+      });
     } else {
       try {
         await Provider.of<Auth>(context, listen: false)
             .signin(_userEmail, _userPass);
-      } on HttpException catch (_) {
-        var errorMessage = 'حدث خطأ ما';
-        _errorMessage(errorMessage);
       } catch (error) {
         var errorMessage = 'حدث خطأ ما';
         _errorMessage(errorMessage);
       }
-      _isLoading = false;
     }
   }
 
@@ -219,16 +217,16 @@ class _AuthFormState extends State<AuthForm> {
                         ],
                       ),
                     ),
-                    TextButton(
-                        style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.zero),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                        onPressed: () => forgotPassword(_userEmail),
-                        child: Text(
-                          'إعادة ضبط كلمة المرور',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        )),
+                    // TextButton(
+                    //     style: ButtonStyle(
+                    //         padding: MaterialStateProperty.all(EdgeInsets.zero),
+                    //         tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                    //     onPressed: () => forgotPassword(_userEmail),
+                    //     child: Text(
+                    //       'إعادة ضبط كلمة المرور',
+                    //       style: TextStyle(
+                    //           color: Theme.of(context).colorScheme.primary),
+                    //     )),
                   ],
                 ),
               ))),
