@@ -1,19 +1,19 @@
-import 'dart:convert';
+import "dart:convert";
+import "package:flutter/foundation.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
+import "package:socket_io_client/socket_io_client.dart" as IO;
+import "package:http/http.dart" as http;
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/models/chat_card.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:http/http.dart' as http;
-import '../helpers/http_exception.dart';
-import '../models/message.dart';
-import 'auth.dart';
+import "../models/chat_card.dart";
+import "../models/message.dart";
+import "../helpers/http_exception.dart";
+import "./auth.dart";
 
 class Chat with ChangeNotifier {
   late String authToken;
   late String userId;
   late IO.Socket socket;
-  final apiUrl = dotenv.env['API_URL']!;
+  final apiUrl = dotenv.env["API_URL"]!;
   List<Message> messages = [];
 
   void recieveToken(Auth auth) {
@@ -77,7 +77,7 @@ class Chat with ChangeNotifier {
             lastMessageUserId: accessSingleMessage["lastUserId"],
             lastName: accessSingleMessage["user"]["lastName"],
             userId: accessSingleMessage["user"]["id"],
-            userPicture: accessSingleMessage["user"]["picture"] ?? '');
+            userPicture: accessSingleMessage["user"]["picture"] ?? "");
         chatmessages.add(currentMessage);
       }
       if (responseData["error"] != null) {
@@ -112,8 +112,8 @@ class Chat with ChangeNotifier {
             recieverId: accessSingleMessage["receiverId"],
             isOwner: accessSingleMessage["isOwner"],
             text: accessSingleMessage["text"],
-            isRead: accessSingleMessage['isRead'],
-            createdAt: DateTime.parse(accessSingleMessage['createdAt']),
+            isRead: accessSingleMessage["isRead"],
+            createdAt: DateTime.parse(accessSingleMessage["createdAt"]),
             updatedAt: DateTime.parse(accessSingleMessage["updatedAt"]));
         messages.add(currentMessage);
       }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/settings_body_widget.dart';
 import '../providers/auth.dart';
 
 class MainSettingsScreen extends StatelessWidget {

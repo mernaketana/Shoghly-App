@@ -2,16 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:project/models/image.dart';
-import 'package:project/models/worker_project.dart';
-import 'package:project/providers/project.dart';
-import 'package:project/screens/add_project_screen.dart';
-import 'package:project/screens/detailed_project_screen.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
+
+import '../models/image.dart';
+import '../models/worker_project.dart';
 import '../models/employee.dart';
+import '../providers/project.dart';
 import '../providers/user.dart';
-import '../screens/detailed_image_screen.dart';
+import '../screens/add_project_screen.dart';
+import '../screens/detailed_project_screen.dart';
 
 class GalleryScreen extends StatefulWidget {
   static const routeName = '/gallery-screen';

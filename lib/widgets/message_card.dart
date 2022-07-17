@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/models/message.dart';
+import '../models/message.dart';
 
 class MessageCard extends StatelessWidget {
   final Message message;
@@ -38,27 +38,16 @@ class MessageCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${message.createdAt.hour} : ${message.createdAt.minute}',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Icon(
-                      Icons.done,
-                      color: message.isRead ? Colors.teal : Colors.black,
-                      size: 16,
-                    ),
-                  ],
+                padding: const EdgeInsets.only(
+                  right: 5,
+                ),
+                child: Text(
+                  '${message.createdAt.hour} : ${message.createdAt.minute}',
+                  textDirection: TextDirection.ltr,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey[600],
+                  ),
                 ),
               ),
             ],

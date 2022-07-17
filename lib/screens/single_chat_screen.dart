@@ -1,17 +1,14 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectycube_sdk/connectycube_pushnotifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:native_notify/native_notify.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
-import 'package:project/widgets/message_card.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../widgets/message_card.dart';
 import '../models/message.dart';
 import '../providers/chat.dart';
 
@@ -31,7 +28,6 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
   bool show = false;
   FocusNode focusNode = FocusNode();
   bool sendButton = false;
-  // List<MessageModel> messages = [];
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late IO.Socket socket;
@@ -45,38 +41,6 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
   void initState() {
     super.initState();
     connect();
-//     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-
-// // FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-
-// Future<void> onBackgroundMessage(RemoteMessage message) {
-//   print('[onBackgroundMessage] message: $message');
-//   // showNotification(message);
-//   return Future.value();
-// }
-
-//     // request permissions for showing notification in iOS
-//     firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
-
-//     // add listener for foreground push notifications
-//     FirebaseMessaging.onMessage.listen((remoteMessage) {
-//       print('[onMessage] message: $remoteMessage');
-//       // showNotification(remoteMessage);
-//     });
-
-    // set listener for push notifications, which will be received when app in background or killed
-    // FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-    // final fbm = FirebaseMessaging.instance;
-    // fbm.requestPermission();
-    // FirebaseMessaging.onMessage.listen((message) {
-    //   print(message);
-    //   return;
-    // });
-    // FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    //   print(message);
-    //   return;
-    // });
-    // fbm.getToken() Sending autonated push notifications
   }
 
   @override
@@ -130,23 +94,6 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
               null,
               null);
         }
-        // yourAppID, yourAppToken, 'your_sub_id', 'your_title', 'your_body' is required
-        // put null in any other parameter you do NOT want to use
-        // bool isProduction = const bool.fromEnvironment('dart.vm.product');
-        // CreateEventParams params = CreateEventParams();
-        // params.parameters = {
-        //   'message': message.text, // 'message' field is required
-        // };
-        // params.notificationType = NotificationType.PUSH;
-        // params.environment = isProduction
-        //     ? CubeEnvironment.PRODUCTION
-        //     : CubeEnvironment.DEVELOPMENT;
-        // params.usersTagsAll = [message.senderId, message.recieverId];
-        // // params.usersIds = [88709, 88708];
-        // params.eventType = 'message';
-        // createEvent(params.getEventForRequest())
-        //     .then((cubeEvent) {})
-        //     .catchError((error) {});
       });
     });
     socket.onConnectError((data) => print(data));
@@ -196,7 +143,7 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                     ),
                     CircleAvatar(
                       radius: 20,
-                      backgroundImage: widget.arguments['userImage'] == ''
+                      backgroundImage: widget.arguments['userImage'] == null
                           ? const AssetImage('assets/images/placeholder.png')
                               as ImageProvider
                           : CachedNetworkImageProvider(

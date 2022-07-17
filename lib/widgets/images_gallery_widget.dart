@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:project/screens/detailed_image_screen.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import '../screens/detailed_image_screen.dart';
 
 class ImagesGallery extends StatefulWidget {
   final List<String> images;

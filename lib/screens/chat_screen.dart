@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:project/models/chat_card.dart';
 import 'package:provider/provider.dart';
 
+import '../models/chat_card.dart';
 import '../models/employee.dart';
 import '../providers/chat.dart';
 import '../providers/user.dart';

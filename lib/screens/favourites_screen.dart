@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:project/models/employee.dart';
-import 'package:project/providers/favourites.dart';
-import 'package:project/screens/worker_details_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../models/employee.dart';
+import '../providers/favourites.dart';
 import '../providers/user.dart';
+import '../screens/worker_details_screen.dart';
 
 class FavouritesScreen extends StatefulWidget {
   const FavouritesScreen({Key? key}) : super(key: key);
@@ -50,57 +50,63 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                 child: SpinKitSpinningLines(
                     color: Theme.of(context).colorScheme.primary),
               )
-            : Padding(
-                padding: const EdgeInsets.all(6),
-                child: GridView(
-                  children: <Widget>[
-                    ...employees.map((e) => InkWell(
-                        onTap: () => Navigator.of(context).pushNamed(
-                                WorkerDetailsScreen.routeName,
-                                arguments: {
-                                  'currentWorker': e,
-                                  'currentUser': currentUser
-                                }),
-                        splashColor: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: GridTile(
-                            child: Hero(
-                              tag: e.id,
-                              child: CachedNetworkImage(
-                                imageUrl: e.image!,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    SpinKitSpinningLines(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
+            : employees.isEmpty
+                ? const Center(
+                    child: Text('ليس لديك مفضلات بعد!'),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: GridView(
+                      children: <Widget>[
+                        ...employees.map((e) => InkWell(
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    WorkerDetailsScreen.routeName,
+                                    arguments: {
+                                      'currentWorker': e,
+                                      'currentUser': currentUser
+                                    }),
+                            splashColor: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(10),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: GridTile(
+                                child: Hero(
+                                  tag: e.id,
+                                  child: CachedNetworkImage(
+                                    imageUrl: e.image!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        SpinKitSpinningLines(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                ),
+                                footer: GridTileBar(
+                                  backgroundColor:
+                                      const Color.fromARGB(150, 0, 0, 0),
+                                  title: Text(
+                                    '${e.fname} ${e.lname}',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontFamily: 'ReadexPro'),
+                                  ),
+                                ),
                               ),
-                            ),
-                            footer: GridTileBar(
-                              backgroundColor:
-                                  const Color.fromARGB(150, 0, 0, 0),
-                              title: Text(
-                                '${e.fname} ${e.lname}',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontFamily: 'ReadexPro'),
-                              ),
-                            ),
-                          ),
-                        )))
-                  ],
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 2.7 / 3,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
+                            )))
+                      ],
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        childAspectRatio: 2.7 / 3,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                      ),
+                      padding: const EdgeInsets.all(25),
+                    ),
                   ),
-                  padding: const EdgeInsets.all(25),
-                ),
-              ),
       ),
     );
   }

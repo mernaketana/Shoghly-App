@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project/models/worker_project.dart';
-import 'package:project/screens/add_project_screen.dart';
-import 'package:project/screens/detailed_image_screen.dart';
-import 'package:project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../models/worker_project.dart';
+import '../screens/detailed_image_screen.dart';
+import '../widgets/splash_screen.dart';
 import '../providers/project.dart';
 
 class DetailedProjectScreen extends StatefulWidget {
@@ -37,6 +36,12 @@ class _DetailedProjectScreenState extends State<DetailedProjectScreen> {
       });
     }
     _isInit = false;
+  }
+
+  void delete(String projectId) async {
+    await Provider.of<Project>(context, listen: false)
+        .deleteProject(projectId)
+        .then((value) => Navigator.of(context).pop());
   }
 
   @override
@@ -135,7 +140,31 @@ class _DetailedProjectScreenState extends State<DetailedProjectScreen> {
                                       RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(5)))),
-                              onPressed: () {},
+                              onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                        actionsAlignment:
+                                            MainAxisAlignment.start,
+                                        title: const Text(
+                                          'هل انت متأكد؟ لا يمكنك استرجاع المشروع بعد حذفه.',
+                                          textAlign: TextAlign.right,
+                                          textDirection: TextDirection.rtl,
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                              onPressed: () {
+                                                delete(widget
+                                                    .arguments['projectId']);
+                                                Navigator.of(ctx).pop();
+                                              },
+                                              child: const Text(
+                                                'نعم',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ))
+                                        ],
+                                      )),
                               icon: const Icon(
                                 Icons.delete,
                               ),

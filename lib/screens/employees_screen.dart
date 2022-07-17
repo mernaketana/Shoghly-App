@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:project/dummy_data.dart';
-import 'package:project/providers/worker.dart';
 import 'package:provider/provider.dart';
+
+import '../dummy_data.dart';
+import '../providers/worker.dart';
 import '../widgets/employees_body_widget.dart';
 import '../models/employee.dart';
 
@@ -35,7 +36,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           widget.arguments['title']);
       employees = Provider.of<Worker>(context, listen: false).employees;
       _city = (widget.arguments['currentUser'] as Employee).location;
-      print(employees);
       setState(() {
         _isLoading = false;
       });

@@ -14,6 +14,7 @@ class Employee {
   String address;
   List? reviews;
   double? avgRate;
+  int? isAuth;
 
   Employee(
       {required this.id,
@@ -24,6 +25,7 @@ class Employee {
       required this.lname,
       required this.email,
       required this.password,
+      this.isAuth,
       this.image,
       required this.gender,
       required this.phone,

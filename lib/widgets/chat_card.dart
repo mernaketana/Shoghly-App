@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:project/models/chat_card.dart';
-import 'package:project/screens/single_chat_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../models/chat_card.dart';
 import '../models/employee.dart';
+import '../screens/single_chat_screen.dart';
 import '../providers/auth.dart';
 
 class ChatCard extends StatelessWidget {
@@ -47,33 +47,18 @@ class ChatCard extends StatelessWidget {
             ),
           ),
           subtitle: FittedBox(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (message.lastMessageUserId == currentUser.id)
-                  const Icon(
-                    Icons.done,
-                    size: 15,
-                    color: Colors.black,
-                  ),
-                const SizedBox(
-                  width: 3,
+            child: SizedBox(
+              width: 200,
+              child: Text(
+                message.lastMessage,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
                 ),
-                SizedBox(
-                  width: 200,
-                  child: Text(
-                    message.lastMessage,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-          // trailing: const Text(message.),
         ),
       ),
     );

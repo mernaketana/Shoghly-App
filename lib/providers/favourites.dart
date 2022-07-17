@@ -1,15 +1,16 @@
 import "dart:async";
 import "dart:convert";
-import 'package:http/http.dart' as http;
-import "package:flutter/cupertino.dart";
-import '../models/employee.dart';
-import '../providers/auth.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import "package:http/http.dart" as http;
+import "package:flutter_dotenv/flutter_dotenv.dart";
+import "package:flutter/foundation.dart";
+
+import "../models/employee.dart";
+import "./auth.dart";
 
 class Favourites with ChangeNotifier {
   late String authToken;
   late String userId;
-  final apiUrl = dotenv.env['API_URL']!;
+  final apiUrl = dotenv.env["API_URL"]!;
 
   void recieveToken(Auth auth) {
     authToken = auth.token;
@@ -18,7 +19,7 @@ class Favourites with ChangeNotifier {
 
   Future<void> addFavourite(String workerId) async {
     final url = Uri.parse("${apiUrl}favorites/workers/$workerId");
-    Map<String, String> queryParams = {'workerId': workerId};
+    Map<String, String> queryParams = {"workerId": workerId};
     final finalUrl = url.replace(queryParameters: queryParams);
     try {
       final response = await http.post(
@@ -42,7 +43,7 @@ class Favourites with ChangeNotifier {
 
   Future<void> deleteFavourite(String workerId) async {
     final url = Uri.parse("${apiUrl}favorites/workers/$workerId");
-    Map<String, String> queryParams = {'workerId': workerId};
+    Map<String, String> queryParams = {"workerId": workerId};
     final finalUrl = url.replace(queryParameters: queryParams);
     try {
       final response = await http.delete(
@@ -52,7 +53,6 @@ class Favourites with ChangeNotifier {
           "Authorization": "Bearer $authToken",
         },
       );
-      // final employee = await getUser(userId);
       final data = json.decode(response.body) as Map<String, dynamic>;
       print(data);
       // ignore: unnecessary_null_comparison
@@ -81,21 +81,21 @@ class Favourites with ChangeNotifier {
       List<Employee> employees = [];
       for (var i = 0; i < accessWorkers.length; i++) {
         final emp = Employee(
-            id: accessWorkers[i]["worker"]['id'],
-            image: accessWorkers[i]["worker"]['picture'],
-            categordId: accessWorkers[i]["worker"]['profession'],
-            address: '',
-            fname: accessWorkers[i]["worker"]['firstName'],
-            lname: accessWorkers[i]["worker"]['lastName'],
-            email: '',
+            id: accessWorkers[i]["worker"]["id"],
+            image: accessWorkers[i]["worker"]["picture"],
+            categordId: accessWorkers[i]["worker"]["profession"],
+            address: "",
+            fname: accessWorkers[i]["worker"]["firstName"],
+            lname: accessWorkers[i]["worker"]["lastName"],
+            email: "",
             avgRate: double.parse(
-                ((accessWorkers[i]["worker"]['averageRating']) ?? 0)
+                ((accessWorkers[i]["worker"]["averageRating"]) ?? 0)
                     .toString()),
-            password: '',
-            gender: accessWorkers[i]["worker"]['gender'],
+            password: "",
+            gender: accessWorkers[i]["worker"]["gender"],
             phone: 0,
-            location: '',
-            role: 'worker');
+            location: "",
+            role: "worker");
         employees.add(emp);
       }
       // ignore: unnecessary_null_comparison

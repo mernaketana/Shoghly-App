@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import '../screens/worker_details_screen.dart';
 import '../models/employee.dart';
 
@@ -19,7 +20,6 @@ class EmployeesBodyWidget extends StatelessWidget {
     List<Widget> createStars(double rate) {
       starList.clear();
       for (var i = 0; i < rate; i++) {
-        // print(i);
         starList.add(
           const Icon(
             Icons.star,

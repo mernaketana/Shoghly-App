@@ -1,56 +1,29 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:project/providers/chat.dart';
-import 'package:project/providers/favourites.dart';
-import 'package:project/providers/images.dart';
-import 'package:project/providers/user.dart';
-import 'package:project/screens/add_project_screen.dart';
-import 'package:project/screens/detailed_image_screen.dart';
-import 'package:project/screens/detailed_project_screen.dart';
-import 'package:project/screens/single_chat_screen.dart';
-import 'package:project/widgets/settings_body_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../providers/chat.dart';
+import '../providers/favourites.dart';
+import '../providers/images.dart';
+import '../providers/user.dart';
+import '../screens/add_project_screen.dart';
+import '../screens/detailed_image_screen.dart';
+import '../screens/detailed_project_screen.dart';
+import '../screens/single_chat_screen.dart';
 import './screens/detailed_auth_screen.dart';
 import './screens/worker_details_screen.dart';
 import './screens/choice_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/employees_screen.dart';
-import 'screens/page_controller_screen.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import './screens/page_controller_screen.dart';
 import './providers/auth.dart';
-import 'providers/project.dart';
-import 'providers/review.dart';
-import 'providers/worker.dart';
-import 'widgets/splash_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:firebase_app_installations/firebase_app_installations.dart';
-import 'package:native_notify/native_notify.dart';
+import './providers/project.dart';
+import './providers/review.dart';
+import './providers/worker.dart';
+import './widgets/settings_body_widget.dart';
+import './widgets/splash_screen.dart';
 
 void main() async {
   await dotenv.load();
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  // NotificationSettings settings = await firebaseMessaging.requestPermission(
-  //     alert: true,
-  //     announcement: false,
-  //     badge: true,
-  //     sound: true,
-  //     criticalAlert: false,
-  //     provisional: false,
-  //     carPlay: false);
-  // FirebaseMessaging.onMessage.listen((message) {
-  //   print(message.data);
-  // });
-  // FirebaseMessaging.onBackgroundMessage(FirebaseMessagingBackgroundHandler);
-  // String id = await FirebaseInstallations.instance.getId();
-  // print(id);
-  // print('user granted permission ${settings.authorizationStatus}');
-  WidgetsFlutterBinding.ensureInitialized();
-  NativeNotify.initialize(1119, 'wLzxM3KpqXUF1xxgw5Lb7r', null, null);
   runApp(const MyApp());
 }
 

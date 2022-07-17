@@ -1,19 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:project/models/employee.dart';
-import 'package:project/providers/favourites.dart';
-import 'package:project/screens/detailed_project_screen.dart';
-import 'package:project/screens/single_chat_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../models/employee.dart';
 import '../models/comment.dart';
 import '../models/worker_project.dart';
+import '../screens/detailed_project_screen.dart';
+import '../screens/single_chat_screen.dart';
+import '../providers/favourites.dart';
 import '../providers/auth.dart';
 import '../providers/project.dart';
 import '../providers/worker.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../widgets/comments.dart';
 
+// ignore: must_be_immutable
 class WorkerDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> arguments;
   bool? editAndDelete;
@@ -143,281 +144,257 @@ class _WorkerDetailsScreenState extends State<WorkerDetailsScreen> {
                   child: SpinKitSpinningLines(
                       color: Theme.of(context).colorScheme.primary),
                 )
-              : CustomScrollView(
-                  // slivers are scrollable areas on the screen
-                  slivers: <Widget>[
-                      SliverAppBar(
-                        expandedHeight: 300,
-                        pinned: true,
-                        flexibleSpace: FlexibleSpaceBar(
-                            background: Hero(
-                                tag: currentWorker.id,
-                                child: currentWorker.image == ''
-                                    ? Image.asset(
-                                        'assets/images/placeholder.png',
-                                        fit: BoxFit.cover,
-                                      )
-                                    : CachedNetworkImage(
-                                        imageUrl: currentWorker.image as String,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            SpinKitSpinningLines(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      ))),
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(5),
-                                      bottomRight: Radius.circular(5))),
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+              : CustomScrollView(slivers: <Widget>[
+                  SliverAppBar(
+                    expandedHeight: 300,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                        background: Hero(
+                            tag: currentWorker.id,
+                            child: currentWorker.image == null
+                                ? Image.asset(
+                                    'assets/images/placeholder.png',
+                                    fit: BoxFit.cover,
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: currentWorker.image as String,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        SpinKitSpinningLines(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ))),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(5),
+                                  bottomRight: Radius.circular(5))),
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${currentWorker.fname} ${currentWorker.lname}',
+                                  softWrap: true,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1!
+                                          .color,
+                                      fontSize: 20),
+                                  textAlign: TextAlign.right,
+                                ),
+                                const Spacer(),
+                                SizedBox(
+                                  width: 130,
+                                  height: 30,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: widget.arguments["currentWorker"]
+                                                .avgRate ==
+                                            null
+                                        ? createStars(0)
+                                        : createStars(widget
+                                            .arguments["currentWorker"].avgRate!
+                                            .toDouble()),
+                                  ),
+                                ),
+                              ]),
+                        ),
+                        Card(
+                          color: Theme.of(context).backgroundColor,
+                          elevation: 4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 11, vertical: 9),
+                                child: Text(
+                                  'المعلومات',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 22, bottom: 14),
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      '${currentWorker.fname} ${currentWorker.lname}',
-                                      softWrap: true,
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .color,
-                                          fontSize: 20),
-                                      textAlign: TextAlign.right,
+                                      currentWorker.categordId as String,
                                     ),
-                                    const Spacer(),
-                                    SizedBox(
-                                      width: 130,
-                                      height: 30,
-                                      child: ListView(
-                                        scrollDirection: Axis.horizontal,
-                                        children: widget
-                                                    .arguments["currentWorker"]
-                                                    .avgRate ==
-                                                null
-                                            ? createStars(0)
-                                            : createStars(widget
-                                                .arguments["currentWorker"]
-                                                .avgRate!
-                                                .toDouble()),
+                                    Text(
+                                      currentWorker.location,
+                                    ),
+                                    Text(
+                                      currentWorker.address,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    TextButton.icon(
+                                      icon: const Icon(
+                                        Icons.phone,
+                                        size: 18,
+                                        color: Colors.black,
                                       ),
-                                    ),
-                                  ]),
-                            ),
-                            Card(
-                              color: Theme.of(context).backgroundColor,
-                              elevation: 4,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 11, vertical: 9),
-                                    child: Text(
-                                      'المعلومات',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 22, bottom: 14),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          currentWorker.categordId as String,
-                                        ),
-                                        Text(
-                                          currentWorker.location,
-                                        ),
-                                        Text(
-                                          currentWorker.address,
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            // const Icon(
-                                            //   Icons.phone,
-                                            //   size: 18,
-                                            //   color: Colors.black,
-                                            // ),
-                                            // const SizedBox(
-                                            //   width: 4,
-                                            // ),
-                                            TextButton.icon(
-                                              icon: const Icon(
-                                                Icons.phone,
-                                                size: 18,
-                                                color: Colors.black,
-                                              ),
-                                              label: Text(
-                                                '0${currentWorker.phone.toString()}',
-                                                style: const TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                              onPressed: () => _launchCaller(
-                                                  "tel:0${currentWorker.phone.toString()}"),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Card(
-                              color: Theme.of(context).backgroundColor,
-                              elevation: 4,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 11, vertical: 9),
-                                    child: Text(
-                                      'الالبومات',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ),
-                                  if (projects.isEmpty)
-                                    const Padding(
-                                      padding: EdgeInsets.only(bottom: 10),
-                                      child: Center(
-                                        child: Text(
-                                          'لا يوجد البومات',
-                                          style: TextStyle(fontSize: 17),
-                                        ),
+                                      label: Text(
+                                        '0${currentWorker.phone.toString()}',
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       ),
+                                      onPressed: () => _launchCaller(
+                                          "tel:0${currentWorker.phone.toString()}"),
                                     ),
-                                  if (projects.isNotEmpty)
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: createGallery(projects),
-                                      ),
-                                    ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            Card(
-                              color: Theme.of(context).backgroundColor,
-                              elevation: 4,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 11, vertical: 9),
-                                    child: Text(
-                                      'التعليقات',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                      height: 200,
-                                      child: Comments(
-                                          userComments: comments,
-                                          currentUser: currentUser,
-                                          currentWorker: widget
-                                              .arguments["currentWorker"])),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: Row(
-                                children: [
-                                  if (currentUser.role == 'client')
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)))),
-                                          onPressed: () => favEmployees.any(
-                                                  (element) =>
-                                                      element.id ==
-                                                      (widget.arguments['currentWorker']
-                                                              as Employee)
-                                                          .id)
-                                              ? unfavourite((widget.arguments['currentWorker'] as Employee).id)
-                                              : favourite((widget.arguments['currentWorker'] as Employee).id),
-                                          icon: Icon(Icons.favorite, color: favEmployees.any((element) => element.id == (widget.arguments['currentWorker'] as Employee).id) ? Colors.red : Colors.white),
-                                          label: Text(favEmployees.any((element) => element.id == (widget.arguments['currentWorker'] as Employee).id) ? 'ازالة من مفضلاتي' : 'اضافة لمفضلاتي')),
-                                    ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  if (currentUser.role == 'client')
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)))),
-                                          onPressed: () {
-                                            final token = Provider.of<Auth>(
-                                                    context,
-                                                    listen: false)
-                                                .token;
-                                            Navigator.of(context).pushNamed(
-                                                SingleChatScreen.routeName,
-                                                arguments: {
-                                                  "userId": currentWorker.id,
-                                                  "userImage":
-                                                      currentWorker.image,
-                                                  "userFirstName":
-                                                      currentWorker.fname,
-                                                  "userLastName":
-                                                      currentWorker.lname,
-                                                  "token": token
-                                                });
-                                          },
-                                          icon: const Icon(
-                                            Icons.message,
-                                            color: Colors.amber,
-                                          ),
-                                          label: const Text('الدردشة')),
-                                    ),
-                                ],
-                              ),
-                            )
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ]),
+                        Card(
+                          color: Theme.of(context).backgroundColor,
+                          elevation: 4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 11, vertical: 9),
+                                child: Text(
+                                  'الالبومات',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              if (projects.isEmpty)
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Center(
+                                    child: Text(
+                                      'لا يوجد البومات',
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                  ),
+                                ),
+                              if (projects.isNotEmpty)
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: createGallery(projects),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        Card(
+                          color: Theme.of(context).backgroundColor,
+                          elevation: 4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 11, vertical: 9),
+                                child: Text(
+                                  'التعليقات',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: 200,
+                                  child: Comments(
+                                      userComments: comments,
+                                      currentUser: currentUser,
+                                      currentWorker:
+                                          widget.arguments["currentWorker"])),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Row(
+                            children: [
+                              if (currentUser.role == 'client')
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5)))),
+                                      onPressed: () => favEmployees.any((element) =>
+                                              element.id ==
+                                              (widget.arguments['currentWorker']
+                                                      as Employee)
+                                                  .id)
+                                          ? unfavourite((widget.arguments['currentWorker'] as Employee).id)
+                                          : favourite((widget.arguments['currentWorker'] as Employee).id),
+                                      icon: Icon(Icons.favorite, color: favEmployees.any((element) => element.id == (widget.arguments['currentWorker'] as Employee).id) ? Colors.red : Colors.white),
+                                      label: Text(favEmployees.any((element) => element.id == (widget.arguments['currentWorker'] as Employee).id) ? 'ازالة من مفضلاتي' : 'اضافة لمفضلاتي')),
+                                ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              if (currentUser.role == 'client')
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5)))),
+                                      onPressed: () {
+                                        final token = Provider.of<Auth>(context,
+                                                listen: false)
+                                            .token;
+                                        Navigator.of(context).pushNamed(
+                                            SingleChatScreen.routeName,
+                                            arguments: {
+                                              "userId": currentWorker.id,
+                                              "userImage": currentWorker.image,
+                                              "userFirstName":
+                                                  currentWorker.fname,
+                                              "userLastName":
+                                                  currentWorker.lname,
+                                              "token": token
+                                            });
+                                      },
+                                      icon: const Icon(
+                                        Icons.message,
+                                        color: Colors.amber,
+                                      ),
+                                      label: const Text('الدردشة')),
+                                ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ]),
         ));
   }
 }

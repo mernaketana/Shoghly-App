@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/auth.dart';
 import '../dummy_data.dart';
 
@@ -22,12 +23,10 @@ class DetailedAuthForm extends StatefulWidget {
 
 class _DetailedAuthFormState extends State<DetailedAuthForm> {
   final _formKey = GlobalKey<FormState>();
-  // final _pickedDate = TextEditingController();
   // ignore: unused_field
   String? _dropdownVal;
   // ignore: unused_field
   String? _dropdownValCat;
-  // String? _userImage;
   final _categories = DUMMY_CATEGORIES.map((e) => e.title).toList();
 
   // ignore: prefer_final_fields
@@ -187,48 +186,6 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                     const SizedBox(
                       height: 14,
                     ),
-                    // BIRTHDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY
-                    // TextFormField(
-                    //   key: const ValueKey('bdate'),
-                    //   validator: (e) {
-                    //     if (e!.isEmpty) {
-                    //       return 'يجب ادخال تاريخ الميلاد';
-                    //     } else {
-                    //       return null;
-                    //     }
-                    //   },
-                    //   onSaved: (e) =>
-                    //   newUsers = Employee(
-                    //       image: newUsers.image,
-                    //       categordId: newUsers.categordId,
-                    //       id: newUsers.id,
-                    //       fname: newUsers.fname,
-                    //       lname: newUsers.lname,
-                    //       email: newUsers.email,
-                    //       password: newUsers.password,
-                    //       phone: newUsers.phone,
-                    //       location: newUsers.location,
-                    //       address: newUsers.address,
-                    //       role: newUsers.role,
-                    //       bDate: DateFormat.yMd().parse(e as String)),
-                    //   onTap: () {
-                    //     FocusScope.of(context).requestFocus(FocusNode());
-                    //     _datePicker();
-                    //   },
-                    //   controller: _pickedDate,
-                    //   decoration: InputDecoration(
-                    //     prefixIcon: const Icon(
-                    //       Icons.date_range_outlined,
-                    //       color: Colors.grey,
-                    //     ),
-                    //     border: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(10.0),
-                    //     ),
-                    //     labelText: 'تاريخ الميلاد',
-                    //     // labelStyle: TextStyle(color: Colors.white)
-                    //   ),
-                    //   // style: const TextStyle(color: Colors.white),
-                    // ),
                     DropdownButtonFormField(
                         validator: (e) {
                           if (e == null) {
@@ -245,10 +202,7 @@ class _DetailedAuthFormState extends State<DetailedAuthForm> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            labelText: 'الجنس'
-                            // style: const TextStyle(color: Colors.white)
-                            // labelStyle: TextStyle(color: Colors.white)
-                            ),
+                            labelText: 'الجنس'),
                         isExpanded: true,
                         iconEnabledColor: Colors.white,
                         items: const [

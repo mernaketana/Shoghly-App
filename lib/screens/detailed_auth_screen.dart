@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/detailed_auth_form.dart';
 
 class DetailedAuthScreen extends StatefulWidget {
@@ -14,7 +15,6 @@ class _DetailedAuthScreenState extends State<DetailedAuthScreen> {
   Widget build(BuildContext context) {
     final arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    // print(arguments);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(

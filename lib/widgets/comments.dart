@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:project/models/comment.dart';
-import 'package:project/models/employee.dart';
-import 'package:project/screens/worker_details_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../models/comment.dart';
+import '../models/employee.dart';
+import '../screens/worker_details_screen.dart';
 import '../providers/review.dart';
 
 class Comments extends StatefulWidget {
@@ -58,7 +59,6 @@ class _CommentsState extends State<Comments> {
   List<Widget> createStars(double rate) {
     starList.clear();
     for (var i = 0; i < rate; i++) {
-      // print(i);
       starList.add(
         const Icon(
           Icons.star,
@@ -193,7 +193,6 @@ class _CommentsState extends State<Comments> {
                             userId: widget.currentUser.id,
                             workerId: widget.currentWorker.id,
                             createdAt: DateTime.now());
-                        // widget.items.add(value);
                         createReview(value);
                       }
 

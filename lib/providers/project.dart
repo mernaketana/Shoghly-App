@@ -1,16 +1,17 @@
 import "dart:async";
 import "dart:convert";
-import 'package:http/http.dart' as http;
-import "package:flutter/cupertino.dart";
-import 'package:project/models/worker_project.dart';
-import '../helpers/http_exception.dart';
-import '../providers/auth.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import "package:http/http.dart" as http;
+import "package:flutter/foundation.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
+
+import "../models/worker_project.dart";
+import "../helpers/http_exception.dart";
+import "./auth.dart";
 
 class Project with ChangeNotifier {
   late String authToken;
   late String userId;
-  final apiUrl = dotenv.env['API_URL']!;
+  final apiUrl = dotenv.env["API_URL"]!;
 
   void recieveToken(Auth auth) {
     authToken = auth.token;
@@ -51,7 +52,6 @@ class Project with ChangeNotifier {
           "Authorization": "Bearer $authToken",
         },
       );
-      // final employee = await getUser(userId);
       final data = json.decode(response.body) as Map<String, dynamic>;
       print(data);
       final accessProjects = data["data"] as List;
@@ -98,7 +98,7 @@ class Project with ChangeNotifier {
           updatedAt: DateTime.parse(accessProject["updatedAt"]));
       // ignore: unnecessary_null_comparison
       if (data == null) {
-        return WorkerProject(desc: '', urls: []);
+        return WorkerProject(desc: "", urls: []);
       }
       notifyListeners();
       return project;
@@ -129,11 +129,24 @@ class Project with ChangeNotifier {
     }
   }
 
-  // Employee? get currentUser {
-  //   if (_user.id != '') {
-  //     return _user;
-  //   } else {
-  //     return null;
-  //   }
-  // }
+  Future<void> deleteProject(String projectId) async {
+    final url = Uri.parse("${apiUrl}workers/projects/$projectId");
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken"
+        },
+      );
+      final responseData = json.decode(response.body);
+      print(responseData);
+      if (responseData["error"] != null) {
+        throw HttpException(responseData["message"]);
+      }
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/widgets/my_account_body.dart';
+import '../widgets/my_account_body.dart';
 
 class MyAccountScreen extends StatelessWidget {
   static const routeName = '/my-account-screen';

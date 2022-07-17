@@ -1,24 +1,18 @@
 import "dart:async";
 import "dart:convert";
-import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
-import "package:flutter/cupertino.dart";
+import "package:http/http.dart" as http;
+import "package:flutter/foundation.dart";
 import "package:shared_preferences/shared_preferences.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
+
 import "../helpers/http_exception.dart";
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
-import 'package:native_notify/native_notify.dart';
 
 class Auth with ChangeNotifier {
-  String? _token; //tokens expire after an amount of time typically one hour
-  // DateTime? _expiryDate;
+  String? _token;
   String? _userId;
   String? imageUrl;
   String? identifier;
-  // Timer? _authTimer;
-  final apiUrl = dotenv.env['API_URL']!;
+  final apiUrl = dotenv.env["API_URL"]!;
   String? firebasetoken;
 
   Future<void> signup(
@@ -45,7 +39,7 @@ class Auth with ChangeNotifier {
           "role": role,
           "profession": profession,
           "phone": phone,
-          "picture": imageUrl ?? '',
+          "picture": imageUrl ?? "",
           "country": "مصر",
           "city": city,
           "line": address
@@ -58,29 +52,7 @@ class Auth with ChangeNotifier {
         throw HttpException(responseData["message"]);
       }
       _userId = responseData["id"];
-      NativeNotify.registerIndieID(_userId);
       notifyListeners();
-      // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-      // if (Platform.isAndroid) {
-      //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      //   print('Running on ${androidInfo.model}'); // e.g. "Moto G (4)"
-      //   identifier = androidInfo.id.toString();
-      //   firebasetoken = await firebaseMessaging.getToken();
-      // } else if (Platform.isIOS) {
-      //   IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      //   print('Running on ${iosInfo.utsname.machine}'); // e.g. "iPod7,1"
-      //   identifier = iosInfo.identifierForVendor; //UUID for iOS
-      //   firebasetoken = await firebaseMessaging.getToken();
-      // }
-      // if (firebasetoken != null) {
-      //   print(firebasetoken);
-      //   print(identifier);
-      //   subscribe(firebasetoken!, identifier!);
-      // }
-      // firebaseMessaging.onTokenRefresh.listen((newToken) {
-      //   subscribe(newToken, identifier!);
-      // });
       signin(email, password);
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -92,39 +64,6 @@ class Auth with ChangeNotifier {
       rethrow;
     }
   }
-
-  // subscribe(String token, String deviceId) async {
-  //   print('[subscribe] token: $token');
-
-  //   bool isProduction = const bool.fromEnvironment('dart.vm.product');
-
-  //   CreateSubscriptionParameters parameters = CreateSubscriptionParameters();
-  //   parameters.environment =
-  //       isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
-
-  //   if (Platform.isAndroid) {
-  //     parameters.channel = NotificationsChannels.GCM;
-  //     parameters.platform = CubePlatform.ANDROID;
-  //     parameters.bundleIdentifier = "com.connectycube.flutter.chat_sample";
-  //   } else if (Platform.isIOS) {
-  //     parameters.channel = NotificationsChannels.APNS;
-  //     parameters.platform = CubePlatform.IOS;
-  //     parameters.bundleIdentifier = Platform.isIOS
-  //         ? "com.connectycube.flutter.chatSample.app"
-  //         : "com.connectycube.flutter.chatSample.macOS";
-  //   }
-
-  //   parameters.udid = deviceId;
-  //   parameters.pushToken = token;
-
-  //   createSubscription(parameters.getRequestParameters())
-  //       .then((cubeSubscription) {
-  //     print('doneeeeeeeeeeeeeeeeeeeeeeee');
-  //   }).catchError((error) {
-  //     print('errooooooooooooooooooooooooooooooooooor');
-  //     print(error);
-  //   });
-  // }
 
   Future<void> verifyEmail(String email, String code) async {
     final url = Uri.parse("${apiUrl}settings/verify-email");
@@ -163,15 +102,11 @@ class Auth with ChangeNotifier {
       }
       _token = responseData["accessToken"];
       _userId = responseData["userId"];
-      // _expiryDate = DateTime.now()
-      //     .add(Duration(seconds: int.parse(responseData["expiresIn"])));
-      // _autoLogOut();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
         "token": _token,
         "userId": _userId,
-        // "expiryDate": _expiryDate!.toIso8601String(),
       });
       prefs.setString("userData", userData);
     } catch (error) {
@@ -186,16 +121,16 @@ class Auth with ChangeNotifier {
         url,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": 'Bearer $_token'
+          "Authorization": "Bearer $_token"
         },
       );
       final responseData = json.decode(response.body);
       print(responseData);
       final prefs = await SharedPreferences.getInstance();
-      if (!prefs.containsKey('userData')) {
+      if (!prefs.containsKey("userData")) {
         return;
       } else {
-        prefs.remove('userData');
+        prefs.remove("userData");
       }
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
@@ -237,7 +172,7 @@ class Auth with ChangeNotifier {
             .encode({"oldPassword": oldPassword, "newPassword": newPassword}),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": 'Bearer $_token'
+          "Authorization": "Bearer $_token"
         },
       );
       final responseData = json.decode(response.body);
@@ -254,20 +189,17 @@ class Auth with ChangeNotifier {
 
   Future<bool> tryAutoLogIn() async {
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userData')) {
+    if (!prefs.containsKey("userData")) {
       return false;
     } else {
       final extractedUserData =
-          json.decode(prefs.getString('userData') as String)
+          json.decode(prefs.getString("userData") as String)
               as Map<String, dynamic>;
-      // final expiryDate =
-      //     DateTime.parse(extractedUserData['expiryDate'] as String);
-      if (extractedUserData['token'] == null) {
+      if (extractedUserData["token"] == null) {
         return false;
       }
-      _token = extractedUserData['token'] as String;
-      _userId = extractedUserData['userId'] as String;
-      // _expiryDate = expiryDate;
+      _token = extractedUserData["token"] as String;
+      _userId = extractedUserData["userId"] as String;
       notifyListeners();
     }
     return true;
@@ -276,27 +208,23 @@ class Auth with ChangeNotifier {
   Future<void> logOut() async {
     _token = null;
     _userId = null;
-    // if (_authTimer != null) {
-    //   _authTimer!.cancel();
-    //   _authTimer = null;
-    // }
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
 
   bool get isAuth {
-    return token != '';
+    return token != "";
   }
 
   String get token {
     if (_token != null) {
       return _token as String;
     }
-    return '';
+    return "";
   }
 
   String get userId {
-    return _userId == null ? '' : _userId as String;
+    return _userId == null ? "" : _userId as String;
   }
 }

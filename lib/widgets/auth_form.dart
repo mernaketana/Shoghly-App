@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+
 import '../helpers/http_exception.dart';
 import '../providers/auth.dart';
 import '../screens/choice_screen.dart';

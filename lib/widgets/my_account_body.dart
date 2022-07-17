@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:project/models/employee.dart';
-import 'package:project/screens/detailed_image_screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../screens/detailed_image_screen.dart';
+import '../models/employee.dart';
 import '../models/comment.dart';
 import '../models/image.dart';
 import '../providers/images.dart';
@@ -26,13 +26,10 @@ class _MyAccountBodyState extends State<MyAccountBody> {
   var _expandInfo = false;
   var newWorkImage = MyImage('', [], '');
   var _isLoading = false;
-  // String age(DateTime bdate) {
-  //   var myAge = DateTime.now().difference(bdate).toString();
-  //   return myAge;
-  // }
   late Employee currentUser;
   List<Comment> comments = [];
   var _isInit = true;
+  String code = '';
 
   @override
   void didChangeDependencies() async {
@@ -283,30 +280,6 @@ class _MyAccountBodyState extends State<MyAccountBody> {
                         const SizedBox(
                           height: 6,
                         ),
-                        // Row(
-                        // children: [
-                        // const Spacer(),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 10),
-                        //   child: TextButton.icon(
-                        //       onPressed: () => Navigator.of(context)
-                        //               .pushNamed(SettingsBody.routeName,
-                        //                   arguments: {
-                        //                 'currentUser': currentUser,
-                        //                 'editPass': false
-                        //               }),
-                        //       icon: const Icon(
-                        //         Icons.edit,
-                        //         size: 20,
-                        //       ),
-                        //       label: const Text(
-                        //         'تعديل',
-                        //         style: TextStyle(
-                        //             decoration: TextDecoration.underline),
-                        //       )),
-                        // ),
-                        // ],
-                        // )
                       ],
                     ),
                   ),

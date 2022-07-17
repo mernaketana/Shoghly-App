@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:project/widgets/employees_body_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/employees_body_widget.dart';
+import '../widgets/categories_body_widget.dart';
 import '../dummy_data.dart';
 import '../models/employee.dart';
 import '../providers/user.dart';
-import '../widgets/categories_body_widget.dart';
 
 class CategoriesScreen extends StatefulWidget {
   static const routeName = '/categories-screen';
@@ -184,10 +185,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 )
               : _searchBool
                   ? employees.isEmpty
-                      ? Center(
+                      ? const Center(
                           child: Text(
-                          'لا يوجد عامل بهذا الاسم في $searchCity',
-                          style: const TextStyle(fontSize: 20),
+                          'لا يوجد عامل بهذا الاسم في هذه المحافظة',
+                          style: TextStyle(fontSize: 20),
                         ))
                       : ListView.builder(
                           itemBuilder: (context, index) => EmployeesBodyWidget(
@@ -216,62 +217,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         padding: const EdgeInsets.all(25),
                       ),
                     ),
-      // Center(
-      //     child: Directionality(
-      //         textDirection: TextDirection.rtl,
-      //         child: AlertDialog(
-      //           title: const Text(
-      //               'برجاء ادخال الكود الذي تم بعثه الى حسابك الشخصي للتجقق من الحساب'),
-      //           content: TextFormField(
-      //             key: const ValueKey('code'),
-      //             onChanged: (e) {
-      //               code = e;
-      //               print(e);
-      //             },
-      //             keyboardType: TextInputType.number,
-      //             decoration: InputDecoration(
-      //               border: OutlineInputBorder(
-      //                 borderRadius: BorderRadius.circular(10.0),
-      //               ),
-      //             ),
-      //           ),
-      //           actions: [
-      //             TextButton(
-      //                 onPressed: () {
-      //                   if (code == '') {
-      //                     showDialog(
-      //                         context: context,
-      //                         builder: (context) => Directionality(
-      //                               textDirection: TextDirection.rtl,
-      //                               child: AlertDialog(
-      //                                 title: const Text(
-      //                                     'يجب عليك ادخال الكود'),
-      //                                 actions: [
-      //                                   TextButton(
-      //                                       onPressed: () =>
-      //                                           Navigator.of(context)
-      //                                               .pop(),
-      //                                       child: const Text(
-      //                                         'حسنا',
-      //                                         style: TextStyle(
-      //                                             color: Colors.black,
-      //                                             fontSize: 18),
-      //                                       ))
-      //                                 ],
-      //                               ),
-      //                             ));
-      //                   }
-      //                   if (formKey.currentState!.validate()) {
-      //                     verifyEmail(code);
-      //                   }
-      //                 },
-      //                 child: const Text(
-      //                   'تم',
-      //                   style: TextStyle(
-      //                       color: Colors.black, fontSize: 18),
-      //                 ))
-      //           ],
-      //         )))
     );
   }
 }

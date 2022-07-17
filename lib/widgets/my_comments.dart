@@ -62,16 +62,8 @@ class _MyCommentsState extends State<MyComments> {
                                 width: 40,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10)),
-                                child: const CircleAvatar(
-                                    // maxRadius: 20,
-                                    // backgroundImage: user.image != null
-                                    //     ? NetworkImage(user.image as String)
-                                    //     : const AssetImage(
-                                    //             'assets/images/placeholder.png')
-                                    //         as ImageProvider
-                                    ),
+                                child: const CircleAvatar(),
                               ),
-                              // title: Text('${user.fname} ${user.lname}'),
                               subtitle: Text(widget.comments[index].comment),
                             ),
                           ),

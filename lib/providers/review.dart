@@ -1,34 +1,31 @@
-import 'dart:convert';
-import 'dart:io';
+import "dart:convert";
+import "dart:io";
+import "package:flutter/foundation.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
+import "package:http/http.dart" as http;
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
-import '../models/comment.dart';
-import 'auth.dart';
+import "../models/comment.dart";
+import "./auth.dart";
 
 class Review with ChangeNotifier {
   late String authToken;
   late String _reviewId;
-  // ignore: unused_field
   Comment _review = Comment(
-      comment: '',
-      workerId: '',
+      comment: "",
+      workerId: "",
       createdAt: DateTime.now(),
       rate: 0,
-      reviewId: '',
+      reviewId: "",
       updatedAt: DateTime.now(),
-      user: Commenter(id: '', fname: '', lname: '', picture: '', gender: ''));
+      user: Commenter(id: "", fname: "", lname: "", picture: "", gender: ""));
   late String userId;
-  final apiUrl = dotenv.env['API_URL']!;
+  final apiUrl = dotenv.env["API_URL"]!;
+  List<Comment> _items = [];
 
   void recieveToken(Auth auth) {
     authToken = auth.token;
     userId = auth.userId;
   }
-
-  // ignore: prefer_final_fields
-  List<Comment> _items = [];
 
   List<Comment> get items {
     return [..._items];
@@ -50,7 +47,7 @@ class Review with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       print(responseData);
-      _reviewId = responseData['data']['id'];
+      _reviewId = responseData["data"]["id"];
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
@@ -76,7 +73,6 @@ class Review with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       print(responseData);
-      // _reviewId = responseData['data']['id'];
       if (responseData["error"] != null) {
         throw HttpException(responseData["message"]);
       }
@@ -120,8 +116,8 @@ class Review with ChangeNotifier {
                 picture: currentComment["client"]["picture"],
                 gender: currentComment["client"]["gender"]),
             comment: currentComment["description"],
-            workerId: currentComment['workerId'],
-            createdAt: DateTime.parse(currentComment['createdAt']).toLocal(),
+            workerId: currentComment["workerId"],
+            createdAt: DateTime.parse(currentComment["createdAt"]).toLocal(),
             rate: (currentComment["rating"] as int).toDouble());
         if (_review.user != null) {
           workerComments.add(_review);

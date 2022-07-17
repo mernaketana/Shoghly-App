@@ -6,7 +6,7 @@ import '../dummy_data.dart';
 import '../models/employee.dart';
 import '../providers/auth.dart';
 import '../providers/user.dart';
-import '../widgets/user_image_picker.dart';
+import './user_image_picker.dart';
 
 class SettingsBody extends StatefulWidget {
   static const routeName = '/settings-screen';
@@ -108,22 +108,6 @@ class _SettingsBodyState extends State<SettingsBody> {
     Navigator.of(context).pop();
   }
 
-  // Future _datePicker() async {
-  //   await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(1900),
-  //     lastDate: DateTime.now(),
-  //   ).then((date) {
-  //     if (date == null) {
-  //       return;
-  //     }
-  //     setState(() {
-  //       _pickedDate.text = DateFormat.yMd().format(date);
-  //     });
-  //   });
-  // }
-
   void _pickedImage(String image) {
     _authData["picture"] = image; //بفوروارد بالعكس
   }
@@ -131,8 +115,6 @@ class _SettingsBodyState extends State<SettingsBody> {
   @override
   Widget build(BuildContext context) {
     bool editPass = ModalRoute.of(context)!.settings.arguments as bool;
-    // _pickedDate.text =
-    //     '${currentUser.bDate!.day}/${currentUser.bDate!.month}/${currentUser.bDate!.year}';
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -232,7 +214,6 @@ class _SettingsBodyState extends State<SettingsBody> {
                                 ),
                                 obscureText: true,
                               ),
-
                             if (!editPass)
                               UserImagePicker(imagePick: _pickedImage),
                             if (!editPass)
@@ -325,51 +306,8 @@ class _SettingsBodyState extends State<SettingsBody> {
                               const SizedBox(
                                 height: 14,
                               ),
-                            // BIRTHDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY
-                            // TextFormField(
-                            //   key: const ValueKey('bdate'),
-                            //   validator: (e) {
-                            //     if (e!.isEmpty) {
-                            //       return 'يجب ادخال تاريخ الميلاد';
-                            //     } else {
-                            //       return null;
-                            //     }
-                            //   },
-                            //   onSaved: (e) =>
-                            //   newUsers = Employee(
-                            //       image: newUsers.image,
-                            //       categordId: newUsers.categordId,
-                            //       id: newUsers.id,
-                            //       fname: newUsers.fname,
-                            //       lname: newUsers.lname,
-                            //       email: newUsers.email,
-                            //       password: newUsers.password,
-                            //       phone: newUsers.phone,
-                            //       location: newUsers.location,
-                            //       address: newUsers.address,
-                            //       role: newUsers.role,
-                            //       bDate: DateFormat.yMd().parse(e as String)),
-                            //   onTap: () {
-                            //     FocusScope.of(context).requestFocus(FocusNode());
-                            //     _datePicker();
-                            //   },
-                            //   controller: _pickedDate,
-                            //   decoration: InputDecoration(
-                            //     prefixIcon: const Icon(
-                            //       Icons.date_range_outlined,
-                            //       color: Colors.grey,
-                            //     ),
-                            //     border: OutlineInputBorder(
-                            //       borderRadius: BorderRadius.circular(10.0),
-                            //     ),
-                            //     labelText: 'تاريخ الميلاد',
-                            //     // labelStyle: TextStyle(color: Colors.white)
-                            //   ),
-                            //   // style: const TextStyle(color: Colors.white),
-                            // ),
                             if (!editPass)
                               DropdownButtonFormField(
-                                  // value: currentUser.location,
                                   validator: (e) {
                                     if (e == null) {
                                       return 'يجب اختيار الجنس  ';
@@ -410,7 +348,6 @@ class _SettingsBodyState extends State<SettingsBody> {
                               ),
                             if (!editPass)
                               DropdownButtonFormField(
-                                  // value: currentUser.gender,
                                   validator: (e) {
                                     if (e == null) {
                                       return 'يجب اختيار المحافظة  ';

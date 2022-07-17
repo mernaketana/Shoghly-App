@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
 
 class DetailedImageScreen extends StatelessWidget {
   static const routeName = '/detailed-image-screen';

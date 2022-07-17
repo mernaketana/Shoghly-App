@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../screens/detailed_auth_screen.dart';
 
 class ChoicesScreen extends StatefulWidget {

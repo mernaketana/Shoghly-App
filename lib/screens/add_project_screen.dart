@@ -3,11 +3,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:project/models/worker_project.dart';
-import 'package:project/providers/project.dart';
-import 'package:project/screens/detailed_image_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../models/worker_project.dart';
+import '../providers/project.dart';
 import '../providers/images.dart';
+import '../screens/detailed_image_screen.dart';
 
 class AddProjectScreen extends StatefulWidget {
   static const routeName = '/add-project-screen';
@@ -112,17 +113,12 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.arguments['canEdit']) {
-      _savedProject = (widget.arguments['currentProject'] as WorkerProject);
-    }
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          title: Text((widget.arguments['canEdit'] as bool)
-              ? 'تعديل البوم'
-              : 'اضافة البوم'),
+          title: const Text('اضافة البوم'),
         ),
         body: _isLoading
             ? Center(
@@ -141,11 +137,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                               key: _form,
                               child: SingleChildScrollView(
                                 child: TextFormField(
-                                  initialValue: widget.arguments['canEdit']
-                                      ? (widget.arguments['currentProject']
-                                              as WorkerProject)
-                                          .desc
-                                      : null,
                                   keyboardType: TextInputType.multiline,
                                   decoration: const InputDecoration(
                                     labelText: 'تفاصيل المشروع',
@@ -204,10 +195,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                                 children: <Widget>[
                                   ..._savedProject.urls!
                                       .map((e) => InkWell(
-                                            onDoubleTap: () => widget
-                                                    .arguments['canEdit']
-                                                ? _savedProject.urls!.remove(e)
-                                                : {},
                                             onTap: () => Navigator.of(context)
                                                 .pushNamed(
                                                     DetailedImageScreen

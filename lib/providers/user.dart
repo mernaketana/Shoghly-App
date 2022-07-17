@@ -1,31 +1,31 @@
 import "dart:async";
 import "dart:convert";
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import "package:flutter/cupertino.dart";
-import 'package:project/models/employee.dart';
-import '../providers/auth.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import "dart:io";
+import "package:http/http.dart" as http;
+import "package:flutter/foundation.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
+
+import "../models/employee.dart";
+import "./auth.dart";
 
 class User with ChangeNotifier {
   late String authToken;
   late String userId;
   Employee _user = Employee(
-    gender: '',
-    id: '',
-    address: '',
-    fname: '',
-    lname: '',
-    email: '',
-    password: '',
+    gender: "",
+    id: "",
+    address: "",
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
     phone: 0,
-    location: '',
-    role: '',
-    categordId: '',
+    location: "",
+    role: "",
+    categordId: "",
   );
-  final apiUrl = dotenv.env['API_URL']!;
+  final apiUrl = dotenv.env["API_URL"]!;
 
-// for main to get the token and the user id from auth
   void recieveToken(Auth auth) {
     authToken = auth.token;
     userId = auth.userId;
@@ -46,33 +46,33 @@ class User with ChangeNotifier {
       // ignore: unnecessary_null_comparison
       if (data == null) {
         return Employee(
-            id: '',
-            address: '',
-            fname: '',
-            lname: '',
-            email: '',
-            password: '',
-            gender: '',
+            id: "",
+            address: "",
+            fname: "",
+            lname: "",
+            email: "",
+            password: "",
+            gender: "",
             phone: 0,
-            location: '',
-            role: '');
+            location: "",
+            role: "");
       }
       Map<String, dynamic> employeeInfo = data["data"];
       _user = Employee(
-        id: employeeInfo["id"],
-        fname: employeeInfo["firstName"],
-        lname: employeeInfo["lastName"],
-        phone: int.parse(employeeInfo["phone"]),
-        image: employeeInfo["picture"],
-        categordId: employeeInfo["profession"],
-        gender: employeeInfo["gender"],
-        location: employeeInfo["city"],
-        address: employeeInfo["line"],
-        reviews: employeeInfo["reviews"],
-        email: '',
-        password: '',
-        role: employeeInfo["role"],
-      );
+          id: employeeInfo["id"],
+          fname: employeeInfo["firstName"],
+          lname: employeeInfo["lastName"],
+          phone: int.parse(employeeInfo["phone"]),
+          image: employeeInfo["picture"],
+          categordId: employeeInfo["profession"],
+          gender: employeeInfo["gender"],
+          location: employeeInfo["city"],
+          address: employeeInfo["line"],
+          reviews: employeeInfo["reviews"],
+          email: "",
+          password: "",
+          role: employeeInfo["role"],
+          isAuth: employeeInfo["emailVerified"]);
       notifyListeners();
       return _user;
     } catch (error) {
@@ -82,7 +82,7 @@ class User with ChangeNotifier {
 
   Future<List<Employee>> search(String text, String city) async {
     final url = Uri.parse("${apiUrl}search");
-    Map<String, String> queryParams = {'text': text, 'city': city};
+    Map<String, String> queryParams = {"text": text, "city": city};
     final finalUrl = url.replace(queryParameters: queryParams);
     try {
       final response = await http.get(
@@ -94,23 +94,23 @@ class User with ChangeNotifier {
       );
       final data = json.decode(response.body) as Map<String, dynamic>;
       print(data);
-      final results = data['results'] as List<dynamic>;
+      final results = data["results"] as List<dynamic>;
       List<Employee> employees = [];
       for (var i = 0; i < results.length; i++) {
         final emp = Employee(
-            id: results[i]['userId'],
-            image: results[i]['picture'],
-            categordId: results[i]['profession'],
-            address: results[i]['line'],
-            fname: (results[i]['fullName'] as String).split(' ')[0],
-            lname: (results[i]['fullName'] as String).split(' ')[1],
-            email: results[i]['email'],
-            avgRate: double.parse(results[i]['rating'] ?? '0'),
-            password: '',
-            gender: '',
-            phone: int.parse(results[i]['phone'] as String),
-            location: results[i]['city'],
-            role: 'worker');
+            id: results[i]["userId"],
+            image: results[i]["picture"],
+            categordId: results[i]["profession"],
+            address: results[i]["line"],
+            fname: (results[i]["fullName"] as String).split(" ")[0],
+            lname: (results[i]["fullName"] as String).split(" ")[1],
+            email: results[i]["email"],
+            avgRate: double.parse(results[i]["rating"] ?? "0"),
+            password: "",
+            gender: "",
+            phone: int.parse(results[i]["phone"] as String),
+            location: results[i]["city"],
+            role: "worker");
         employees.add(emp);
       }
       // ignore: unnecessary_null_comparison
@@ -157,7 +157,7 @@ class User with ChangeNotifier {
   }
 
   Employee? get currentUser {
-    if (_user.id != '') {
+    if (_user.id != "") {
       return _user;
     } else {
       return null;
